@@ -1,12 +1,13 @@
 
 import './App.css'
+import Header from './comp/header'
 
 function App() {
  
   return (
     <>
-      
-    </>
+     <Header/> 
+    </> 
   )
 }
 
