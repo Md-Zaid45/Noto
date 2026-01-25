@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { FaGripLinesVertical } from "react-icons/fa";
+import { VscLayoutSidebarLeft, VscLayoutSidebarLeftOff, VscLayoutSidebarRight, VscLayoutSidebarRightOff } from "react-icons/vsc";
 import { FiHome } from "react-icons/fi";
 import { FiLogOut } from "react-icons/fi";
-import { LuPanelRightOpen, LuPanelRightClose } from "react-icons/lu";
 
 export default function Header({
   ExpandLeftbar,
@@ -16,7 +14,7 @@ export default function Header({
 
   return (
     <nav
-      className="flex items-center justify-between fixed top-0 bg-white p-3 shadow-md w-full overflow-hidden h-9 gap-10
+      className="flex items-center justify-between fixed top-0 bg-purple-100 p-3  w-full overflow-hidden h-9 gap-10 select-none
     z-10"
     >
       <div
@@ -26,7 +24,7 @@ export default function Header({
           console.log(ExpandLeftbar);
         }}
       >
-        {ExpandLeftbar ? <FaGripLinesVertical /> : <GiHamburgerMenu />}
+        {ExpandLeftbar ? <VscLayoutSidebarLeft className="text-xl "/>:<VscLayoutSidebarLeftOff className="text-xl"/>}
       </div>
 
       <div className="hidden sm:flex gap-6">
@@ -64,7 +62,7 @@ export default function Header({
             console.log(ExpandRightbar);
           }}
         >
-          {ExpandRightbar ? <LuPanelRightOpen /> : <LuPanelRightClose />}
+          {ExpandRightbar ? <VscLayoutSidebarRight className="text-xl"/> : <VscLayoutSidebarRightOff className="text-xl"/>}
         </div>
         {isLoggedIn ? (
           <button className="bg-red-500 text-white  h-4 rounded hover:bg-red-600 transition duration-300 cursor-pointer">
