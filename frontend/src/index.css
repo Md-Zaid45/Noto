@@ -1,1 +1,9 @@
 @import "tailwindcss";
+.ProseMirror {
+  outline: none;
+  min-height:12px;
+  
+  background-color:rgb(210, 190, 200);
+  padding: 12px;
+  color: black;
+}

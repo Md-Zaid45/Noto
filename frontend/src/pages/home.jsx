@@ -10,6 +10,7 @@ import RightSidebar from "../features/flashcards/rightSidebar";
 import ContextMenu from "../features/navigation/sidebar/contextMenu";
 import { UiController } from "../store/uiController";
 import { useSelector } from "react-redux";
+import Tiptap from "../features/notes/editor";
 export const sidebarContext=createContext({})
 
 function App() {
@@ -31,14 +32,20 @@ function App() {
   }, []);
 
   return (
-    <>
-      <Header
-        ExpandLeftbar={ExpandLeftbar}
-        ExpandRightbar={ExpandRightbar}
-        setExpandLeftbar={setExpandLeftbar}
-        setExpandRightbar={setExpandRightbar}
-      />
-      <sidebarContext.Provider
+   <div className="h-screen flex flex-col overflow-hidden">
+  
+
+  <Header
+    ExpandLeftbar={ExpandLeftbar}
+    ExpandRightbar={ExpandRightbar}
+    setExpandLeftbar={setExpandLeftbar}
+    setExpandRightbar={setExpandRightbar}
+  />
+
+
+  <div className="flex-1 flex overflow-hidden">
+    
+    <sidebarContext.Provider
       value={{
         ShowContextMenu,
         setShowContextMenu,
@@ -50,10 +57,19 @@ function App() {
         setRename,
       }}
     >
-      <LeftSidebar ExpandLeftbar={ExpandLeftbar}/>
-      <ContextMenu/>
-      {/* <RightSidebar  ExpandRightbar={ExpandRightbar}/> */}
-    </sidebarContext.Provider></>
+      <LeftSidebar ExpandLeftbar={ExpandLeftbar} />
+      <ContextMenu />
+      {/* <RightSidebar ExpandRightbar={ExpandRightbar} /> */}
+    </sidebarContext.Provider>
+
+   
+    <div className="flex-1 min-h-0 overflow-y-auto">
+      <Tiptap />
+    </div>
+
+  </div>
+</div>
+
   );
 }
 

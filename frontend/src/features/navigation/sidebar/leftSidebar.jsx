@@ -66,9 +66,9 @@ export default function LeftSidebar({ExpandLeftbar}) {
         <div
           data-left-sidebar
           className={`
-        bg-sky-950 h-screen overflow-hidden 
+        bg-sky-950 h-screen overflow-hidden block
         transition-all duration-300 ease-out
-        text-white select-none 
+        text-white select-none shrink-0
         ${ExpandLeftbar ? "w-60 opacity-100" : "w-0 opacity-0"}
       `}
         >
