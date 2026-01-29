@@ -3,7 +3,14 @@
   outline: none;
   min-height:12px;
   
-  background-color:rgb(210, 190, 200);
+  
   padding: 12px;
-  color: black;
+  
+}
+:root {
+  --black: #0d0c0c;
+  --white: #ffffff;
+  --gray-2: #e5e7eb;
+  --gray-3: #d1d5db;
+  --purple-light: #ede9fe;
 }

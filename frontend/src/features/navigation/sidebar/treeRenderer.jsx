@@ -30,7 +30,6 @@ export default function Tree({
     setShowInputFolder,
     inputRef,
   } = useContext(treeContext);
-  console.log("Rename in tree :", Rename);
   function toggleExpand(id) {
     id && setExpandFolder((prev) => !prev);
   }

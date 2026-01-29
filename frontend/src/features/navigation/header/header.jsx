@@ -21,7 +21,6 @@ export default function Header({
         className="text-lg font-bold hover:text-blue-500 cursor-pointer mr-17"
         onClick={() => {
           setExpandLeftbar((prev) => !prev);
-          console.log(ExpandLeftbar);
         }}
       >
         {ExpandLeftbar ? <VscLayoutSidebarLeft className="text-xl "/>:<VscLayoutSidebarLeftOff className="text-xl"/>}
@@ -59,7 +58,6 @@ export default function Header({
           className="text-lg font-bold cursor-pointer hover:text-blue-500"
           onClick={() => {
             setExpandRightbar((prev) => !prev);
-            console.log(ExpandRightbar);
           }}
         >
           {ExpandRightbar ? <VscLayoutSidebarRight className="text-xl"/> : <VscLayoutSidebarRightOff className="text-xl"/>}

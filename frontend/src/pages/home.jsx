@@ -10,7 +10,7 @@ import RightSidebar from "../features/flashcards/rightSidebar";
 import ContextMenu from "../features/navigation/sidebar/contextMenu";
 import { UiController } from "../store/uiController";
 import { useSelector } from "react-redux";
-import Tiptap from "../features/notes/editor";
+import Tiptap from "../features/notes/editor/editor"
 export const sidebarContext=createContext({})
 
 function App() {

@@ -12,7 +12,8 @@ export default function ContextMenu({
   //console.log("this is contextmenu for id:", ShowContextMenu);
   const {setRename, setActive ,setShowContextMenu,
   ShowContextMenu,ContextMenuPos} = useContext(sidebarContext);
-  const { Notes, Folders } = useSelector((state) => state);
+  const { Notes } = useSelector((state) =>state.Notes);
+   const { Folders } = useSelector((state) =>state.Folders);
   const dispatch = useDispatch();
   useEffect(() => {
     UiController.sidebarContextMenu = {
