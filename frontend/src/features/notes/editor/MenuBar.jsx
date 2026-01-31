@@ -8,12 +8,28 @@ import {
   LuFileCode,
   LuQuote,
   LuMinus,
+  LuBold,
+  LuItalic,
+  LuStrikethrough,
+  LuCode,
+  LuImage,
 } from "react-icons/lu";
 
 import MenuButton from "./menuButton";
 import { useEditorState } from "@tiptap/react";
+import { useRef } from "react";
 
+async function imagePicker() {
+  let url = null;
+  if ("showOpenFilePicker" in window) {
+    const [handle] = await window.showOpenFilePicker();
+    const file = await handle.getFile();
+    url = URL.createObjectURL(file);
+  }
+  return url;
+}
 export function MenuBar({ editor }) {
+  const inputRef = useRef(null);
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
@@ -26,13 +42,17 @@ export function MenuBar({ editor }) {
         isBulletList: ctx.editor.isActive("bulletList") ? true : false,
         isBlockquote: ctx.editor.isActive("blockquote") ? true : false,
         isCodeBlock: ctx.editor.isActive("codeBlock") ? true : false,
+        isBold: ctx.editor.isActive("bold") ? true : false,
+        isItalic: ctx.editor.isActive("italic") ? true : false,
+        isStrike: ctx.editor.isActive("strike") ? true : false,
+        isCode: ctx.editor.isActive("code") ? true : false,
       };
     },
   });
   if (!editor) return null;
 
   return (
-    <div className=" flex gap-1 p-2 border-b bg-white opacity-100">
+    <div className=" flex gap-1 p-1 bg-gray-100">
       <MenuButton
         active={editorState.isPara}
         onClick={() => {
@@ -40,6 +60,33 @@ export function MenuBar({ editor }) {
         }}
       >
         <LuText className="h-4 w-4" />
+      </MenuButton>
+      <MenuButton
+        active={editorState.isBold}
+        onClick={() => editor.chain().focus().toggleBold().run()}
+      >
+        <LuBold className="h-4 w-4" />
+      </MenuButton>
+
+      <MenuButton
+        active={editorState.isItalic}
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+      >
+        <LuItalic className="h-4 w-4" />
+      </MenuButton>
+
+      <MenuButton
+        active={editorState.isStrike}
+        onClick={() => editor.chain().focus().toggleStrike().run()}
+      >
+        <LuStrikethrough className="h-4 w-4" />
+      </MenuButton>
+
+      <MenuButton
+        active={editorState.isCode}
+        onClick={() => editor.chain().focus().toggleCode().run()}
+      >
+        <LuCode className="h-4 w-4" />
       </MenuButton>
 
       <MenuButton
@@ -98,6 +145,14 @@ export function MenuBar({ editor }) {
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
       >
         <LuMinus className="h-4 w-4" />
+      </MenuButton>
+      <MenuButton
+        onClick={async () => {
+          let url = await imagePicker();
+          if (url) editor.chain().focus().setImage({ src: url }).run();
+        }}
+      >
+        <LuImage className="h-4 w-4" />
       </MenuButton>
     </div>
   );
