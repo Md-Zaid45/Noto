@@ -8,18 +8,15 @@ import { useDispatch } from "react-redux";
 import { renameNote } from "../../notes/notesSlice";
 import { renameFolder } from "../../folders/foldersSlice";
 import { keydownHandler, onContextHandler } from "./handlers";
-export default function Tree({
-  folder,level=-1
-}) {
+import { useNavigate } from "react-router-dom";
+export default function Tree({folder,level=-1}) {
+  const navigate=useNavigate()
   console.log("Tree comp rendered");
   level+=1
   const { Active, setActive, setContextMenuPos, Rename, setRename ,ShowContextMenu,
-  setShowContextMenu} =
-    useContext(sidebarContext);
+  setShowContextMenu} = useContext(sidebarContext);
   const dispatch = useDispatch();
-  const [ExpandFolder, setExpandFolder] = useState(
-    folder.id === "r" ? true : false,
-  );
+  const [ExpandFolder, setExpandFolder] = useState( folder.id === "r" ? true : false);
   console.log("folder", ExpandFolder, "active", Active);
   const {
     activeRef,
@@ -44,11 +41,12 @@ export default function Tree({
             ref={Rename === folder.id ? renameRef : null}
             contentEditable={Rename === folder.id}
             className={`text-white flex gap-1 cursor-pointer focus:outline-none
-    focus:bg-gray-800
-    focus:ring-1 focus:ring-blue-300 ${
-      Active && Active === folder.id ? "bg-gray-500 overflow-visible" : ""
-    }`}
-    style={{ paddingLeft: `${level*7}px` }}
+           focus:bg-gray-800
+            focus:ring-1 focus:ring-blue-300 ${
+            Active && Active === folder.id ? "bg-gray-500 overflow-visible" : ""}`}
+
+            style={{ paddingLeft: `${level*7}px` }}
+
             onClick={() => {
               if (Rename !== folder.id) {
                 console.log(folder.id);
@@ -110,11 +108,9 @@ export default function Tree({
             setShowInputNote={setShowInputNote}
             folder={folder}
             level={level}
-          />
-        ) : (
-          ""
-        )}
-        {ExpandFolder &&
+          /> ) : ("")}
+
+        { ExpandFolder &&
           folder.children &&
           folder.children.map((node) => (
             <Tree
@@ -125,7 +121,7 @@ export default function Tree({
               level={level}
             />
           ))}
-        {ExpandFolder &&
+        { ExpandFolder &&
           folder.notes &&
           folder.notes.map((node) => (
             <div
@@ -134,15 +130,17 @@ export default function Tree({
               contentEditable={Rename === node.id}
               key={node.id}
               className={`pl-8 flex gap-1 text-white cursor-pointer focus:outline-none
-   focus:bg-gray-800
-    focus:ring-1 focus:ring-blue-300  ${
-      Active && Active === node.id ? "bg-gray-500  " : ""
-    }`}
-     style={{ paddingLeft: `${level*7+21}px` }}
+            focus:bg-gray-800
+              focus:ring-1 focus:ring-blue-300  ${
+              Active && Active === node.id ? "bg-gray-500  " : ""}`}
+
+              style={{ paddingLeft: `${level*7+21}px` }}
+
               onClick={() => {
                 if (Rename !== node.id) {
                   console.log(node.id);
                   setActive(node.id);
+                  navigate(`note/${node.id}`)
                 }
               }}
               onContextMenu={(e) =>

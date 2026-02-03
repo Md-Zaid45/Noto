@@ -7,6 +7,7 @@ import {
 
 import { sidebarContext } from "../../../pages/home";
 import { parentFolder } from "./utils";
+import { useSelector } from "react-redux";
 export default function SiderbarHeader({
   fileButtonRef,
   folderButtonRef,
@@ -15,7 +16,7 @@ export default function SiderbarHeader({
 }) {
   //console.log("sidebarHeader comp rendered", Active);
  const {Active}=useContext(sidebarContext)
-
+ const Notes=useSelector(state=>state.Notes)
   return (
     <div className="flex cursor-pointer gap-3 justify-end mr-2">
       <AiOutlineFileAdd

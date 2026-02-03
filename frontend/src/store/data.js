@@ -101,6 +101,110 @@ export const notes = [
   },
 ];
 
+export const NotesContent = [
+  {
+    id: "td-1",
+    noteId: "n-1",
+    userId: 1,
+    folderId: "f-2",
+    name: "HTML Basics",
+    revisionMark: false,
+    type: "file",
+    content: "this is content for html basics"
+    // {
+    //   type: "doc",
+    //   content: [
+    //     {
+    //       type: "paragraph",
+    //       content: [
+    //         { type: "text", text: "HTML defines the structure of web pages." }
+    //       ]
+    //     }
+    //   ]
+    // }
+  },
+  {
+    id: "td-2",
+    noteId: "n-2",
+    userId: 1,
+    folderId: "r",
+    name: "root note",
+    revisionMark: false,
+    type: "file",
+    content: {
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            { type: "text", text: "root notktnirnn" }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    id: "td-3",
+    noteId: "n-3",
+    userId: 1,
+    folderId: "f-2",
+    name: "CSS Flexbox",
+    revisionMark: true,
+    type: "file",
+    content: {
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            { type: "text", text: "Flexbox is used for one-dimensional layouts." }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    id: "td-4",
+    noteId: "n-4",
+    userId: 1,
+    folderId: "f-4",
+    name: "React Components",
+    revisionMark: true,
+    type: "file",
+    content: {
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            { type: "text", text: "Components are reusable UI blocks." }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    id: "td-5",
+    noteId: "n-5",
+    userId: 1,
+    folderId: "f-3",
+    name: "SQL Joins",
+    revisionMark: false,
+    type: "file",
+    content: {
+      type: "doc", 
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            { type: "text", text: "INNER, LEFT, RIGHT joins explained." }
+          ]
+        }
+      ]
+    }
+  }
+];
+
 /* ================= FLASHCARDS ================= */
 export const flashcards = [
   {

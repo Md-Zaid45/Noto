@@ -18,8 +18,8 @@ export default function LeftSidebar({ExpandLeftbar}) {
   } = useContext(sidebarContext);
 
   const activeRef = useRef(null);
-  const {Notes,Folders}=useSelector(state=>state)
-  console.log("redux",Notes,Folders)
+  const {Notes,Folders,NotesContent}=useSelector(state=>state)
+  console.log("redux",Notes,Folders,NotesContent)
   const fileButtonRef = useRef(null);
   const folderButtonRef = useRef(null);
   const inputRef = useRef(null);

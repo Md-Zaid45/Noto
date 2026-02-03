@@ -11,6 +11,8 @@ import ContextMenu from "../features/navigation/sidebar/contextMenu";
 import { UiController } from "../store/uiController";
 import { useSelector } from "react-redux";
 import Tiptap from "../features/notes/editor/editor"
+import Editor from "../features/notes/editor/editor";
+import { Outlet } from "react-router-dom";
 export const sidebarContext=createContext({})
 
 function App() {
@@ -60,13 +62,13 @@ function App() {
       <LeftSidebar ExpandLeftbar={ExpandLeftbar} />
       <ContextMenu />
       {/* <RightSidebar ExpandRightbar={ExpandRightbar} /> */}
-    </sidebarContext.Provider>
+  
 
    
     <div className="flex-1 min-h-0 overflow-y-auto">
-      <Tiptap />
+      <Outlet />
     </div>
-
+  </sidebarContext.Provider>
   </div>
 </div>
 
