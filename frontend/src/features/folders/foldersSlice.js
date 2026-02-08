@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 import { folders } from "../../store/data";
 
 const foldersSlice = createSlice({
@@ -15,7 +15,7 @@ const foldersSlice = createSlice({
     addFolder: (state, action) => {
       const { name, parentFolderId } = action.payload;
       const newFolder={
-    id: `f-${state.length +1}`,
+    id: `f-${nanoid(4)}`,
     userId: 1,
     name,
     parentFolderId,

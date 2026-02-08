@@ -1,25 +1,20 @@
-
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { sidebarContext} from '../../../pages/home'
+import { sidebarContext } from "../../../pages/home";
 import { useSelector } from "react-redux";
 import { treeContext } from "./store";
 import { fileTree } from "./utils";
 import { UiController } from "../../../store/uiController";
 import SiderbarHeader from "./sidebarHeader";
 import Tree from "./treeRenderer";
-export default function LeftSidebar({ExpandLeftbar}) {
+export default function LeftSidebar({ ExpandLeftbar }) {
   console.log("sidebar comp rendered");
 
-  const {
-    Active,
-    setActive,
-    Rename,
-    setRename,
-  } = useContext(sidebarContext);
+  const { Active, setActive, Rename, setRename } = useContext(sidebarContext);
 
   const activeRef = useRef(null);
-  const {Notes,Folders,NotesContent}=useSelector(state=>state)
-  console.log("redux",Notes,Folders,NotesContent)
+  const Notes = useSelector((state) => state.Notes);
+  const NotesContent = useSelector((state) => state.NotesContent);
+  const Folders = useSelector((state) => state.Folders);
   const fileButtonRef = useRef(null);
   const folderButtonRef = useRef(null);
   const inputRef = useRef(null);
@@ -51,7 +46,6 @@ export default function LeftSidebar({ExpandLeftbar}) {
   }, []);
   useEffect(() => {}, []);
 
-  
   useEffect(() => {
     const isEmpty = !tree.children?.length && !tree.notes?.length;
 
@@ -91,9 +85,7 @@ export default function LeftSidebar({ExpandLeftbar}) {
                   setShowInputFolder={setShowInputFolder}
                   setShowInputNote={setShowInputNote}
                 />
-                <Tree
-                  folder={tree}
-                />
+                <Tree folder={tree} />
               </div>
             </treeContext.Provider>
           }

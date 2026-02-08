@@ -2,6 +2,7 @@ import {
   createContext,
   useState,
   useEffect,
+  useRef,
 } from "react";
 
 import Header from "../features/navigation/header/header";
@@ -16,8 +17,8 @@ import { Outlet } from "react-router-dom";
 export const sidebarContext=createContext({})
 
 function App() {
-  const {Notes,Folders} = useSelector((state) => state);
-  console.log("this is redux store data", Notes,Folders);
+  const {Notes,Folders,NotesContent} = useSelector((state) => state);
+  console.log("this is redux store data", Notes,Folders,NotesContent);
   console.log("App comp rendered ");
   const [ContextMenuPos, setContextMenuPos] = useState({});
   const [Rename, setRename] = useState(null);
@@ -25,6 +26,7 @@ function App() {
   const [ExpandLeftbar, setExpandLeftbar] = useState(null);
   const [ExpandRightbar, setExpandRightbar] = useState(false);
   const [Active, setActive] = useState("r");
+  const deletionIds=useRef([]);
  
 
   useEffect(() => {
@@ -57,6 +59,7 @@ function App() {
         setContextMenuPos,
         Rename,
         setRename,
+        deletionIds
       }}
     >
       <LeftSidebar ExpandLeftbar={ExpandLeftbar} />

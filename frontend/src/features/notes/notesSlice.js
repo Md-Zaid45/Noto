@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 import { notes } from "../../store/data";
 
 const notesSlice = createSlice({
@@ -17,7 +17,7 @@ const notesSlice = createSlice({
       const {  name, folderId } = action.payload;
       console.log("noteslice",action.payload)
       const newNote= {
-        id: `n-${state.length + 1}`,
+        id: `n-${nanoid(4)}`,
     userId: 1,
     folderId,
     name,

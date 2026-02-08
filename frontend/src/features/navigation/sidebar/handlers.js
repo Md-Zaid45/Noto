@@ -1,5 +1,6 @@
 import { childrenIds } from "./utils";
 import { menuPosition } from "./conextMenuPos";
+import { deleteNotesContent } from "../../notes/notesContentSlice";
 
 export function handleInput(
   e,
@@ -10,13 +11,13 @@ export function handleInput(
   folder,
   dispatch,
   addFolder,
-  addNote
+  addNote,
 ) {
   if (e.key === "Enter" && e.target.value) {
     if (ShowInputNote) {
       dispatch(addNote({ name: e.target.value, folderId: folder.id }));
 
-      setShowInputNote(0);
+      setShowInputNote(null);
       console.log("this is input tab", ShowInputNote);
     }
     if (ShowInputFolder) {
@@ -27,7 +28,7 @@ export function handleInput(
         }),
       );
 
-      setShowInputFolder(0);
+      setShowInputFolder(null);
       console.log("this is input tab", ShowInputFolder);
     }
   }
@@ -39,19 +40,19 @@ export function registerActiveInput(
   ShowInputNote,
   setShowInputNote,
   inputRef,
-  UiController
+  UiController,
 ) {
   if (ShowInputFolder)
     UiController.activeInput = {
       close: () => {
-        setShowInputFolder(0);
+        setShowInputFolder(null);
       },
     };
   else if (ShowInputNote)
     UiController.activeInput = {
       ref: inputRef,
       close: () => {
-        setShowInputNote(0);
+        setShowInputNote(null);
       },
     };
   return () => (UiController.activeInput = null);
@@ -69,15 +70,20 @@ export function handleContextMenuAction(
   Notes,
   Folders,
   setActive,
+  deletionIds,
 ) {
   if (ShowContextMenu && option === "Rename") {
     setRename(ShowContextMenu);
   } else if (ShowContextMenu) {
     if (ShowContextMenu[0] === "n") {
+      deletionIds.current = [ShowContextMenu];
+      dispatch(deleteNotesContent([ShowContextMenu]));
       dispatch(deleteNote([ShowContextMenu]));
     } else if (ShowContextMenu[0] === "f") {
       let ids = childrenIds(ShowContextMenu, Notes, Folders);
       console.log(ids);
+      deletionIds.current = ids;
+      dispatch(deleteNotesContent(ids));
       dispatch(deleteFolder(ids));
       dispatch(deleteChildrenNotes(ids));
     }

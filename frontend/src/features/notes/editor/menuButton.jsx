@@ -15,5 +15,5 @@ export default function MenuButton({ editor, onClick, active, canRun = true, chi
     >
       {children}
     </button>
-  )
+    )
 }

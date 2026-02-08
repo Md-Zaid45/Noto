@@ -14,7 +14,6 @@ export default function SiderbarHeader({
   setShowInputNote,
   setShowInputFolder,
 }) {
-  //console.log("sidebarHeader comp rendered", Active);
  const {Active}=useContext(sidebarContext)
  const Notes=useSelector(state=>state.Notes)
   return (

@@ -4,30 +4,23 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import App from "./pages/home.jsx";
 import appStore from "./store/appStore.js";
-import {Provider} from 'react-redux'
-import LandingPage from "./pages/landinPage..jsx";
-import TipTap from "./features/notes/editor/editor.jsx"
-import Editor from "./features/notes/editor/editor.jsx";
-import Editors from "./features/notes/editor/editors.jsx";
+import { Provider } from "react-redux";
+import LandingPage from "./pages/landinPage.jsx";
+import Editr from "./features/notes/editor/editor.jsx";
 
 const router = createBrowserRouter([
-  { path: "/", element: <LandingPage/> },
-  { path: "/home",
-     element:<App/>,
-     children:[
-      {path:"note/:id",
-        element:
-      <Editors/>
- 
-      }
-     ]
-   }
+  { path: "/", element: <LandingPage /> },
+  {
+    path: "/home",
+    element: <App />,
+    children: [{ path: "note/:id", element: <Editr /> }],
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
-  
+  <StrictMode>
     <Provider store={appStore}>
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </Provider>
-  
+  </StrictMode>,
 );

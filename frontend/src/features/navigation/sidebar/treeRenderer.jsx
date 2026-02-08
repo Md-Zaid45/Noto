@@ -17,7 +17,6 @@ export default function Tree({folder,level=-1}) {
   setShowContextMenu} = useContext(sidebarContext);
   const dispatch = useDispatch();
   const [ExpandFolder, setExpandFolder] = useState( folder.id === "r" ? true : false);
-  console.log("folder", ExpandFolder, "active", Active);
   const {
     activeRef,
     renameRef,
