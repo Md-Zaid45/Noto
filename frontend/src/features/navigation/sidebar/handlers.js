@@ -70,19 +70,16 @@ export function handleContextMenuAction(
   Notes,
   Folders,
   setActive,
-  deletionIds,
 ) {
   if (ShowContextMenu && option === "Rename") {
     setRename(ShowContextMenu);
   } else if (ShowContextMenu) {
     if (ShowContextMenu[0] === "n") {
-      deletionIds.current = [ShowContextMenu];
       dispatch(deleteNotesContent([ShowContextMenu]));
       dispatch(deleteNote([ShowContextMenu]));
     } else if (ShowContextMenu[0] === "f") {
       let ids = childrenIds(ShowContextMenu, Notes, Folders);
       console.log(ids);
-      deletionIds.current = ids;
       dispatch(deleteNotesContent(ids));
       dispatch(deleteFolder(ids));
       dispatch(deleteChildrenNotes(ids));

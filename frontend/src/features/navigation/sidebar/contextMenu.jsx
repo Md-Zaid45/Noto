@@ -8,18 +8,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleContextMenuAction } from "./handlers";
 export default function ContextMenu({}) {
   const contextOptions = ["Rename", "Mark for Revision", "Delete"];
-  //console.log("this is contextmenu for id:", ShowContextMenu);
   const {
     setRename,
     setActive,
     setShowContextMenu,
-    deletionIds,
     ShowContextMenu,
     ContextMenuPos,
   } = useContext(sidebarContext);
   const Notes = useSelector((state) => state.Notes);
   const Folders = useSelector((state) => state.Folders);
-  console.log("ChildrenIds...", Notes, Folders);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -59,7 +56,6 @@ export default function ContextMenu({}) {
                   Notes,
                   Folders,
                   setActive,
-                  deletionIds,
                 );
               }}
             >

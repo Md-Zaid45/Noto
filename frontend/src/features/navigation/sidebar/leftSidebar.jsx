@@ -6,11 +6,12 @@ import { fileTree } from "./utils";
 import { UiController } from "../../../store/uiController";
 import SiderbarHeader from "./sidebarHeader";
 import Tree from "./treeRenderer";
+import { useParams } from "react-router-dom";
 export default function LeftSidebar({ ExpandLeftbar }) {
   console.log("sidebar comp rendered");
 
   const { Active, setActive, Rename, setRename } = useContext(sidebarContext);
-
+  const {id}= useParams()
   const activeRef = useRef(null);
   const Notes = useSelector((state) => state.Notes);
   const NotesContent = useSelector((state) => state.NotesContent);
@@ -24,6 +25,11 @@ export default function LeftSidebar({ ExpandLeftbar }) {
   const renameRef = useRef(null);
   const tree = useMemo(() => fileTree(Folders, Notes), [Folders, Notes]);
   console.log("tree", tree);
+
+  useEffect(() => {
+    if (id) setActive(id);
+    else setActive("r");
+  }, [id]);
 
   useEffect(() => {
     console.log(renameRef.current);

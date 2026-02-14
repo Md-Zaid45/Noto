@@ -1,5 +1,5 @@
 import { useEditor } from "@tiptap/react";
-import { addNoteContent } from "../notesContentSlice";
+import { addNoteContent, updateNoteContent } from "../notesContentSlice";
 import { Editor } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
@@ -30,9 +30,9 @@ const pasteHandler = async (e, editor) => {
   if (url) editor.chain().focus().setImage({ src: url }).run();
 };
 
-export function createEditor({ id, note, dispatch }) {
+export function createEditor({ note, dispatch}) {
   const editor = new Editor({
-    content: note?.content ? note.content : "",
+    content: note?.content,
     extensions: [
       Image,
       StarterKit.configure({
@@ -41,13 +41,13 @@ export function createEditor({ id, note, dispatch }) {
     ],
     onUpdate({ editor }) {
       const json = editor.getJSON();
-      dispatch(
-        addNoteContent({
-          id: note?.id,
-          content: json,
-          noteId: id,
-        }),
-      );
+      if (note)
+        dispatch(
+          updateNoteContent({
+            id: note.noteId,
+            content: json,
+          }),
+        );
     },
     editorProps: {
       handleDrop(view, e) {
@@ -63,9 +63,9 @@ export function createEditor({ id, note, dispatch }) {
   return editor;
 }
 
-export function editorInstance(editors, id, note, dispatch) {
-  if (editors.current.get(id)) return editors.current.get(id);
-  const editor = createEditor({ id, note, dispatch });
-  editors.current.set(id, editor);
+export function editorInstance(editors, note, dispatch) {
+  if (editors.current.has(note.noteId)) return editors.current.get(note.noteId);
+  const editor = createEditor({ note, dispatch });
+  editors.current.set(note.noteId, editor);
   return editor;
 }

@@ -2,17 +2,13 @@ import {
   createContext,
   useState,
   useEffect,
-  useRef,
 } from "react";
 
 import Header from "../features/navigation/header/header";
 import LeftSidebar from "../features/navigation/sidebar/leftSidebar";
-import RightSidebar from "../features/flashcards/rightSidebar";
 import ContextMenu from "../features/navigation/sidebar/contextMenu";
 import { UiController } from "../store/uiController";
 import { useSelector } from "react-redux";
-import Tiptap from "../features/notes/editor/editor"
-import Editor from "../features/notes/editor/editor";
 import { Outlet } from "react-router-dom";
 export const sidebarContext=createContext({})
 
@@ -26,7 +22,6 @@ function App() {
   const [ExpandLeftbar, setExpandLeftbar] = useState(null);
   const [ExpandRightbar, setExpandRightbar] = useState(false);
   const [Active, setActive] = useState("r");
-  const deletionIds=useRef([]);
  
 
   useEffect(() => {
@@ -59,15 +54,11 @@ function App() {
         setContextMenuPos,
         Rename,
         setRename,
-        deletionIds
       }}
     >
       <LeftSidebar ExpandLeftbar={ExpandLeftbar} />
       <ContextMenu />
-      {/* <RightSidebar ExpandRightbar={ExpandRightbar} /> */}
-  
 
-   
     <div className="flex-1 min-h-0 overflow-y-auto">
       <Outlet />
     </div>
