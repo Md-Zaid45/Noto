@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { editorInstance } from "./editorUtils";
 import { useDispatch, useSelector } from "react-redux";
-import { addNoteContent } from "../notesContentSlice";
+import { addNoteContent, updateNoteContent } from "../notesContentSlice";
 
 export function useStorage(key, defaultVal) {
   const [Item, setItem] = useState(() => {
@@ -14,14 +14,15 @@ export function useStorage(key, defaultVal) {
   return [Item, setItem];
 }
 
-export function useEditor(editors,OpenTabs, note) {
+export function useEditor(editors, OpenTabs, note) {
   const dispatch = useDispatch();
-  
+  const [isSaved, setIsSaved] = useState(null);
+  const clearTimeoutId = useRef(null);
   const editor = useMemo(() => {
     if (!note) {
       return null;
     }
-    return editorInstance(editors, note, dispatch);
+    return editorInstance(editors, note);
   }, [note?.noteId, dispatch]);
 
   useEffect(() => {
@@ -36,8 +37,41 @@ export function useEditor(editors,OpenTabs, note) {
     }
   }, [OpenTabs]);
 
+  useEffect(() => {
+    if (isSaved === note?.noteId) {
+      setTimeout(() => {
+        setIsSaved(null);
+      }, 1000);
+    }
+  }, [isSaved, note?.noteId]);
 
-  return editor;
+  useEffect(() => {
+    if (!editor) return;
+
+    function saveContent() {
+      if (clearTimeoutId.current) clearTimeout(clearTimeoutId.current);
+      clearTimeoutId.current = setTimeout(() => {
+        console.log("debounce auto save...........");
+
+        if (note)
+          dispatch(
+            updateNoteContent({
+              id: note.noteId,
+              content: editor.getJSON(),
+            }),
+          );
+        setIsSaved(note.noteId);
+      }, 2000);
+    }
+
+    editor.on("update", saveContent);
+    return () => {
+      editor.off("update", saveContent);
+      clearTimeout(clearTimeoutId.current);
+    };
+  }, [note, editor, dispatch]);
+
+  return [editor, isSaved];
 }
 
 export function useNote(id) {
@@ -86,11 +120,14 @@ export function useTabs(note, id) {
     });
   }, [note?.noteId, note?.name]);
 
-  const deleteTab = useCallback((id) => {
-    setTabs((prev) => {
-      return prev.filter((tab) => tab.id !== id);
-    });
-  }, [id]);
+  const deleteTab = useCallback(
+    (id) => {
+      setTabs((prev) => {
+        return prev.filter((tab) => tab.id !== id);
+      });
+    },
+    [id],
+  );
 
   return [Tabs, deleteTab];
 }

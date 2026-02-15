@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Tabs from "./tabs";
 import { useEditor, useNote, useTabs } from "./hooks";
 import { useCallback, useEffect, useRef } from "react";
+import { HiOutlineCheckBadge } from "react-icons/hi2";
 
 export default function Editr() {
   const { id } = useParams();
@@ -14,22 +15,25 @@ export default function Editr() {
   const [tabs, deleteTab] = useTabs(note, id);
   const editors = useRef(new Map());
 
-  const editor = useEditor(editors, tabs, note);
+  const [editor, isSaved] = useEditor(editors, tabs, note);
 
-  const deleteHandler = useCallback((tab) => {
-    const nextTabs = tabs.filter((t) => t.id !== tab.id);
-    deleteTab(tab.id);
+  const deleteHandler = useCallback(
+    (tab) => {
+      const nextTabs = tabs.filter((t) => t.id !== tab.id);
+      deleteTab(tab.id);
 
-    if (tab.id === id) {
-      setTimeout(() => {
-        if (nextTabs.length > 0) {
-          navigate(`../note/${nextTabs.at(-1).id}`);
-        } else {
-          navigate("../");
-        }
-      }, 0);
-    }
-  },[tabs,deleteTab,id])
+      if (tab.id === id) {
+        setTimeout(() => {
+          if (nextTabs.length > 0) {
+            navigate(`../note/${nextTabs.at(-1).id}`);
+          } else {
+            navigate("../");
+          }
+        }, 0);
+      }
+    },
+    [tabs, deleteTab, id],
+  );
 
   useEffect(() => {
     return () => {
@@ -46,6 +50,12 @@ export default function Editr() {
       <Tabs OpenTabs={tabs} deleteHandler={deleteHandler} />
       {editor ? (
         <div className="">
+          {isSaved === id && (
+            <div className="fixed flex right-8 top-20 z-50  gap-1 items-center px-2 py-0.5 rounded-lg text-xs font-medium bg-emerald-100 animate-fade-in">
+              <HiOutlineCheckBadge className="  text-green-500 text-sm stroke-2" />{" "}
+              <div>Saved</div>
+            </div>
+          )}
           <MenuBar editor={editor} />
           <EditorBubbleMenu editor={editor} />
           <EditorContent editor={editor} />

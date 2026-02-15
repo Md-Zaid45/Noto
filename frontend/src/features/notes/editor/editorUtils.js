@@ -3,6 +3,7 @@ import { addNoteContent, updateNoteContent } from "../notesContentSlice";
 import { Editor } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
+import { useRef } from "react";
 
 export function getImageUrl(files) {
   let url = null;
@@ -30,7 +31,7 @@ const pasteHandler = async (e, editor) => {
   if (url) editor.chain().focus().setImage({ src: url }).run();
 };
 
-export function createEditor({ note, dispatch}) {
+export function createEditor({ note }) {
   const editor = new Editor({
     content: note?.content,
     extensions: [
@@ -39,22 +40,13 @@ export function createEditor({ note, dispatch}) {
         heading: { levels: [1, 2, 3] },
       }),
     ],
-    onUpdate({ editor }) {
-      const json = editor.getJSON();
-      if (note)
-        dispatch(
-          updateNoteContent({
-            id: note.noteId,
-            content: json,
-          }),
-        );
-    },
+
     editorProps: {
-      handleDrop(view, e) {
+      handleDrop(e) {
         dropHandler(e, editor);
         return false;
       },
-      handlePaste(view, e) {
+      handlePaste(e) {
         pasteHandler(e, editor);
         return false;
       },
@@ -63,9 +55,9 @@ export function createEditor({ note, dispatch}) {
   return editor;
 }
 
-export function editorInstance(editors, note, dispatch) {
+export function editorInstance(editors, note) {
   if (editors.current.has(note.noteId)) return editors.current.get(note.noteId);
-  const editor = createEditor({ note, dispatch });
+  const editor = createEditor({ note });
   editors.current.set(note.noteId, editor);
   return editor;
 }
