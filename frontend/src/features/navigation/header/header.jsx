@@ -68,7 +68,7 @@ export default function Header({
           </button>
         ) : (
           <NavLink
-            to={"login"}
+            to={"../signup-login"}
             className="bg-blue-500 text-white px-4  h-6 rounded hover:bg-blue-600 transition duration-300 cursor-pointer text-sm "
           >
             Login

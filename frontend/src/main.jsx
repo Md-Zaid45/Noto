@@ -7,6 +7,7 @@ import appStore from "./store/appStore.js";
 import { Provider } from "react-redux";
 import LandingPage from "./pages/landinPage.jsx";
 import Editr from "./features/notes/editor/editor.jsx";
+import { AuthPage } from "./pages/signup-login.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
     element: <App />,
     children: [{ path: "note/:id", element: <Editr /> }],
   },
+  {
+    path:"/signup-login",
+    element:<AuthPage/>
+  }
 ]);
 
 createRoot(document.getElementById("root")).render(
