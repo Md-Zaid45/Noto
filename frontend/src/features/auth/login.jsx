@@ -1,30 +1,28 @@
 import { useState } from "react";
+import { feildsConfig, validateForm, validators } from "./authLogic";
 import Input from "./input";
-import { feildsConfig } from "./authLogic";
 import { NavLink } from "react-router-dom";
 import useFormHandlers from "./hooks";
 
-export function SignUp() {
+export default function Login() {
   const [formValues, setFormValues] = useState({
-    Name: "",
     Email: "",
-    CreatePassword: "",
-    ConfirmPassword: "",
+    Password: "",
   });
-
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({
-    Name: false,
     Email: false,
-    CreatePassword: false,
-    ConfirmPassword: false,
+    Password: false,
   });
-  const { submitHandler, handleInput, handleBlur } =useFormHandlers( formValues,
-  setFormValues,
-  errors,
-  setErrors,
-  touched,
-  setTouched)
+
+  const { submitHandler, handleInput, handleBlur } = useFormHandlers(
+    formValues,
+    setFormValues,
+    errors,
+    setErrors,
+    touched,
+    setTouched,
+  );
 
   return (
     <>
@@ -45,19 +43,18 @@ export function SignUp() {
             error={errors[feild]}
             touched={touched[feild]}
           />
-        ))}
-
+        ))}{" "}
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition"
         >
-          Sign Up
+          Login
         </button>
       </form>
       <center>
-        Already have an Account ?{" "}
-        <NavLink to={"/login"} className="text-blue-400">
-          Login
+        Don't have an Account ?{" "}
+        <NavLink to={"/signup"} className="text-blue-400">
+          Signup
         </NavLink>
       </center>
     </>

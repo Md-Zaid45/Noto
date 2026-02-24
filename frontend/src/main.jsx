@@ -17,7 +17,11 @@ const router = createBrowserRouter([
     children: [{ path: "note/:id", element: <Editr /> }],
   },
   {
-    path:"/signup-login",
+    path:"/signup",
+    element:<AuthPage/>
+  },
+   {
+    path:"/login",
     element:<AuthPage/>
   }
 ]);
