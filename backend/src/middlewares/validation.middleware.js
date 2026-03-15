@@ -1,14 +1,13 @@
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import ApiError from "../utils/ApiError.js";
 
 export const validateEmail = (req, res, next) => {
   try {
     const { email } = req.body;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      const error = new Error("invalid email");
-      error.statusCode = 401
-      throw error
+      throw new ApiError(401, "invalid email");
     }
     next();
   } catch (error) {
@@ -18,13 +17,10 @@ export const validateEmail = (req, res, next) => {
 
 export const validateFields = (req, res, next) => {
   try {
-    console.log(req.body);
     const fields = Object.values(req.body);
 
     if (fields.some((field) => field.trim() === "")) {
-      const error = new Error("Empty field");
-      error.statusCode = 400
-      throw error
+      throw new ApiError(400, "Empty field");
     }
 
     next();
@@ -38,9 +34,7 @@ export const checkUserExisted = async (req, res, next) => {
     const { email } = req.body;
     const user = await User.exists({ email });
     if (user) {
-      const error = new Error("user already existed");
-      error.statusCode = 409
-      throw error
+     throw new ApiError(409, "user already existed");
     }
     next();
   } catch (error) {
@@ -53,16 +47,11 @@ export const validateCredentials = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      const error = new Error("user not found");
-      error.statusCode = 404
-      throw error
+      throw new ApiError(404, "user not found");
     }
-    console.log(user);
     const validPass = await user.isPasswordCorrect(password);
     if (!validPass) {
-      const error = new Error("incorrect password");
-      error.statusCode = 401
-      throw error
+      throw new ApiError(401, "incorrect password");
     }
     req.user = user;
     next();
@@ -75,9 +64,7 @@ export const verifyJwt = (req, res, next) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
     if (!token) {
-      const error = new Error("Token is required");
-      error.statusCode = 401
-      throw error
+      throw new ApiError(401, "Token is required");
     }
     const verifiedUser = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     req.user = verifiedUser;
