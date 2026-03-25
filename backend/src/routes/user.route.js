@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   getFolderStructure,
+  getNote,
   loginUser,
   logoutUser,
   registerUser,
@@ -30,5 +31,9 @@ router.post(
   loginUser,
 );
 router.post("/logout", verifyJwt, logoutUser);
+
+router.get("/workspace", verifyJwt, getFolderStructure);
+
+router.get("/notes/:id",verifyJwt, getNote)
 
 export default router;

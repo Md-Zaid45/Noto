@@ -1,4 +1,7 @@
 import { User } from "../models/user.model.js";
+import { Folder } from "../models/folder.model.js";
+import { Note } from "../models/note.model.js";
+import { Flashcard } from "../models/flashcard.model.js";
 import ApiError from "../utils/ApiError.js";
 
 export const registerUser = async (req, res, next) => {
@@ -54,6 +57,42 @@ export const logoutUser = async (req, res, next) => {
         success: true,
         message: "logged out user successfully",
       });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getFolderStructure = async (req, res, next) => {
+  try {
+    const folders = await Folder.find({ userId: req.user._id });
+    const notes = await Note.find({ userId: req.user._id });
+    const flashcards = await Flashcard.find({ userId: req.user._id });
+    console.log(folders, notes);
+    return res.status(200).json({
+      payload: {
+        folders,
+        notes,
+        flashcards,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getNote = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new ApiError(400, "invalid note id");
+    const note = await Note.findOne({ userId: req.user._id, _id: id });
+    if (!note) throw new ApiError(404, "Cannot find note");
+    return res.status(200).json({
+      success: true,
+      payload: {
+        note,
+      },
+    });
   } catch (error) {
     next(error);
   }
