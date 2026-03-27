@@ -3,6 +3,7 @@ import { Folder } from "../models/folder.model.js";
 import { Note } from "../models/note.model.js";
 import { Flashcard } from "../models/flashcard.model.js";
 import ApiError from "../utils/ApiError.js";
+import mongoose from "mongoose";
 
 export const registerUser = async (req, res, next) => {
   try {
@@ -92,6 +93,128 @@ export const getNote = async (req, res, next) => {
       payload: {
         note,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateNoteContent = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { content } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new ApiError(400, "Invalid note id");
+
+    const updatedNote = await Note.findOneAndUpdate(
+      { _id: id, userId: req.user._id },
+      { $set: { title, content } },
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedNote) throw new ApiError(500, "Updation failed");
+    return res.status(200).json({
+      success: true,
+      payload: { note: updatedNote },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createNote = async (req, res, next) => {
+  try {
+    const { name, folderId, content, revisionMark } = req.body;
+
+    if (!name.trim()) throw new ApiError(400, "Name is required");
+
+    if (typeof revisionMark !== "boolean")
+      throw new ApiError(400, "Invalid revision mark");
+
+    if (!mongoose.Types.ObjectId.isValid(folderId))
+      throw new ApiError(400, "Invalid folder id");
+
+    const newNote = await Note.create({
+      name,
+      folderId,
+      content,
+      revisionMark,
+      userId: req.user._id,
+    });
+
+    if (!newNote) throw new ApiError(500, "Unable to create note");
+
+    return res.status(201).json({
+      success: true,
+      payload: {
+        note: newNote,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteNote = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new ApiError(400, "Invalid note id");
+
+    const deletedNote = await Note.findOneAndDelete({
+      _id: id,
+      userId: req.user._id,
+    });
+    if (!deletedNote) throw new ApiError(404, "Note does not exists");
+
+    await Flashcard.deleteMany({ userId: req.user._id, noteId: id });
+
+    return res.status(200).json({
+      success: true,
+      message: "Note deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateNote = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new ApiError(400, "Invalid note id");
+
+    const { title, folderId, revisionMark } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(folderId))
+      throw new ApiError(400, "Invalid folder id");
+
+    const fields = Object.fromEntries(
+      Object.entries({ title, folderId, revisionMark }).filter(
+        ([_, val]) => val !== undefined && val !== "",
+      ),
+    );
+
+    if (Object.keys(fields).length === 0)
+      throw new ApiError(400, "Empty fields");
+
+    const updatedNote = await Note.findOneAndUpdate(
+      {
+        _id: id,
+        userId: req.user._id,
+      },
+      { $set: fields },
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedNote) throw new ApiError(404, "Unable to find note");
+
+    return res.status(200).json({
+      success: true,
+      payload: { note: updatedNote },
     });
   } catch (error) {
     next(error);
