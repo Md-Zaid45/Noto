@@ -2,33 +2,6 @@ import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import ApiError from "../utils/ApiError.js";
 
-export const validateEmail = (req, res, next) => {
-  try {
-    const { email } = req.body;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      throw new ApiError(401, "invalid email");
-    }
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const validateFields = (req, res, next) => {
-  try {
-    const fields = Object.values(req.body);
-
-    if (fields.some((field) => field.trim() === "")) {
-      throw new ApiError(400, "Empty field");
-    }
-
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const checkUserExisted = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -71,6 +44,18 @@ export const verifyJwt = async (req, res, next) => {
 
     if (!user) throw new ApiError(404, "user not found");
     req.user = user;
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const validate = (schema) => (req, res, next) => {
+  try {
+    const parsed = schema.parse(req);
+    if (parsed.body !== undefined) req.body = parsed.body;
+    if (parsed.params !== undefined) req.params = parsed.params;
+    if (parsed.query !== undefined) req.query = parsed.query;
     next();
   } catch (error) {
     next(error);
