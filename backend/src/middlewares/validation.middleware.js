@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import ApiError from "../utils/ApiError.js";
 
-export const checkUserExisted = async (req, res, next) => {
+export const checkUserExists = async (req, res, next) => {
   try {
     const { email } = req.body;
     const user = await User.exists({ email });
@@ -13,6 +13,28 @@ export const checkUserExisted = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+export const checkExists = (model, location = "params", field = "id") => {
+  return async (req, res, next) => {
+    try {
+      const value = req[location]?.[field];
+
+      if (!value) next();
+
+      const document = await model.findOne({
+        _id: value,
+        userId: req.user._id,
+      });
+
+      if (!document) {
+        throw new ApiError(404, `Document not found for ${field}: ${value}`);
+      }
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
 };
 
 export const validateCredentials = async (req, res, next) => {
