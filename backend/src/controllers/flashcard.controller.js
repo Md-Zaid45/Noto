@@ -21,7 +21,7 @@ export const createFlashcard = async (req, res, next) => {
   }
 };
 
-export const updateFlahcard = async (req, res, next) => {
+export const updateFlashcard = async (req, res, next) => {
   try {
     const { id } = req.params;
 
