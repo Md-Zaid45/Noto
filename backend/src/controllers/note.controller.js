@@ -8,7 +8,6 @@ export const getNote = async (req, res, next) => {
     if (!note) throw new ApiError(404, "Cannot find note");
     return res.status(200).json({
       success: true,
-      note,
       payload: {
         note,
       },
