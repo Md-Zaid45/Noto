@@ -1,50 +1,125 @@
 import { Router } from "express";
 import {
-  getFolderStructure,
-  getNote,
-  updateNoteContent,
-  createNote,
+  registerUser,
   loginUser,
   logoutUser,
-  registerUser,
-  deleteNote,
-} from "../controllers/user.controller.js";
+} from "../controllers/auth.controller.js";
 import {
-  checkUserExisted,
+  getNote,
+  updateNote,
+  createNote,
+  deleteNotes,
+} from "../controllers/note.controller.js";
+import {
+  createFolder,
+  deleteFolders,
+  getFolderStructure,
+  updateFolder,
+} from "../controllers/folder.controller.js";
+import {
+  createFlashcard,
+  deleteFlashcards,
+  updateFlashcard,
+} from "../controllers/flashcard.controller.js";
+import {
+  checkUserExists,
   validateCredentials,
-  validateEmail,
-  validateFields,
+  validate,
   verifyJwt,
+  checkExists,
 } from "../middlewares/validation.middleware.js";
+import { loginSchema, registerSchema } from "../schemas/authSchema.js";
+import {
+  updateNoteSchema,
+  createNoteSchema,
+  deleteNotesSchema,
+} from "../schemas/noteSchema.js";
+import { Folder } from "../models/folder.model.js";
+import {
+  updateFolderSchema,
+  createFolderSchema,
+  deleteFoldersSchema,
+} from "../schemas/folderSchema.js";
+import {
+  updateFlashcardSchema,
+  createFlashcardSchema,
+  deleteFlashcardsSchema,
+} from "../schemas/flashcardSchema.js";
+import { Note } from "../models/note.model.js";
+
 
 const router = Router();
 
-router.post(
-  "/signup",
-  validateFields,
-  validateEmail,
-  checkUserExisted,
-  registerUser,
-);
-router.post(
-  "/login",
-  validateFields,
-  validateEmail,
-  validateCredentials,
-  loginUser,
-);
+// Auth Routes
+router.post("/signup", validate(registerSchema), checkUserExists, registerUser);
+router.post("/login", validate(loginSchema), validateCredentials, loginUser);
 router.post("/logout", verifyJwt, logoutUser);
 
-router.get("/workspace", verifyJwt, getFolderStructure);
-
+// Notes Routes
 router.get("/notes/:id", verifyJwt, getNote);
+router.patch(
+  "/notes/:id",
+  verifyJwt,
+  validate(updateNoteSchema),
+  checkExists(Folder, "body", "folderId"),
+  updateNote,
+);
+router.post(
+  "/notes",
+  verifyJwt,
+  validate(createNoteSchema),
+  checkExists(Folder, "body", "folderId"),
+  createNote,
+);
+router.delete(
+  "/notes/:id",
+  verifyJwt,
+  validate(deleteNotesSchema),
+  deleteNotes,
+);
 
-router.patch("/notes/:id", verifyJwt, updateNoteContent);
+// Folder Routes
+router.get("/workspace", verifyJwt, getFolderStructure);
+router.patch(
+  "/folders/:id",
+  verifyJwt,
+  validate(updateFolderSchema),
+  checkExists(Folder, "body", "folderId"),
+  updateFolder,
+);
+router.post(
+  "/folders",
+  verifyJwt,
+  validate(createFolderSchema),
+  checkExists(Folder, "body", "folderId"),
+  createFolder,
+);
+router.delete(
+  "/folders/:id",
+  verifyJwt,
+  validate(deleteFoldersSchema),
+  deleteFolders,
+);
 
-router.post("/notes", verifyJwt, createNote)
-
-router.delete("/notes/:id",verifyJwt, deleteNote)
-
-
-
+// Flashcard Routes
+router.patch(
+  "/flashcards/:id",
+  verifyJwt,
+  validate(updateFlashcardSchema),
+  checkExists(Note, "body", "noteId"),
+  updateFlashcard,
+);
+router.post(
+  "/flashcards",
+  verifyJwt,
+  validate(createFlashcardSchema),
+  checkExists(Note, "body", "noteId"),
+  createFlashcard,
+);
+router.delete(
+  "/flashcards/:id",
+  verifyJwt,
+  validate(deleteFlashcardsSchema),
+  deleteFlashcards,
+);
 export default router;
