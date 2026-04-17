@@ -14,22 +14,37 @@ const router = createBrowserRouter([
   {
     path: "/home",
     element: <App />,
-    children: [{ path: "note/:id", element: <Editr /> }],
+    loader: async () => {
+      const res = await fetch("http://localhost:8000/api/v1/users/workspace", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const data = await res.json();
+      console.log(data);
+      return data;
+    },
+    children: [
+      {
+        path: "notes/:id",
+        element: <Editr/>,
+      },
+    ],
   },
   {
-    path:"/signup",
-    element:<AuthPage/>
+    path: "/signup",
+    element: <AuthPage />,
   },
-   {
-    path:"/login",
-    element:<AuthPage/>
-  }
+  {
+    path: "/login",
+    element: <AuthPage />,
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
   //  <StrictMode>
-    <Provider store={appStore}>
-      <RouterProvider router={router} />
-    </Provider>
-//  </StrictMode>
+  <Provider store={appStore}>
+    <RouterProvider router={router} />
+  </Provider>,
+  //  </StrictMode>
 );
