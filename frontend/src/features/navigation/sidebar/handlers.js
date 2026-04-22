@@ -1,6 +1,17 @@
 import { childrenIds } from "./utils";
 import { menuPosition } from "./conextMenuPos";
 import { deleteNotesContent } from "../../notes/notesContentSlice";
+import {
+  createFolderAsync,
+  deleteFoldersAsync,
+  updateFolderAsync,
+} from "../../folders/foldersSlice";
+import { nanoid } from "@reduxjs/toolkit";
+import {
+  createNoteAsync,
+  deleteNotesAsync,
+  updateNoteAsync,
+} from "../../notes/notesSlice";
 
 export function handleInput(
   e,
@@ -14,9 +25,12 @@ export function handleInput(
   addNote,
 ) {
   if (e.key === "Enter" && e.target.value) {
+    const tempId = nanoid(8);
+    let folderId = folder.id;
+    if (folder.id === "r") folderId = null;
     if (ShowInputNote) {
-      dispatch(addNote({ name: e.target.value, folderId: folder.id }));
-
+      dispatch(addNote({ name: e.target.value, folderId: folder.id, tempId }));
+      dispatch(createNoteAsync({ name: e.target.value, folderId, tempId }));
       setShowInputNote(null);
       console.log("this is input tab", ShowInputNote);
     }
@@ -25,6 +39,14 @@ export function handleInput(
         addFolder({
           name: e.target.value,
           parentFolderId: folder.id,
+          tempId,
+        }),
+      );
+      dispatch(
+        createFolderAsync({
+          name: e.target.value,
+          parentFolderId: folderId,
+          tempId,
         }),
       );
 
@@ -72,17 +94,21 @@ export function handleContextMenuAction(
   setActive,
 ) {
   if (ShowContextMenu && option === "Rename") {
-    setRename(ShowContextMenu);
-  } else if (ShowContextMenu) {
-    if (ShowContextMenu[0] === "n") {
+    setRename(ShowContextMenu.id);
+  } else if (ShowContextMenu && option === "Delete") {
+    if (ShowContextMenu.type === "file") {
+      console.log(ShowContextMenu);
       dispatch(deleteNotesContent([ShowContextMenu]));
-      dispatch(deleteNote([ShowContextMenu]));
-    } else if (ShowContextMenu[0] === "f") {
-      let ids = childrenIds(ShowContextMenu, Notes, Folders);
-      console.log(ids);
+      dispatch(deleteNote(ShowContextMenu.id));
+      dispatch(deleteNotesAsync([ShowContextMenu.id]));
+    } else if (ShowContextMenu.type === "folder") {
+      let ids = childrenIds(ShowContextMenu.id, Notes, Folders);
+      console.log("folder deletion in handler hit", ids);
       dispatch(deleteNotesContent(ids));
       dispatch(deleteFolder(ids));
       dispatch(deleteChildrenNotes(ids));
+      dispatch(deleteFoldersAsync(ids));
+      dispatch(deleteNotesAsync(ids));
     }
     setActive("r");
   }
@@ -102,20 +128,28 @@ export function keydownHandler(
 
   if (e.key === "Enter") {
     e.preventDefault();
-    if (node.type == "folder")
+    if (node.type == "folder") {
       dispatch(
         renameFolder({
           id: node.id,
           name: e.currentTarget.innerText,
         }),
       );
-    else if (node.type == "file")
+      dispatch(
+        updateFolderAsync({ id: node.id, name: e.currentTarget.innerText }),
+      );
+    } else if (node.type == "file") {
       dispatch(
         renameNote({
           id: node.id,
           name: e.currentTarget.innerText,
         }),
       );
+      dispatch(
+        updateNoteAsync({ name: e.currentTarget.innerText, id: node.id }),
+      );
+    }
+    console.log("handler", node.id);
     setRename(null);
   }
 
@@ -135,6 +169,6 @@ export function onContextHandler(
 ) {
   e.preventDefault();
   setActive(node.id);
-  setShowContextMenu(node.id);
+  setShowContextMenu({ id: node.id, type: node.type });
   setContextMenuPos(menuPosition(e));
 }
