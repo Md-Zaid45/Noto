@@ -118,9 +118,9 @@ export const createNoteAsync = createAsyncThunk(
 
 export const updateNoteAsync = createAsyncThunk(
   "notes/updateNote",
-  async (field) => {
-    const {id, ...updateField} = field
-        console.log('update noteasync', id, updateField);
+  async (obj) => {
+    const { id, ...updateField } = obj;
+    console.log("update noteasync", id, updateField);
 
     const res = await fetch(`http://localhost:8000/api/v1/users/notes/${id}`, {
       method: "PATCH",
@@ -128,8 +128,26 @@ export const updateNoteAsync = createAsyncThunk(
       credentials: "include",
       body: JSON.stringify(updateField),
     });
-    if(!res.ok) throw new Error("res error at update ntoe aync")
-    const data = await res.json()
-    return data.payload.note
+    if (!res.ok) throw new Error("res error at update ntoe aync");
+    const data = await res.json();
+    return data.payload.note;
+  },
+);
+
+export const deleteNotesAsync = createAsyncThunk(
+  "notes/deleteNotes",
+  async (ids) => {
+    console.log("ids in deletenoteasync", ids);
+    
+    const res = await fetch("http://localhost:8000/api/v1/users/notes", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ ids }),
+    });
+    if (!res.ok) throw new Error("response failure in deleteNoteAsync");
+    const data = await res.json();
+    console.log("res in deleteNoteAsync", data, ids);
+    return data.payload;
   },
 );
