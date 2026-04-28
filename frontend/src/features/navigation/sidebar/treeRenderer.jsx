@@ -9,14 +9,29 @@ import { renameNote } from "../../notes/notesSlice";
 import { renameFolder } from "../../folders/foldersSlice";
 import { keydownHandler, onContextHandler } from "./handlers";
 import { useNavigate } from "react-router-dom";
-export default function Tree({folder,level=-1}) {
-  const navigate=useNavigate()
-  console.log("Tree comp rendered");
-  level+=1
-  const { Active, setActive, setContextMenuPos, Rename, setRename ,ShowContextMenu,
-  setShowContextMenu} = useContext(sidebarContext);
+import {
+  HiFolder, 
+  HiFolderOpen,
+  HiDocumentText,
+} from "react-icons/hi2";
+import { HiChevronDown, HiChevronRight } from "react-icons/hi2";
+
+export default function Tree({ folder, level = -1 }) {
+  const navigate = useNavigate();
+  level += 1;
+  const {
+    Active,
+    setActive,
+    setContextMenuPos,
+    Rename,
+    setRename,
+    ShowContextMenu,
+    setShowContextMenu,
+  } = useContext(sidebarContext);
   const dispatch = useDispatch();
-  const [ExpandFolder, setExpandFolder] = useState( folder.id === "r" ? true : false);
+  const [ExpandFolder, setExpandFolder] = useState(
+    folder.id === "r" ? true : false
+  );
   const {
     activeRef,
     renameRef,
@@ -26,79 +41,57 @@ export default function Tree({folder,level=-1}) {
     setShowInputFolder,
     inputRef,
   } = useContext(treeContext);
+
   function toggleExpand(id) {
     id && setExpandFolder((prev) => !prev);
   }
 
   return (
-    <div className="">
-      <div className={`${folder.parentFolderId ? "w-2" : ""} `}></div>
-      <div className="text-[13.5px] ">
-        {folder.id && folder.id != "r" && (
+    <div>
+      <div className={folder.parentFolderId ? "w-2" : ""}></div>
+      <div className="text-[14px]">
+        {folder.id && folder.id !== "r" && (
           <div
             draggable
             ref={Rename === folder.id ? renameRef : null}
             contentEditable={Rename === folder.id}
-            className={`text-white flex gap-1 cursor-pointer focus:outline-none
-           focus:bg-gray-800
-            focus:ring-1 focus:ring-blue-300 ${
-            Active && Active === folder.id ? "bg-gray-500 overflow-visible" : ""}`}
-
-            style={{ paddingLeft: `${level*7}px` }}
-
+            className={`
+              group flex items-center gap-1.5 py-1.5 pr-2 rounded-md cursor-pointer
+              transition-[background-color,color] duration-150
+              text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-300
+              ${Active && Active === folder.id ? "bg-indigo-50 text-indigo-700 font-medium" : ""}
+            `}
+            style={{ paddingLeft: `${level * 7 + 8}px` }}
             onClick={() => {
               if (Rename !== folder.id) {
-                console.log(folder.id);
                 toggleExpand(folder.id);
                 setActive(folder.id);
               }
             }}
             onKeyDown={(e) => {
-              keydownHandler(
-                e,
-                Rename,
-                dispatch,
-                renameFolder,
-                renameNote,
-                setRename,
-                folder,
-              );
+              keydownHandler(e, Rename, dispatch, renameFolder, renameNote, setRename, folder);
             }}
             onContextMenu={(e) =>
-              onContextHandler(
-                e,
-                folder,
-                setActive,
-                setShowContextMenu,
-                setContextMenuPos,
-              )
+              onContextHandler(e, folder, setActive, setShowContextMenu, setContextMenuPos)
             }
-            // onDragStart={(e)=>console.log("drag",folder.name,e.target)}
-            // onDragOver={(e)=>{console.log('over',folder.name,e.target)}}
-            // onDrop={(e)=>console.log("drop",folder.name,e.target)}
-            // onDragEnd={(e)=>console.log("drag end",folder.name,e.target)}
           >
             {ExpandFolder ? (
               <>
-                <BiChevronDown contentEditable={false} className="text-lg  " />
-                <LuFolderOpen
-                  contentEditable={false}
-                  className="text-white text-lg "
-                />
+                <HiChevronDown contentEditable={false} className="text-slate-500 shrink-0 text-[15px]" />
+                <HiFolderOpen contentEditable={false} className="text-indigo-500 shrink-0 text-[15px]" />
               </>
             ) : (
               <>
-                <BiChevronRight contentEditable={false} className="text-lg " />
-                <LuFolderClosed
-                  contentEditable={false}
-                  className="text-white text-lg "
-                />
+                <HiChevronRight contentEditable={false} className="text-slate-500 shrink-0 text-[15px]" />
+                <HiFolder contentEditable={false} className="text-sky-500 shrink-0 text-[15px]" />
               </>
             )}
-            <div>{folder.name}</div>
+            <span className="truncate">{folder.name}</span>
           </div>
         )}
-        {ShowInputNote === folder.id || ShowInputFolder === folder.id ? (
+
+
+        {(ShowInputNote === folder.id || ShowInputFolder === folder.id) && (
           <Input
             inputRef={inputRef}
             setShowInputFolder={setShowInputFolder}
@@ -107,9 +100,10 @@ export default function Tree({folder,level=-1}) {
             setShowInputNote={setShowInputNote}
             folder={folder}
             level={level}
-          /> ) : ("")}
+          />
+        )}
 
-        { ExpandFolder &&
+        {ExpandFolder &&
           folder.children &&
           folder.children.map((node) => (
             <Tree
@@ -120,7 +114,8 @@ export default function Tree({folder,level=-1}) {
               level={level}
             />
           ))}
-        { ExpandFolder &&
+
+        {ExpandFolder &&
           folder.notes &&
           folder.notes.map((node) => (
             <div
@@ -128,46 +123,33 @@ export default function Tree({folder,level=-1}) {
               ref={Rename === node.id ? renameRef : null}
               contentEditable={Rename === node.id}
               key={node.id}
-              className={`pl-8 flex gap-1 text-white cursor-pointer focus:outline-none
-            focus:bg-gray-800
-              focus:ring-1 focus:ring-blue-300  ${
-              Active && Active === node.id ? "bg-gray-500  " : ""}`}
-
-              style={{ paddingLeft: `${level*7+21}px` }}
-
+              className={`
+                flex items-center gap-1.5 py-1.5 pr-2 rounded-md cursor-pointer
+                transition-[background-color,color] duration-150
+                text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-300
+                ${Active && Active === node.id ? "bg-indigo-50 text-indigo-700 font-medium" : ""}
+              `}
+              style={{ paddingLeft: `${level * 7 + 21 + 8}px` }}
               onClick={() => {
                 if (Rename !== node.id) {
-                  console.log(node.id);
                   setActive(node.id);
-                  navigate(`note/${node.id}`)
+                  navigate(`notes/${node.id}`);
                 }
               }}
               onContextMenu={(e) =>
-                onContextHandler(
-                  e,
-                  node,
-                  setActive,
-                  setShowContextMenu,
-                  setContextMenuPos,
-                )
+                onContextHandler(e, node, setActive, setShowContextMenu, setContextMenuPos)
               }
               onKeyDown={(e) => {
-                keydownHandler(
-                  e,
-                  Rename,
-                  dispatch,
-                  renameFolder,
-                  renameNote,
-                  setRename,
-                  node,
-                );
+                keydownHandler(e, Rename, dispatch, renameFolder, renameNote, setRename, node);
               }}
             >
-              <LuFilePen
+              <HiDocumentText
                 contentEditable={false}
-                className="text-green-400 text-lg"
+                className="text-emerald-400 shrink-0 text-[15px]"
               />
-              <div contentEditable={Rename === node.id}>{node.name}</div>
+              <span className="truncate" contentEditable={Rename === node.id}>
+                {node.name}
+              </span>
             </div>
           ))}
       </div>
