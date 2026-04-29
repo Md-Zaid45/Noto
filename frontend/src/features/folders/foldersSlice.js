@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
 import { folders } from "../../store/data";
+const API_URL = import.meta.env.VITE_API_URL
 
 const foldersSlice = createSlice({
   name: "folders",
-  initialState: folders,
+  initialState: [],
   reducers: {
     renameFolder: (state, action) => {
       const { id, name } = action.payload;
@@ -98,7 +99,7 @@ export const createFolderAsync = createAsyncThunk(
   "folders/createFolder",
   async ({ name, parentFolderId = null, revisionMark = false }) => {
     const newFolder = { name, revisionMark, folderId: parentFolderId };
-    const data = await fetch("http://localhost:8000/api/v1/users/folders", {
+    const data = await fetch(`${API_URL}/api/v1/users/folders`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -114,7 +115,7 @@ export const deleteFoldersAsync = createAsyncThunk(
   "folders/deleteFolders",
   async (ids) => {
     console.log("deletefolderasync ids", ids);
-    const res = await fetch("http://localhost:8000/api/v1/users/folders", {
+    const res = await fetch(`${API_URL}/api/v1/users/folders`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -133,7 +134,7 @@ export const updateFolderAsync = createAsyncThunk(
     const { id, ...updateField } = obj;
     console.log("updateFolderAsync ", obj, updateField);
     const res = await fetch(
-      `http://localhost:8000/api/v1/users/folders/${id}`,
+      `${API_URL}/api/v1/users/folders/${id}`,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

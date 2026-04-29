@@ -1,9 +1,9 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
 import { NotesContent } from "../../store/data";
 
 const notesContentSlice = createSlice({
   name: "notes-content",
-  initialState: NotesContent,
+  initialState: [],
   reducers: {
     updateNoteContent: (state, action) => {
       console.log("update NoteContent", action.payload);
@@ -15,17 +15,13 @@ const notesContentSlice = createSlice({
       }
     },
     addNoteContent: (state, action) => {
-      if (action.payload ) {
+      if (action.payload) {
         console.log("add NoteContent", action.payload);
         const newNote = {
-          id: `td-${nanoid(4)}`,
+          id: action.payload.noteId,
           noteId: action.payload.noteId,
-          userId: 1,
-          folderId: action.payload.folderId,
           name: action.payload.name,
-          revisionMark: false,
-          type: "file",
-          content: "",
+          content: {},
         };
         state.push(newNote);
       } else {
@@ -44,8 +40,36 @@ const notesContentSlice = createSlice({
         return state.filter((note) => !action.payload.includes(note.noteId));
       }
     },
+
   },
+      extraReducers: (builder) => {
+      builder.addCase("HYDRATE_APP", (state, action) => {
+        const newState = action.payload.notesContent.map((note) => ({
+          id: note._id,
+          name: note.name,
+          noteId: note._id,
+          content: note.content,
+        }));
+        console.log("notescntentSlice", newState);
+
+        return newState;
+      });
+    },
 });
+
+export const updateContentAsync = createAsyncThunk('notes-content/updateContent',async ({content,id})=>{
+console.log("id of note for updateContent in async thunk", id,JSON.stringify({content}));
+const res = await fetch(`http://localhost:8000/api/v1/users/notes/${id}`,{
+  method:"PATCH",
+  headers:{"Content-Type":"application/json"},
+  credentials:'include',
+  body:JSON.stringify({content})
+})
+if(!res.ok) throw new Error("res error at aync content update")
+const data = await res.json()
+console.log("res from backend in updateContentAsync", data);
+return data.payload.notesContent
+})
 
 export default notesContentSlice;
 export const {

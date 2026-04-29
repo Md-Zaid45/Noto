@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
 import { notes } from "../../store/data";
-
+const API_URL = import.meta.env.VITE_API_URL
 const notesSlice = createSlice({
   name: "notes",
   initialState: [],
@@ -102,7 +102,7 @@ export const createNoteAsync = createAsyncThunk(
     const newNote = { name, folderId, revisionMark, content };
     console.log("thunk noteslice", newNote);
 
-    const res = await fetch("http://localhost:8000/api/v1/users/notes", {
+    const res = await fetch(`${API_URL}/api/v1/users/notes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -122,7 +122,7 @@ export const updateNoteAsync = createAsyncThunk(
     const { id, ...updateField } = obj;
     console.log("update noteasync", id, updateField);
 
-    const res = await fetch(`http://localhost:8000/api/v1/users/notes/${id}`, {
+    const res = await fetch(`${API_URL}/api/v1/users/notes/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -139,7 +139,7 @@ export const deleteNotesAsync = createAsyncThunk(
   async (ids) => {
     console.log("ids in deletenoteasync", ids);
     
-    const res = await fetch("http://localhost:8000/api/v1/users/notes", {
+    const res = await fetch(`${API_URL}/api/v1/users/notes`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
