@@ -9,30 +9,40 @@ export const checkUserExists = async (req, res, next) => {
     if (user) {
       throw new ApiError(409, "user already existed");
     }
-    next();
+    return next();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
-export const checkExists = (model, location = "params", field = "id") => {
+export const checkExists = (
+  model,
+  location = "params",
+  field = "id",
+) => {
   return async (req, res, next) => {
     try {
       const value = req[location]?.[field];
 
-      if (!value) next();
-
+      if (!value) {
+        return next();
+      }
+      const query = {
+        _id: value,
+        userId: req.user?._id,
+      };
       const document = await model.findOne({
         _id: value,
-        userId: req.user._id,
+        userId: req.user?._id,
       });
-
       if (!document) {
         throw new ApiError(404, `Document not found for ${field}: ${value}`);
       }
-      next();
+      req.foundDocument = document;
+
+      return next();
     } catch (error) {
-      next(error);
+      return next(error);
     }
   };
 };
@@ -49,37 +59,45 @@ export const validateCredentials = async (req, res, next) => {
       throw new ApiError(401, "incorrect password");
     }
     req.user = user;
-    next();
+    return next();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
 export const verifyJwt = async (req, res, next) => {
   try {
-    const token = req.headers.authorization?.replace("Bearer ", "");
+    const token =
+      req.headers.authorization?.replace("Bearer ", "") ||
+      req.cookies.accessToken;
     if (!token) {
       throw new ApiError(401, "Token is required");
     }
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
     const user = await User.findOne({ _id: decoded._id });
+    console.log("verifyjwt ", decoded, user, req.body );
 
     if (!user) throw new ApiError(404, "user not found");
     req.user = user;
-    next();
+    return next();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
 export const validate = (schema) => (req, res, next) => {
+  console.log("valiadte schema hit ");
   try {
     const parsed = schema.parse(req);
     if (parsed.body !== undefined) req.body = parsed.body;
     if (parsed.params !== undefined) req.params = parsed.params;
     if (parsed.query !== undefined) req.query = parsed.query;
-    next();
+    console.log("valiadte schema hit next ");
+
+    return next();
   } catch (error) {
-    next(error);
+    console.log("valiadte schema hit error ");
+    return next(error);
   }
 };
