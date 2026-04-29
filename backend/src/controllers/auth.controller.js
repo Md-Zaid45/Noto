@@ -24,12 +24,11 @@ export const loginUser = async (req, res, next) => {
 
     user.refreshToken = refToken;
     await user.save({ validateBeforeSave: false });
-
     return res
-      .cookie("accessToken", accToken, { httpOnly: true, secure: true })
-      .cookie("refreshToken", refToken, { httpOnly: true, secure: true })
+      .cookie("accessToken", accToken, { httpOnly: true, secure: true ,sameSite: "none", path: "/"})
+      .cookie("refreshToken", refToken, { httpOnly: true, secure: true, sameSite: "none", path: "/"})
       .status(200)
-      .json({ success: true, message: "login user successfully" });
+      .json({ success: true, message: "login user successfully" ,token:accToken});
   } catch (error) {
     next(error);
   }
@@ -47,8 +46,8 @@ export const logoutUser = async (req, res, next) => {
     }
     return res
       .status(200)
-      .clearCookie("accessToken", { httpOnly: true, secure: true })
-      .clearCookie("refreshToken", { httpOnly: true, secure: true })
+      .clearCookie("accessToken", { httpOnly: true, secure: true, sameSite: "none", path: "/"})
+      .clearCookie("refreshToken", { httpOnly: true, secure: true , sameSite: "none", path: "/"})
       .json({
         success: true,
         message: "logged out user successfully",
