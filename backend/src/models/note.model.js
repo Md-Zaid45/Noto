@@ -16,14 +16,16 @@ const noteSchema = new mongoose.Schema(
     folderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Folder",
-      default: "r",
+      default: null,
     },
     content: {
-      type: String,
+      type: mongoose.Schema.Types.Mixed,
+      default:{}
     },
     revisionMark: {
       type: Boolean,
       default: false,
+      enum: [true, false],
     },
   },
   { timestamps: true },

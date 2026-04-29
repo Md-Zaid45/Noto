@@ -23,9 +23,10 @@ const flashcardSchema = new mongoose.Schema(
       ref: "Note",
       required: true,
     },
-    revisionMark:{
-      type:Boolean,
-      default:false,
+    revisionMark: {
+      type: Boolean,
+      default: false,
+      enum: [true, false],
     },
     nextReview: {
       type: Date,

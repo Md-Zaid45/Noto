@@ -47,7 +47,6 @@ import {
 } from "../schemas/flashcardSchema.js";
 import { Note } from "../models/note.model.js";
 
-
 const router = Router();
 
 // Auth Routes
@@ -72,7 +71,7 @@ router.post(
   createNote,
 );
 router.delete(
-  "/notes/:id",
+  "/notes",
   verifyJwt,
   validate(deleteNotesSchema),
   deleteNotes,
@@ -95,7 +94,7 @@ router.post(
   createFolder,
 );
 router.delete(
-  "/folders/:id",
+  "/folders",
   verifyJwt,
   validate(deleteFoldersSchema),
   deleteFolders,

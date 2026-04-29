@@ -5,7 +5,7 @@ export const createNoteSchema = z.object({
   body: z
     .object({
       content: z.string().optional(),
-      folderId: objectId,
+      folderId: objectId.nullable(),
       name: z.string().trim().min(1, "Name is required"),
       revisionMark: optionalBoolean,
     })
@@ -17,7 +17,7 @@ export const updateNoteSchema = z.object({
     .object({
       revisionMark: optionalBoolean,
       name: z.string().trim().min(1, "Name is required").optional(),
-      content: z.string().optional(),
+      content: z.any().optional(),
       folderId: objectId.optional(),
     })
     .strict()

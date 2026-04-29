@@ -16,11 +16,12 @@ const folderSchema = new mongoose.Schema(
     folderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Folder",
-      default: "r",
+      default: null,
     },
     revisionMark: {
       type: Boolean,
       default: false,
+      enum: [true, false],
     },
   },
   { timestamps: true },
