@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { editorInstance } from "./editorUtils";
 import { useDispatch, useSelector } from "react-redux";
-import { addNoteContent, updateNoteContent } from "../notesContentSlice";
+import {
+  addNoteContent,
+  updateContentAsync,
+  updateNoteContent,
+} from "../notesContentSlice";
 
 export function useStorage(key, defaultVal) {
   const [Item, setItem] = useState(() => {
@@ -60,6 +64,9 @@ export function useEditor(editors, OpenTabs, note) {
               content: editor.getJSON(),
             }),
           );
+        dispatch(
+          updateContentAsync({ id: note.noteId, content: editor.getJSON() }),
+        );
         setIsSaved(note.noteId);
       }, 2000);
     }
@@ -90,7 +97,6 @@ export function useNote(id) {
         dispatch(
           addNoteContent({
             noteId: Note.id,
-            folderId: Note.folderId,
             name: Note.name,
           }),
         );

@@ -1,5 +1,4 @@
 export function generateTree(parentId = "r", Folders, Notes) {
-  console.log("utils", Notes, Folders);
   return Folders.filter((folder) => folder.parentFolderId === parentId).map(
     (folder) => ({
       ...folder,
@@ -14,7 +13,7 @@ export function fileTree(Folders, Notes) {
     id: "r",
     name: "",
     parentFolderId: null,
-    revisionMark: true,
+    revisionMark: false,
     children: generateTree("r", Folders, Notes),
     notes: Notes.filter((node) => node?.folderId === "r"),
     type: "folder",

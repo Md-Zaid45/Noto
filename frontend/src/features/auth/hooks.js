@@ -1,4 +1,8 @@
+import { useDispatch } from "react-redux";
 import { validateForm, validators } from "./authLogic";
+import { setLoggedIn } from "../../store/authSlice";
+import {jwtDecode} from 'jwt-decode'
+const API_URL = import.meta.env.VITE_API_URL
 
 export default function useFormHandlers(
   formValues,
@@ -8,7 +12,8 @@ export default function useFormHandlers(
   touched,
   setTouched,
 ) {
-  const submitHandler = (e) => {
+  const dispatch = useDispatch();
+  const signupHandler = async (e) => {
     e.preventDefault();
 
     const allTouched = Object.keys(formValues).reduce((acc, key) => {
@@ -20,8 +25,58 @@ export default function useFormHandlers(
     const allErrors = validateForm(formValues);
     setErrors(allErrors);
 
+    const data = {
+      email: formValues.Email,
+      password: formValues.ConfirmPassword,
+      name: formValues.Name,
+    };
+
     if (Object.keys(allErrors).length === 0) {
-      console.log("Submitting:", formValues);
+      console.log("Submitting:", formValues, data);
+      const result = await fetch(`${API_URL}/api/v1/users/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const r = await result.json();
+    } else {
+      console.log("Validation failed:", allErrors);
+    }
+  };
+  const loginHandler = async (e) => {
+    e.preventDefault();
+
+    const allTouched = Object.keys(formValues).reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {});
+    setTouched(allTouched);
+
+    const allErrors = validateForm(formValues);
+    setErrors(allErrors);
+
+    const data = {
+      email: formValues.Email,
+      password: formValues.Password,
+    };
+
+    if (Object.keys(allErrors).length === 0) {
+      console.log("Submitting:", formValues, data);
+      const result = await fetch(`${API_URL}/api/v1/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+      const res = await result.json();
+      console.log(res);
+            console.log(res, res.success);
+      if (res.success === true) {
+        const decoded = jwtDecode(res.token);
+        console.log(decoded);
+        dispatch(setLoggedIn(decoded.name));
+      }
+
     } else {
       console.log("Validation failed:", allErrors);
     }
@@ -69,5 +124,5 @@ export default function useFormHandlers(
       setErrors((prev) => ({ ...prev, [name]: newError }));
     }
   };
-  return { submitHandler, handleInput, handleBlur };
+  return { loginHandler, signupHandler, handleInput, handleBlur };
 }
