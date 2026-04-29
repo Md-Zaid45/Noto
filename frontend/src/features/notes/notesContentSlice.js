@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
 import { NotesContent } from "../../store/data";
+const API_URL = import.meta.env.VITE_API_URL
 
 const notesContentSlice = createSlice({
   name: "notes-content",
@@ -59,7 +60,7 @@ const notesContentSlice = createSlice({
 
 export const updateContentAsync = createAsyncThunk('notes-content/updateContent',async ({content,id})=>{
 console.log("id of note for updateContent in async thunk", id,JSON.stringify({content}));
-const res = await fetch(`http://localhost:8000/api/v1/users/notes/${id}`,{
+const res = await fetch(`${API_URL}/api/v1/users/notes/${id}`,{
   method:"PATCH",
   headers:{"Content-Type":"application/json"},
   credentials:'include',
