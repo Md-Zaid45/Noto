@@ -17,9 +17,9 @@ export default function SiderbarHeader({
  const {Active}=useContext(sidebarContext)
  const Notes=useSelector(state=>state.Notes)
   return (
-    <div className="flex cursor-pointer gap-3 justify-end mr-2">
+    <div className="flex cursor-pointer gap-3 justify-end mr-7">
       <AiOutlineFileAdd
-        className=" text-blue-300 text-[18px]  active:p-0.5 "
+        className=" text-blue-400 text-[18px]  active:p-0.5 "
         ref={fileButtonRef}
         onClick={() => {
           setShowInputFolder(0);
@@ -29,7 +29,7 @@ export default function SiderbarHeader({
         }}
       />
       <AiOutlineFolderAdd
-        className=" text-blue-300 text-[20px]  active:p-0.5"
+        className=" text-blue-400 text-[20px]  active:p-0.5"
         ref={folderButtonRef}
         onClick={() => {
           setShowInputNote(0);
@@ -38,7 +38,6 @@ export default function SiderbarHeader({
           );
         }}
       />
-      <AiOutlineSearch className="text-xl text-blue-300 active:p-0.5" />
     </div>
   );
 }

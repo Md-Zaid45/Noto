@@ -1,10 +1,10 @@
 @import "tailwindcss";
+
 .ProseMirror {
   outline: none;
-  min-height:520px;
-  background: rgb(231, 225, 229);
-  padding: 12px;
-  
+  min-height: 100%;          
+  background: transparent;   
+  padding: 0;                
 }
 :root {
   --black: #0d0c0c;

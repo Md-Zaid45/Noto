@@ -7,11 +7,13 @@ import { UiController } from "../../../store/uiController";
 import SiderbarHeader from "./sidebarHeader";
 import Tree from "./treeRenderer";
 import { useParams } from "react-router-dom";
+import { BiLogoHeroku } from "react-icons/bi";
+
 export default function LeftSidebar({ ExpandLeftbar }) {
   console.log("sidebar comp rendered");
 
   const { Active, setActive, Rename, setRename } = useContext(sidebarContext);
-  const {id}= useParams()
+  const { id } = useParams();
   const activeRef = useRef(null);
   const Notes = useSelector((state) => state.Notes);
   const NotesContent = useSelector((state) => state.NotesContent);
@@ -23,8 +25,10 @@ export default function LeftSidebar({ ExpandLeftbar }) {
   const [ShowInputFolder, setShowInputFolder] = useState(null);
   const [ShowInputNote, setShowInputNote] = useState(null);
   const renameRef = useRef(null);
-  const tree = useMemo(() => fileTree(Folders, Notes), [Folders, Notes]);
-  console.log("tree", tree);
+
+  const tree = useMemo(() => {
+    return fileTree(Folders, Notes);
+  }, [Folders, Notes]);
 
   useEffect(() => {
     if (id) setActive(id);
@@ -32,7 +36,6 @@ export default function LeftSidebar({ ExpandLeftbar }) {
   }, [id]);
 
   useEffect(() => {
-    console.log(renameRef.current);
     renameRef?.current?.focus();
     UiController.rename = {
       ref: renameRef,
@@ -50,29 +53,28 @@ export default function LeftSidebar({ ExpandLeftbar }) {
     UiController.resetActive = { reset: () => setActive("r") };
     return () => (UiController.resetActive = null);
   }, []);
-  useEffect(() => {}, []);
 
   useEffect(() => {
     const isEmpty = !tree.children?.length && !tree.notes?.length;
-
-    if (isEmpty) {
-      setActive("r");
-    }
+    if (isEmpty) setActive("r");
   }, [tree.children, tree.notes]);
 
   return (
     <>
-      {ExpandLeftbar && (
+      {
         <div
           data-left-sidebar
           className={`
-        bg-sky-950 h-screen overflow-hidden block
-        transition-all duration-300 ease-out
-        text-white select-none shrink-0
-        ${ExpandLeftbar ? "w-60 opacity-100" : "w-0 opacity-0"}
+        h-screen overflow-hidden shrink-0 mr-0.5 mt-0.5
+        bg-zinc-50 border-r border-gray-200 outline-zinc-300 o outline-1
+        transition-all duration-300 ease-in-out
+        select-none rounded-xl
+        ${ExpandLeftbar ? "w-60 opacity-100" : "w-0 opacity-0 overflow-hidden pointer-events-none"}
       `}
         >
-          {
+          <div className="w-60">
+            {" "}
+            {/* inner fixed width so content doesn't wrap when sidebar is 0 */}
             <treeContext.Provider
               value={{
                 renameRef,
@@ -84,7 +86,7 @@ export default function LeftSidebar({ ExpandLeftbar }) {
                 setShowInputFolder,
               }}
             >
-              <div data-tree-header className=" mt-10 space-y-2 ">
+              <div data-tree-header className="mt-5 space-y-2 text-gray-800">
                 <SiderbarHeader
                   fileButtonRef={fileButtonRef}
                   folderButtonRef={folderButtonRef}
@@ -94,9 +96,9 @@ export default function LeftSidebar({ ExpandLeftbar }) {
                 <Tree folder={tree} />
               </div>
             </treeContext.Provider>
-          }
+          </div>
         </div>
-      )}
+      }
     </>
   );
 }

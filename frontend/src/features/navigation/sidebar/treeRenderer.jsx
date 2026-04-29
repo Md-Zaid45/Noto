@@ -9,11 +9,7 @@ import { renameNote } from "../../notes/notesSlice";
 import { renameFolder } from "../../folders/foldersSlice";
 import { keydownHandler, onContextHandler } from "./handlers";
 import { useNavigate } from "react-router-dom";
-import {
-  HiFolder, 
-  HiFolderOpen,
-  HiDocumentText,
-} from "react-icons/hi2";
+import { HiFolder, HiFolderOpen, HiDocumentText } from "react-icons/hi2";
 import { HiChevronDown, HiChevronRight } from "react-icons/hi2";
 
 export default function Tree({ folder, level = -1 }) {
@@ -30,7 +26,7 @@ export default function Tree({ folder, level = -1 }) {
   } = useContext(sidebarContext);
   const dispatch = useDispatch();
   const [ExpandFolder, setExpandFolder] = useState(
-    folder.id === "r" ? true : false
+    folder.id === "r" ? true : false,
   );
   const {
     activeRef,
@@ -69,27 +65,52 @@ export default function Tree({ folder, level = -1 }) {
               }
             }}
             onKeyDown={(e) => {
-              keydownHandler(e, Rename, dispatch, renameFolder, renameNote, setRename, folder);
+              keydownHandler(
+                e,
+                Rename,
+                dispatch,
+                renameFolder,
+                renameNote,
+                setRename,
+                folder,
+              );
             }}
             onContextMenu={(e) =>
-              onContextHandler(e, folder, setActive, setShowContextMenu, setContextMenuPos)
+              onContextHandler(
+                e,
+                folder,
+                setActive,
+                setShowContextMenu,
+                setContextMenuPos,
+              )
             }
           >
             {ExpandFolder ? (
               <>
-                <HiChevronDown contentEditable={false} className="text-slate-500 shrink-0 text-[15px]" />
-                <HiFolderOpen contentEditable={false} className="text-indigo-500 shrink-0 text-[15px]" />
+                <HiChevronDown
+                  contentEditable={false}
+                  className="text-slate-500 shrink-0 text-[15px]"
+                />
+                <HiFolderOpen
+                  contentEditable={false}
+                  className="text-indigo-500 shrink-0 text-[15px]"
+                />
               </>
             ) : (
               <>
-                <HiChevronRight contentEditable={false} className="text-slate-500 shrink-0 text-[15px]" />
-                <HiFolder contentEditable={false} className="text-sky-500 shrink-0 text-[15px]" />
+                <HiChevronRight
+                  contentEditable={false}
+                  className="text-slate-500 shrink-0 text-[15px]"
+                />
+                <HiFolder
+                  contentEditable={false}
+                  className="text-sky-500 shrink-0 text-[15px]"
+                />
               </>
             )}
             <span className="truncate">{folder.name}</span>
           </div>
         )}
-
 
         {(ShowInputNote === folder.id || ShowInputFolder === folder.id) && (
           <Input
@@ -137,10 +158,24 @@ export default function Tree({ folder, level = -1 }) {
                 }
               }}
               onContextMenu={(e) =>
-                onContextHandler(e, node, setActive, setShowContextMenu, setContextMenuPos)
+                onContextHandler(
+                  e,
+                  node,
+                  setActive,
+                  setShowContextMenu,
+                  setContextMenuPos,
+                )
               }
               onKeyDown={(e) => {
-                keydownHandler(e, Rename, dispatch, renameFolder, renameNote, setRename, node);
+                keydownHandler(
+                  e,
+                  Rename,
+                  dispatch,
+                  renameFolder,
+                  renameNote,
+                  setRename,
+                  node,
+                );
               }}
             >
               <HiDocumentText

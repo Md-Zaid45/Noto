@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Navigate, NavLink } from "react-router-dom";
 import {
   PanelLeft,
@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoggedIn, setLoggedOut } from "../../../store/authSlice";
 
 export default function Header({
+  view,
+  setView,
   ExpandLeftbar,
   setExpandLeftbar,
   ExpandRightbar,
@@ -21,10 +23,10 @@ export default function Header({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.Auth);
+
   return (
-    <nav className="w-full top-0 sticky z-50 bg-stone-50/80 backdrop-blur-md border-b border-stone-200/50 select-none">
+    <nav className="w-full top-0 sticky z-50 h-13 bg-stone-50/80 backdrop-blur-md border-b border-stone-200/50 select-none">
       <div className="flex justify-between items-center px-6 md:px-8 py-4 max-w-7xl mx-auto">
-        {/* Left Section: Sidebar Toggle & Branding */}
         <div className="flex items-center gap-6">
           {auth.isLoggedIn && (
             <div
@@ -43,38 +45,39 @@ export default function Header({
           </div>
         </div>
 
-        {/* Middle Section: Navigation Links */}
         <div className="hidden sm:flex items-center space-x-8 md:space-x-12">
           {auth.isLoggedIn ? (
-            <>
-              <NavLink
-                to={`/app/${"home"}`}
-                className="text-stone-500 hover:text-emerald-700 transition-colors duration-200 flex items-center pt-0.5"
+            <div className="flex items-center bg-stone-100 rounded-lg p-0.5">
+              <button
+                onClick={() => setView("note")}
+                className={`
+                  px-4 py-1 text-sm font-medium rounded-md transition-all duration-200
+                  ${
+                    view === "note"
+                      ? "bg-white text-indigo-700 shadow-sm"
+                      : "text-stone-500 hover:text-stone-700"
+                  }
+                `}
               >
-                <Home className="w-5 h-5" />
-              </NavLink>
-              <NavLink
-                to={`/app/${"home"}`}
-                className="text-stone-500 font-medium hover:text-emerald-700 transition-colors duration-200 text-sm"
+                Notes
+              </button>
+              <button
+                onClick={() => setView("card")}
+                className={`
+                  px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
+                  ${
+                    view === "card"
+                      ? "bg-white text-indigo-700 shadow-sm"
+                      : "text-stone-500 hover:text-stone-700"
+                  }
+                `}
               >
-                Dashboard
-              </NavLink>
-              <NavLink
-                to={`/app/${"home"}`}
-                className="text-stone-500 font-medium hover:text-emerald-700 transition-colors duration-200 text-sm"
-              >
-                Revision
-              </NavLink>
-              <NavLink
-                to={`/app/${"home"}`}
-                className="text-stone-500 font-medium hover:text-emerald-700 transition-colors duration-200 text-sm"
-              >
-                Contact
-              </NavLink>
-            </>
+                Cards
+              </button>
+            </div>
           ) : (
             <>
-              <NavLink
+              {/* <NavLink
                 to={`/`}
                 className="text-stone-500 font-medium hover:text-emerald-700 transition-colors duration-200 text-sm"
               >
@@ -91,12 +94,11 @@ export default function Header({
                 className="text-stone-500 font-medium hover:text-emerald-700 transition-colors duration-200 text-sm"
               >
                 Pricing
-              </NavLink>
+              </NavLink> */}
             </>
           )}
         </div>
 
-        {/* Right Section: Sidebar Toggle & Auth */}
         <div className="flex items-center space-x-4 md:space-x-6">
           {auth.isLoggedIn && (
             <div

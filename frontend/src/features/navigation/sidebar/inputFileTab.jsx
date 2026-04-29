@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { LuFilePen, LuFolderClosed} from "react-icons/lu";
+import { LuFilePen, LuFolderClosed } from "react-icons/lu";
 import { UiController } from "../../../store/uiController";
 import { useDispatch } from "react-redux";
 import { handleInput, registerActiveInput } from "./handlers";
@@ -13,12 +13,12 @@ export default function Input({
   ShowInputFolder,
   setShowInputFolder,
   folder,
-  level
+  level,
 }) {
   console.log("input comp rendered");
   const ref = useRef(null);
   const dispatch = useDispatch();
-  const padding=ShowInputNote?level*7+21:level*7
+  const padding = ShowInputNote ? level * 7 + 21 : level * 7;
   useEffect(() => {
     if (ref && ref.current) {
       ref.current.value = "";
@@ -39,8 +39,12 @@ export default function Input({
   return (
     <>
       {ShowInputFolder == folder.id || ShowInputNote == folder.id ? (
-        <div data-input-file ref={inputRef} className="flex gap-1 text-sm"
-         style={{ paddingLeft: `${padding}px` }}>
+        <div
+          data-input-file
+          ref={inputRef}
+          className="flex gap-1 text-sm"
+          style={{ paddingLeft: `${padding}px` }}
+        >
           {ShowInputFolder ? (
             <LuFolderClosed className="text-yellow-300 text-lg" />
           ) : (

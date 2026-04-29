@@ -5,7 +5,7 @@ import "./styles.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import Tabs from "./tabs";
 import { useEditor, useNote, useTabs } from "./hooks";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { HiOutlineCheckBadge } from "react-icons/hi2";
 
 export default function Editr() {
@@ -25,7 +25,7 @@ export default function Editr() {
       if (tab.id === id) {
         setTimeout(() => {
           if (nextTabs.length > 0) {
-            navigate(`../note/${nextTabs.at(-1).id}`);
+            navigate(`../notes/${nextTabs.at(-1).id}`);
           } else {
             navigate("../");
           }
@@ -44,27 +44,38 @@ export default function Editr() {
     };
   }, []);
 
-  console.log("editor comp ", id, tabs, editor);
-  return (
-    <>
+  return (<>
+     <div className="flex flex-col h-full bg-zinc-200">
       <Tabs OpenTabs={tabs} deleteHandler={deleteHandler} />
+
       {editor ? (
-        <div className="">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Saved indicator */}
           {isSaved === id && (
-            <div className="fixed flex right-8 top-20 z-50  gap-1 items-center px-2 py-0.5 rounded-lg text-xs font-medium bg-emerald-100 animate-fade-in">
-              <HiOutlineCheckBadge className="  text-green-500 text-sm stroke-2" />{" "}
-              <div>Saved</div>
+            <div className="fixed top-20 right-8 z-50 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 shadow-sm border border-emerald-200 animate-fade-in">
+              <HiOutlineCheckBadge className="text-emerald-500 text-sm" />
+              <span>Saved</span>
             </div>
           )}
-          <MenuBar editor={editor} />
-          <EditorBubbleMenu editor={editor} />
-          <EditorContent editor={editor} />
+
+          <div className="flex-1 overflow-y-auto">
+            <div className="h-full bg-zinc-50/80 px-3 py-2">
+              <MenuBar editor={editor} />
+              <div className="mt-2">
+                <EditorBubbleMenu editor={editor} />
+                <EditorContent
+                  editor={editor}
+                  className="tiptap focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
-        <center className="mt-35 text-emerald-500 text-3xl">
+        <div className="flex-1 flex items-center justify-center text-emerald-500/70 text-2xl font-semibold italic">
           No Note Found!
-        </center>
+        </div>
       )}
-    </>
+    </div></>
   );
 }

@@ -12,50 +12,40 @@ import Header from "../features/navigation/header/header";
 import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-emerald-200">
       <Header></Header>
       <main>
-        {/* Hero Section */}
         <section className="relative pt-24 pb-20 md:pb-32 px-6 md:px-8 overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row items-end gap-8 mb-16">
               <h1 className="font-extrabold text-5xl md:text-8xl tracking-tighter leading-none max-w-4xl text-black">
-                Think. Write. Organize —{" "}
+                Think. Write. Organize{" "}
                 <span className="text-emerald-700">all in one place.</span>
               </h1>
-              <div className="mb-4 hidden md:block">
-                <span className="text-xs uppercase tracking-[0.2em] text-stone-500 font-semibold">
-                  Version 4.0 Available
-                </span>
-              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
               <div className="lg:col-span-5 space-y-8">
                 <p className="text-lg md:text-xl text-stone-500 leading-relaxed">
                   The professional workspace designed for deep focus and
-                  effortless archival. No clutter, no distractions—just your
+                  effortless archival. No clutter, no distractions just your
                   thoughts in high definition.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                   <button
                     className="w-full sm:w-auto bg-emerald-700 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-emerald-800 hover:shadow-lg transition-all active:scale-95"
                     onClick={() => {
-                      navigate("../login");
+                      navigate("../signup");
                     }}
                   >
                     Start Writing
-                  </button>
-                  <button className="w-full sm:w-auto border border-stone-300 text-black px-8 py-4 rounded-lg font-bold text-lg hover:bg-stone-100 transition-all">
-                    Watch Demo
                   </button>
                 </div>
               </div>
 
               <div className="lg:col-span-7 relative">
-                {/* Hero Illustration */}
                 <div className="aspect-video bg-stone-200 rounded-xl overflow-hidden shadow-2xl relative border border-stone-300/50 flex items-center justify-center p-4">
                   <svg
                     viewBox="0 0 800 500"
@@ -63,9 +53,7 @@ export default function LandingPage() {
                     xmlns="http://www.w3.org/2000/svg"
                     className="w-full h-full shadow-sm rounded-lg"
                   >
-                    {/* Background */}
                     <rect width="800" height="500" rx="12" fill="#fafaf9" />
-                    {/* Sidebar */}
                     <rect x="0" y="0" width="220" height="500" fill="#f5f5f4" />
                     <rect
                       x="24"
@@ -107,7 +95,6 @@ export default function LandingPage() {
                       rx="6"
                       fill="#e7e5e4"
                     />
-                    {/* Main Area */}
                     <rect
                       x="260"
                       y="48"
@@ -164,7 +151,6 @@ export default function LandingPage() {
                       rx="6"
                       fill="#f5f5f4"
                     />
-                    {/* Accent Element */}
                     <rect
                       x="260"
                       y="336"
@@ -181,7 +167,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Feature Grid */}
         <section className="py-20 md:py-24 px-6 md:px-8 bg-stone-100 border-y border-stone-200">
           <div className="max-w-7xl mx-auto">
             <div className="mb-12 md:mb-16">
@@ -194,7 +179,6 @@ export default function LandingPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {/* Card 1: Rich Editor */}
               <div
                 className="md:col-span-2 bg-white p-8 md:p-10 rounded-xl flex flex-col justify-between
                min-h-100 shadow-sm border border-stone-200"
@@ -207,12 +191,11 @@ export default function LandingPage() {
                     Rich Editor
                   </h3>
                   <p className="text-stone-500 leading-relaxed">
-                    Markdown-native writing experience with beautiful typography
-                    presets and immersive focus modes.
+                    Rich text writing experience with beautiful typography and
+                    immersive focus modes.
                   </p>
                 </div>
                 <div className="mt-8 rounded-lg overflow-hidden h-48 bg-stone-50 border border-stone-100 flex items-center justify-center p-6">
-                  {/* Editor Illustration */}
                   <svg
                     viewBox="0 0 400 200"
                     fill="none"
@@ -243,7 +226,6 @@ export default function LandingPage() {
                       strokeWidth="8"
                       strokeLinecap="round"
                     />
-                    {/* Blinking Cursor */}
                     <rect
                       x="220"
                       y="154"
@@ -256,7 +238,6 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Card 2: Folder Organization */}
               <div className="md:col-span-2 bg-stone-200/50 p-8 md:p-10 rounded-xl flex flex-col justify-between min-h-[400px] border border-stone-200">
                 <div>
                   <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-6 text-black shadow-sm">
@@ -292,7 +273,6 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Card 3: Multi-Tab */}
               <div className="md:col-span-2 bg-black text-white p-8 md:p-10 rounded-xl flex flex-col sm:flex-row items-center gap-8 shadow-xl">
                 <div className="w-full sm:w-1/2">
                   <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center mb-6 text-emerald-300">
@@ -307,7 +287,6 @@ export default function LandingPage() {
                   </p>
                 </div>
                 <div className="w-full sm:w-1/2 h-48 rounded-lg bg-white/5 border border-white/10 p-4 flex items-center justify-center relative overflow-hidden">
-                  {/* Tabs Illustration */}
                   <svg
                     viewBox="0 0 300 200"
                     fill="none"
@@ -371,7 +350,6 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Card 4: Fast & Minimal */}
               <div className="md:col-span-2 bg-emerald-50 p-8 md:p-10 rounded-xl flex flex-col justify-center text-center border border-emerald-100">
                 <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-6 text-emerald-700">
                   <Zap size={32} />
@@ -388,7 +366,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* How it Works Section */}
         <section className="py-24 md:py-32 px-6 md:px-8 bg-stone-50">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16 md:mb-20">
@@ -440,7 +417,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Why Noto Comparison */}
         <section className="py-20 md:py-24 px-6 md:px-8 bg-stone-200/50 border-t border-stone-200">
           <div className="max-w-4xl mx-auto bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-200">
             <div className="p-10 border-b border-stone-200 bg-stone-50">
@@ -513,7 +489,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Final CTA */}
         <section className="py-32 px-6 md:px-8 text-center relative overflow-hidden bg-white">
           <div className="max-w-3xl mx-auto relative z-10">
             <h2 className="font-extrabold text-4xl md:text-6xl tracking-tight text-black mb-8">
@@ -524,7 +499,10 @@ export default function LandingPage() {
               sanctuary with Noto.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button className="w-full sm:w-auto bg-black text-white px-10 py-4 md:py-5 rounded-lg font-bold text-lg md:text-xl hover:scale-105 hover:shadow-xl transition-all duration-300">
+              <button
+                className="w-full sm:w-auto bg-black text-white px-10 py-4 md:py-5 rounded-lg font-bold text-lg md:text-xl hover:scale-105 hover:shadow-xl transition-all duration-300"
+                onClick={() => navigate("/signup")}
+              >
                 Get Started for Free
               </button>
               <p className="text-sm text-stone-400 mt-4 sm:mt-0 sm:ml-4">
@@ -533,12 +511,10 @@ export default function LandingPage() {
               </p>
             </div>
           </div>
-          {/* Decorative glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[800px] h-[600px] md:h-[800px] bg-emerald-300/10 blur-[100px] rounded-full pointer-events-none"></div>
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="w-full border-t border-stone-200 bg-stone-50">
         <div className="flex flex-col md:flex-row justify-between items-center px-6 md:px-12 py-10 max-w-7xl mx-auto w-full">
           <div className="flex flex-col items-center md:items-start space-y-2">
@@ -548,32 +524,6 @@ export default function LandingPage() {
             <p className="text-xs uppercase tracking-widest text-stone-400">
               © 2026 Noto Editorial Note-Taking. Built for focus.
             </p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-6 mt-8 md:mt-0">
-            <a
-              className="text-xs uppercase tracking-widest text-stone-400 hover:text-emerald-700 transition-colors"
-              href="#"
-            >
-              Privacy
-            </a>
-            <a
-              className="text-xs uppercase tracking-widest text-stone-400 hover:text-emerald-700 transition-colors"
-              href="#"
-            >
-              Terms
-            </a>
-            <a
-              className="text-xs uppercase tracking-widest text-stone-400 hover:text-emerald-700 transition-colors"
-              href="#"
-            >
-              Changelog
-            </a>
-            <a
-              className="text-xs uppercase tracking-widest text-stone-400 hover:text-emerald-700 transition-colors"
-              href="#"
-            >
-              Status
-            </a>
           </div>
         </div>
       </footer>
