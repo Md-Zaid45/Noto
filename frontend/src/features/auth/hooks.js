@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
 import { validateForm, validators } from "./authLogic";
 import { setLoggedIn } from "../../store/authSlice";
-import {jwtDecode} from 'jwt-decode'
-const API_URL = import.meta.env.VITE_API_URL
+import { jwtDecode } from "jwt-decode";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function useFormHandlers(
   formValues,
@@ -11,6 +11,7 @@ export default function useFormHandlers(
   setErrors,
   touched,
   setTouched,
+  setSuccess
 ) {
   const dispatch = useDispatch();
   const signupHandler = async (e) => {
@@ -32,15 +33,17 @@ export default function useFormHandlers(
     };
 
     if (Object.keys(allErrors).length === 0) {
-      console.log("Submitting:", formValues, data);
       const result = await fetch(`${API_URL}/api/v1/users/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       const r = await result.json();
-    } else {
-      console.log("Validation failed:", allErrors);
+      if (result.ok) setSuccess(true)
+      else {
+        setErrors((prev) => ({ ...prev, res: r.message }));
+        console.log("Validation failed:", allErrors);
+      }
     }
   };
   const loginHandler = async (e) => {
@@ -61,7 +64,6 @@ export default function useFormHandlers(
     };
 
     if (Object.keys(allErrors).length === 0) {
-      console.log("Submitting:", formValues, data);
       const result = await fetch(`${API_URL}/api/v1/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -69,16 +71,13 @@ export default function useFormHandlers(
         body: JSON.stringify(data),
       });
       const res = await result.json();
-      console.log(res);
-            console.log(res, res.success);
-      if (res.success === true) {
+      if (result.ok) {
         const decoded = jwtDecode(res.token);
-        console.log(decoded);
         dispatch(setLoggedIn(decoded.name));
+      } else {
+        setErrors((prev) => ({ ...prev, res: "Incorrect email or password" }));
+        console.log("Validation failed:", allErrors);
       }
-
-    } else {
-      console.log("Validation failed:", allErrors);
     }
   };
 

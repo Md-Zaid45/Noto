@@ -10,7 +10,7 @@ export default function Input({
   touched,
 }) {
   return (
-    <div>
+ <>   <div>
       <input
         name={name}
         value={value}
@@ -26,5 +26,6 @@ export default function Input({
         <div className=" flex gap-2 items-center text-xs text-red-600 mt-1"><IoIosWarning/>{error}</div>
       )}
     </div>
+    </>
   );
 }

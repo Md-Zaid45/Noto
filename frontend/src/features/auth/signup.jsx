@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Input from "./input";
 import { feildsConfig } from "./authLogic";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import useFormHandlers from "./hooks";
+import { IoIosWarning } from "react-icons/io";
 
 export function SignUp() {
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     Name: "",
     Email: "",
     CreatePassword: "",
     ConfirmPassword: "",
   });
-
+  const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({
     Name: false,
@@ -25,9 +27,25 @@ export function SignUp() {
     errors,
     setErrors,
     touched,
-    setTouched
+    setTouched,
+    setSuccess,
   );
+  const timeoutKey = useRef(null);
+  useEffect(() => {
+    if (timeoutKey.current) {
+      clearTimeout(timeoutKey.current);
+    }
 
+    if (success) {
+      timeoutKey.current = setTimeout(() => {
+        navigate("../login");
+      }, 1500);
+    }
+
+    return () => {
+      if (timeoutKey.current) clearTimeout(timeoutKey.current);
+    };
+  }, [success, navigate]);
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
@@ -52,7 +70,12 @@ export function SignUp() {
               touched={touched[feild]}
             />
           ))}
-
+          {errors?.res && (
+            <div className=" flex gap-2 items-center text-xs text-red-600 mt-1">
+              <IoIosWarning />
+              {errors.res}
+            </div>
+          )}
           <button
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -60,7 +83,11 @@ export function SignUp() {
             Sign Up
           </button>
         </form>
-
+{success && (
+  <div className=" mt-1 w-full bg-green-100 text-green-800 border-b border-green-300 px-4 py-3 text-center font-medium animate-slideDown">
+     Registered Successfully !
+  </div>
+)}
         <p className="text-center text-sm text-gray-500 mt-6">
           Already have an account?{" "}
           <NavLink

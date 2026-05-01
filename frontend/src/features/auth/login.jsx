@@ -4,6 +4,7 @@ import Input from "./input";
 import { NavLink, useNavigate } from "react-router-dom";
 import useFormHandlers from "./hooks";
 import { useSelector } from "react-redux";
+import { IoIosWarning } from "react-icons/io";
 
 export default function Login() {
   const [formValues, setFormValues] = useState({
@@ -15,6 +16,7 @@ export default function Login() {
     Email: false,
     Password: false,
   });
+  const [success, setSuccess] = useState(false)
 
   const { loginHandler, handleInput, handleBlur } = useFormHandlers(
     formValues,
@@ -23,6 +25,7 @@ export default function Login() {
     setErrors,
     touched,
     setTouched,
+    setSuccess
   );
   const navigate = useNavigate();
   const auth = useSelector((state) => state.Auth);
@@ -54,6 +57,13 @@ export default function Login() {
               touched={touched[feild]}
             />
           ))}
+          {errors?.res && (
+            <div className=" flex gap-2 items-center text-xs text-red-600 mt-1">
+              <IoIosWarning />
+              {errors.res}
+            </div>
+          )}
+
           <button
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
