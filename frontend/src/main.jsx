@@ -9,9 +9,12 @@ import LandingPage from "./pages/landinPage.jsx";
 import Editr from "./features/notes/editor/editor.jsx";
 import { AuthPage } from "./pages/signup-login.jsx";
 import ContentLayout from "./features/layout/contentLayout.jsx";
+import ErrorPage from "./pages/errorPage.jsx";
 const API_URL = import.meta.env.VITE_API_URL;
 const router = createBrowserRouter([
-  { path: "/", element: <LandingPage /> },
+  { path: "/", element: <LandingPage />,
+    errorElement:<ErrorPage/>
+   },
   {
     path: "/home",
     element: <App />,
@@ -21,6 +24,7 @@ const router = createBrowserRouter([
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
+      if(!res.ok) throw new Error("Failed to fetch data")
       const data = await res.json();
       console.log(data);
       return data;
