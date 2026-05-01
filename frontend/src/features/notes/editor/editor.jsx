@@ -44,38 +44,48 @@ export default function Editr() {
     };
   }, []);
 
-  return (<>
-     <div className="flex flex-col h-full bg-zinc-200">
-      <Tabs OpenTabs={tabs} deleteHandler={deleteHandler} />
+  return (
+    <>
+      <div className="flex flex-col h-full bg-zinc-200">
+        <Tabs OpenTabs={tabs} deleteHandler={deleteHandler} />
 
-      {editor ? (
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Saved indicator */}
-          {isSaved === id && (
-            <div className="fixed top-20 right-8 z-50 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 shadow-sm border border-emerald-200 animate-fade-in">
-              <HiOutlineCheckBadge className="text-emerald-500 text-sm" />
-              <span>Saved</span>
-            </div>
-          )}
+        {editor ? (
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Saved indicator */}
+            {isSaved === id && (
+              <div className="fixed top-20 right-8 z-50 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 shadow-sm border border-emerald-200 animate-fade-in">
+                <HiOutlineCheckBadge className="text-emerald-500 text-sm" />
+                <span>Saved</span>
+              </div>
+            )}
 
-          <div className="flex-1 overflow-y-auto">
-            <div className="h-full bg-zinc-50/80 px-3 py-2">
-              <MenuBar editor={editor} />
-              <div className="mt-2">
-                <EditorBubbleMenu editor={editor} />
-                <EditorContent
-                  editor={editor}
-                  className="tiptap focus:outline-none"
-                />
+            <div className="flex-1 overflow-y-auto">
+              <div className="h-full bg-zinc-50/80 px-3 py-2">
+                <MenuBar editor={editor} />
+                <div className="mt-2">
+                  <EditorBubbleMenu editor={editor} />
+                  <EditorContent
+                    editor={editor}
+                    className="tiptap focus:outline-none"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="flex-1 flex items-center justify-center text-emerald-500/70 text-2xl font-semibold italic">
-          No Note Found!
-        </div>
-      )}
-    </div></>
+        ) : (
+          <div className="flex-1 flex flex-col items-center justify-center bg-transparent">
+            <div className="w-24 h-24 mb-6 rounded-full bg-emerald-500/10 flex items-center justify-center animate-pulse">
+              <span className="text-4xl">🔍</span>
+            </div>
+            <div className="text-center">
+              <h1 className="text-4xl font-black bg-gradient-to-br from-emerald-400 to-emerald-700 bg-clip-text text-transparent">
+                No Note found
+              </h1>
+              <div className="h-1 w-12 bg-emerald-500/30 mx-auto mt-2 rounded-full"></div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
