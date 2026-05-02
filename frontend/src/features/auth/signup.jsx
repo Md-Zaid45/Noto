@@ -4,6 +4,7 @@ import { feildsConfig } from "./authLogic";
 import { NavLink, useNavigate } from "react-router-dom";
 import useFormHandlers from "./hooks";
 import { IoIosWarning } from "react-icons/io";
+import LoadingLoader from "../../commons/loader";
 
 export function SignUp() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export function SignUp() {
     ConfirmPassword: "",
   });
   const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({
     Name: false,
@@ -29,6 +31,7 @@ export function SignUp() {
     touched,
     setTouched,
     setSuccess,
+    setIsLoading,
   );
   const timeoutKey = useRef(null);
   useEffect(() => {
@@ -39,7 +42,7 @@ export function SignUp() {
     if (success) {
       timeoutKey.current = setTimeout(() => {
         navigate("../login");
-      }, 1500);
+      }, 1300);
     }
 
     return () => {
@@ -55,7 +58,11 @@ export function SignUp() {
         <p className="text-sm text-gray-500 text-center mb-6">
           Start building your knowledge base
         </p>
-
+        {isLoading && (
+          <div className="absolute inset-0 bg-white/80 rounded flex items-center justify-center z-10">
+            <LoadingLoader size="lg" color="blue" />
+          </div>
+        )}
         <form noValidate onSubmit={signupHandler} className="space-y-5">
           {Object.keys(formValues).map((feild) => (
             <Input
@@ -83,11 +90,11 @@ export function SignUp() {
             Sign Up
           </button>
         </form>
-{success && (
-  <div className=" mt-1 w-full bg-green-100 text-green-800 border-b border-green-300 px-4 py-3 text-center font-medium animate-slideDown">
-     Registered Successfully !
-  </div>
-)}
+        {success && (
+          <div className=" mt-1 w-full bg-green-100 text-green-800 border-b border-green-300 px-4 py-3 text-center font-medium animate-slideDown">
+            Registered Successfully !
+          </div>
+        )}
         <p className="text-center text-sm text-gray-500 mt-6">
           Already have an account?{" "}
           <NavLink

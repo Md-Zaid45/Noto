@@ -11,7 +11,8 @@ export default function useFormHandlers(
   setErrors,
   touched,
   setTouched,
-  setSuccess
+  setSuccess,
+  setIsLoading,
 ) {
   const dispatch = useDispatch();
   const signupHandler = async (e) => {
@@ -33,13 +34,15 @@ export default function useFormHandlers(
     };
 
     if (Object.keys(allErrors).length === 0) {
+      setIsLoading(true);
       const result = await fetch(`${API_URL}/api/v1/users/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       const r = await result.json();
-      if (result.ok) setSuccess(true)
+      setIsLoading(false);
+      if (result.ok) setSuccess(true);
       else {
         setErrors((prev) => ({ ...prev, res: r.message }));
         console.log("Validation failed:", allErrors);
@@ -64,6 +67,7 @@ export default function useFormHandlers(
     };
 
     if (Object.keys(allErrors).length === 0) {
+      setIsLoading(true);
       const result = await fetch(`${API_URL}/api/v1/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -71,8 +75,10 @@ export default function useFormHandlers(
         body: JSON.stringify(data),
       });
       const res = await result.json();
+      setIsLoading(false);
       if (result.ok) {
         const decoded = jwtDecode(res.token);
+        setSuccess(true);
         dispatch(setLoggedIn(decoded.name));
       } else {
         setErrors((prev) => ({ ...prev, res: "Incorrect email or password" }));
