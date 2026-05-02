@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { feildsConfig, validateForm, validators } from "./authLogic";
 import Input from "./input";
 import { NavLink, useNavigate } from "react-router-dom";
 import useFormHandlers from "./hooks";
 import { useSelector } from "react-redux";
 import { IoIosWarning } from "react-icons/io";
+import LoadingLoader from "../../commons/loader";
 
 export default function Login() {
   const [formValues, setFormValues] = useState({
@@ -16,7 +17,8 @@ export default function Login() {
     Email: false,
     Password: false,
   });
-  const [success, setSuccess] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const { loginHandler, handleInput, handleBlur } = useFormHandlers(
     formValues,
@@ -25,10 +27,28 @@ export default function Login() {
     setErrors,
     touched,
     setTouched,
-    setSuccess
+    setSuccess,
+    setIsLoading,
   );
   const navigate = useNavigate();
   const auth = useSelector((state) => state.Auth);
+  const timeoutKey = useRef(null);
+  useEffect(() => {
+    if (timeoutKey.current) {
+      clearTimeout(timeoutKey.current);
+    }
+
+    if (success) {
+      timeoutKey.current = setTimeout(() => {
+        navigate("../login");
+      }, 1300);
+    }
+
+    return () => {
+      if (timeoutKey.current) clearTimeout(timeoutKey.current);
+    };
+  }, [success, navigate]);
+
   useEffect(() => {
     if (auth.isLoggedIn === true) navigate("../home");
   }, [auth]);
@@ -42,7 +62,11 @@ export default function Login() {
         <p className="text-sm text-gray-500 text-center mb-6">
           Log in to your account
         </p>
-
+        {isLoading && (
+          <div className="absolute inset-0 bg-white/80 rounded flex items-center justify-center z-10">
+            <LoadingLoader size="lg" color="blue" />
+          </div>
+        )}
         <form noValidate onSubmit={loginHandler} className="space-y-5">
           {Object.keys(formValues).map((feild) => (
             <Input
@@ -71,7 +95,11 @@ export default function Login() {
             Log in
           </button>
         </form>
-
+        {success && (
+          <div className=" mt-1 w-full bg-green-100 text-green-800 border-b border-green-300 px-4 py-3 text-center font-medium animate-slideDown">
+            Logged in Successfully !
+          </div>
+        )}
         <p className="text-center text-sm text-gray-500 mt-6">
           Don't have an account?{" "}
           <NavLink

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
-import { folders } from "../../store/data";
+
 const API_URL = import.meta.env.VITE_API_URL
 
 const foldersSlice = createSlice({
