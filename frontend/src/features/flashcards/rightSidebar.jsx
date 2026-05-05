@@ -58,7 +58,8 @@ export default function RightSidebar({ ExpandRightbar }) {
 
           <button
             onClick={handleCreateCard}
-            className="w-full flex items-center justify-center gap-1.5 py-1.5 text-sm font-medium text-white bg-indigo-500 rounded-md hover:bg-indigo-600 transition-colors"
+            className="w-full flex items-center justify-center gap-1.5 py-1.5 text-sm font-medium text-white bg-emerald-700 rounded-md hover:bg-emerald-500 
+            active:p-[5.5px] transition-colors"
           >
             <span>+</span> Create Card
           </button>
