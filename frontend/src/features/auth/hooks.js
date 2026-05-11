@@ -1,7 +1,6 @@
 import { useDispatch } from "react-redux";
 import { validateForm, validators } from "./authLogic";
 import { setLoggedIn } from "../../store/authSlice";
-import { jwtDecode } from "jwt-decode";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function useFormHandlers(
@@ -77,9 +76,9 @@ export default function useFormHandlers(
       const res = await result.json();
       setIsLoading(false);
       if (result.ok) {
-        const decoded = jwtDecode(res.token);
+        const { name, email } = res.payload;
         setSuccess(true);
-        dispatch(setLoggedIn(decoded.name));
+        dispatch(setLoggedIn(name));
       } else {
         setErrors((prev) => ({ ...prev, res: "Incorrect email or password" }));
         console.log("Validation failed:", allErrors);
