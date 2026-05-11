@@ -3,9 +3,9 @@ import { editorInstance } from "./editorUtils";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addNoteContent,
-  updateContentAsync,
   updateNoteContent,
 } from "../notesContentSlice";
+import { updateContentAsync } from "../notesContentThunks";
 
 export function useStorage(key, defaultVal) {
   const [Item, setItem] = useState(() => {

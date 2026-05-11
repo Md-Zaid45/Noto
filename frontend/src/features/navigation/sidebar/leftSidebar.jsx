@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { sidebarContext } from "../../../pages/home";
+import { sidebarContext } from "../../../home";
 import { useSelector } from "react-redux";
 import { treeContext } from "./store";
 import { fileTree } from "./utils";

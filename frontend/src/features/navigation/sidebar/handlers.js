@@ -5,13 +5,13 @@ import {
   createFolderAsync,
   deleteFoldersAsync,
   updateFolderAsync,
-} from "../../folders/foldersSlice";
+} from "../../folders/folderThunks";
 import { nanoid } from "@reduxjs/toolkit";
 import {
   createNoteAsync,
   deleteNotesAsync,
   updateNoteAsync,
-} from "../../notes/notesSlice";
+} from "../../notes/notesThunks";
 
 export function handleInput(
   e,

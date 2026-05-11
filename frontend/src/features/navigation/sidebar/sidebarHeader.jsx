@@ -5,7 +5,7 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 
-import { sidebarContext } from "../../../pages/home";
+import { sidebarContext } from "../../../home";
 import { parentFolder } from "./utils";
 import { useSelector } from "react-redux";
 export default function SiderbarHeader({

@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 import { LuFilePen, LuFolderClosed, LuFolderOpen } from "react-icons/lu";
 import { treeContext } from "./store";
-import { sidebarContext } from "../../../pages/home";
+import { sidebarContext} from "../../../home"
 import Input from "./inputFileTab";
 import { useDispatch } from "react-redux";
 import { renameNote } from "../../notes/notesSlice";
@@ -93,7 +93,7 @@ export default function Tree({ folder, level = -1 }) {
                 />
                 <HiFolderOpen
                   contentEditable={false}
-                  className="text-indigo-500 shrink-0 text-[15px]"
+                  className="text-gray-800 shrink-0 text-[15px]"
                 />
               </>
             ) : (
@@ -104,7 +104,7 @@ export default function Tree({ folder, level = -1 }) {
                 />
                 <HiFolder
                   contentEditable={false}
-                  className="text-sky-500 shrink-0 text-[15px]"
+                  className="text-gray-500 shrink-0 text-[15px]"
                 />
               </>
             )}
@@ -166,7 +166,7 @@ export default function Tree({ folder, level = -1 }) {
                   setContextMenuPos,
                 )
               }
-              onKeyDown={(e) => {
+              onKeyDown={(e) => { 
                 keydownHandler(
                   e,
                   Rename,
@@ -180,7 +180,7 @@ export default function Tree({ folder, level = -1 }) {
             >
               <HiDocumentText
                 contentEditable={false}
-                className="text-emerald-400 shrink-0 text-[15px]"
+                className="text-gray-500 shrink-0 text-[15px]"
               />
               <span className="truncate" contentEditable={Rename === node.id}>
                 {node.name}

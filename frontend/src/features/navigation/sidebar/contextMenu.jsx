@@ -1,11 +1,10 @@
 import { useEffect, useContext } from "react";
 import { UiController } from "../../../store/uiController";
-import { sidebarContext } from "../../../pages/home";
-
 import { deleteChildrenNotes, deleteNote } from "../../notes/notesSlice";
 import { deleteFolder } from "../../folders/foldersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { handleContextMenuAction } from "./handlers";
+import { sidebarContext } from "../../../home";
 export default function ContextMenu({}) {
   const contextOptions = ["Rename", "Mark for Revision", "Delete"];
   const {

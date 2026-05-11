@@ -1,4 +1,4 @@
-// components/LoadingLoader.jsx
+
 const LoadingLoader = ({ size = "md", color = "blue", fullScreen = false }) => {
   const sizeClasses = {
     sm: "w-5 h-5 border-2",

@@ -23,7 +23,7 @@ export default function Header({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.Auth);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   return (
     <nav className="w-full top-0 sticky z-50 h-13 bg-stone-50/80 backdrop-blur-md border-b border-stone-200/50 select-none">
       <div className="flex justify-between items-center px-6 md:px-8 py-4 max-w-7xl mx-auto">
@@ -115,9 +115,16 @@ export default function Header({
 
           {auth.isLoggedIn ? (
             <button
-              onClick={() => {
-                dispatch(setLoggedOut());
+              onClick={async () => {
                 navigate("../login");
+                dispatch(setLoggedOut());
+                const res = await fetch(`${API_URL}/api/v1/users/logout`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  credentials: "include",
+                });
+                const data = await res.json();
+                console.log("logout res", data);
               }}
               className="bg-red-50 text-red-600 px-3 py-2.5 rounded-lg font-semibold tracking-tight active:scale-95 duration-150 ease-in-out transition-all flex items-center justify-center hover:bg-red-100"
             >
