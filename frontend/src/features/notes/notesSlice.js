@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL;
 const notesSlice = createSlice({
   name: "notes",
   initialState: [],
@@ -69,7 +69,7 @@ const notesSlice = createSlice({
       return newState;
     });
 
-    builder.addCase(createNoteAsync.fulfilled, (state, action) => {
+    builder.addCase("notes/addNote/fulfilled", (state, action) => {
       console.log("builder note add from backend");
       const newFolder = {
         name: action.payload.name,
@@ -96,58 +96,3 @@ export const {
 } = notesSlice.actions;
 export default notesSlice;
 
-export const createNoteAsync = createAsyncThunk(
-  "notes/addNote",
-  async ({ name, folderId = null, revisionMark = false, content = "" }) => {
-    const newNote = { name, folderId, revisionMark, content };
-    console.log("thunk noteslice", newNote);
-
-    const res = await fetch(`${API_URL}/api/v1/users/notes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(newNote),
-    });
-    if (!res.ok) throw new Error("response failure in thunk");
-
-    const data = await res.json();
-    console.log("note thunk ", data);
-    return data.payload.note;
-  },
-);
-
-export const updateNoteAsync = createAsyncThunk(
-  "notes/updateNote",
-  async (obj) => {
-    const { id, ...updateField } = obj;
-    console.log("update noteasync", id, updateField);
-
-    const res = await fetch(`${API_URL}/api/v1/users/notes/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(updateField),
-    });
-    if (!res.ok) throw new Error("res error at update ntoe aync");
-    const data = await res.json();
-    return data.payload.note;
-  },
-);
-
-export const deleteNotesAsync = createAsyncThunk(
-  "notes/deleteNotes",
-  async (ids) => {
-    console.log("ids in deletenoteasync", ids);
-    
-    const res = await fetch(`${API_URL}/api/v1/users/notes`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ ids }),
-    });
-    if (!res.ok) throw new Error("response failure in deleteNoteAsync");
-    const data = await res.json();
-    console.log("res in deleteNoteAsync", data, ids);
-    return data.payload;
-  },
-);

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -57,20 +57,6 @@ const notesContentSlice = createSlice({
       });
     },
 });
-
-export const updateContentAsync = createAsyncThunk('notes-content/updateContent',async ({content,id})=>{
-console.log("id of note for updateContent in async thunk", id,JSON.stringify({content}));
-const res = await fetch(`${API_URL}/api/v1/users/notes/${id}`,{
-  method:"PATCH",
-  headers:{"Content-Type":"application/json"},
-  credentials:'include',
-  body:JSON.stringify({content})
-})
-if(!res.ok) throw new Error("res error at aync content update")
-const data = await res.json()
-console.log("res from backend in updateContentAsync", data);
-return data.payload.notesContent
-})
 
 export default notesContentSlice;
 export const {
