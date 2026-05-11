@@ -97,7 +97,7 @@ export const validate = (schema) => (req, res, next) => {
 
     return next();
   } catch (error) {
-    console.log("valiadte schema hit error ");
+    console.log("valiadte schema hit error " , error);
     return next(error);
   }
 };

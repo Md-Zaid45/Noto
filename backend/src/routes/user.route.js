@@ -3,6 +3,8 @@ import {
   registerUser,
   loginUser,
   logoutUser,
+  refreshToken,
+  me,
 } from "../controllers/auth.controller.js";
 import {
   getNote,
@@ -53,6 +55,8 @@ const router = Router();
 router.post("/signup", validate(registerSchema), checkUserExists, registerUser);
 router.post("/login", validate(loginSchema), validateCredentials, loginUser);
 router.post("/logout", verifyJwt, logoutUser);
+router.post("/refresh", refreshToken);
+router.post("/me", me);
 
 // Notes Routes
 router.get("/notes/:id", verifyJwt, getNote);
@@ -70,12 +74,7 @@ router.post(
   checkExists(Folder, "body", "folderId"),
   createNote,
 );
-router.delete(
-  "/notes",
-  verifyJwt,
-  validate(deleteNotesSchema),
-  deleteNotes,
-);
+router.delete("/notes", verifyJwt, validate(deleteNotesSchema), deleteNotes);
 
 // Folder Routes
 router.get("/workspace", verifyJwt, getFolderStructure);

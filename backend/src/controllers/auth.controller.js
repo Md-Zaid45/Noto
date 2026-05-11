@@ -41,7 +41,7 @@ export const loginUser = async (req, res, next) => {
       .json({
         success: true,
         message: "login user successfully",
-        token: accToken,
+        payload: { name: req.user.name, email: req.user.email },
       });
   } catch (error) {
     next(error);
@@ -83,18 +83,19 @@ export const logoutUser = async (req, res, next) => {
 
 export const refreshToken = async (req, res, next) => {
   try {
-    const refreshToken = req.cookie.refreshToken;
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    const user = User.findOne({ _id: decoded._id });
+    const refToken = req.cookies.refreshToken;
+    const decoded = jwt.verify(refToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = await User.findById(decoded._id);
     const storedToken = user.refreshToken;
-    if (storedToken !== refreshToken) {
+
+    if (storedToken !== refToken) {
       throw new ApiError(401, "Refresh token is not matched");
     }
     const newAccToken = user.generateAccessToken();
-    const newRefToken = user.generateAccessToken();
+    const newRefToken = user.generateRefreshToken();
 
-    user.findByIdAndUpdate(decoded._id, { refreshToken: newRefToken });
-
+    user.refreshToken = newRefToken;
+    user.save();
     return res
       .status(200)
       .cookie("accessToken", newAccToken, {
@@ -111,22 +112,25 @@ export const refreshToken = async (req, res, next) => {
       })
       .json({
         success: true,
-        message: "logged in user successfully",
+        message: "refreshed tokens successfully",
+        payload: { name: decoded.name, email: decoded.email },
       });
   } catch (error) {
     return next(error);
   }
 };
 
-export const me = async () => {
+export const me = async (req, res, next) => {
   try {
-    const accessToken = req.cookie.accessToken;
-    console.log('accesstoken in me', accessToken);
-    
+    const accessToken =
+      req.cookies.accessToken ||
+      req.headers.authorization?.replace("Bearer ", "");
+    console.log("accesstoken in me", accessToken);
+
     const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
     return res.status(200).json({
       success: true,
-      payload: { name: decoded.name },
+      payload: { name: decoded.name, email: decoded.email },
     });
   } catch (error) {
     return next(error);
