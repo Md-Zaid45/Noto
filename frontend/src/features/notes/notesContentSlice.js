@@ -22,7 +22,7 @@ const notesContentSlice = createSlice({
           id: action.payload.noteId,
           noteId: action.payload.noteId,
           name: action.payload.name,
-          content: {},
+          content: action.payload.content || {},
         };
         state.push(newNote);
       } else {

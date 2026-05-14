@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { editorInstance } from "./editorUtils";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addNoteContent,
-  updateNoteContent,
-} from "../notesContentSlice";
+import { addNoteContent, updateNoteContent } from "../notesContentSlice";
 import { updateContentAsync } from "../notesContentThunks";
+import { apiFetch } from "../../../commons/apifetch";
+import { createNoteAsync } from "../notesThunks";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export function useStorage(key, defaultVal) {
   const [Item, setItem] = useState(() => {
@@ -81,7 +81,7 @@ export function useEditor(editors, OpenTabs, note) {
   return [editor, isSaved];
 }
 
-export function useNote(id) {
+export function useNote(id, setIsLoading) {
   const NotesContent = useSelector((state) => state.NotesContent);
   const Notes = useSelector((state) => state.Notes);
   const dispatch = useDispatch();
@@ -94,12 +94,24 @@ export function useNote(id) {
   useEffect(() => {
     if (Note) {
       if (!note) {
-        dispatch(
-          addNoteContent({
-            noteId: Note.id,
-            name: Note.name,
-          }),
-        );
+        setIsLoading(true);
+        const fetchContent = async () => {
+          const res = await apiFetch(`${API_URL}/api/v1/users/notes/${id}`, {
+            method: "GET",
+          });
+          if (!res.ok) throw new Error("Unable to fetch Content");
+
+          const { success, payload } = await res.json();
+          dispatch(
+            addNoteContent({
+              noteId: payload.note._id || Note.id,
+              name: payload.note.name || Note.name,
+              content: payload.note.content || {},
+            }),
+          );
+        };
+        fetchContent();
+        setIsLoading(false);
       }
     }
   }, [note?.id, Note]);
