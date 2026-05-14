@@ -5,13 +5,14 @@ import "./styles.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import Tabs from "./tabs";
 import { useEditor, useNote, useTabs } from "./hooks";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { HiOutlineCheckBadge } from "react-icons/hi2";
 
 export default function Editr() {
   const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const note = useNote(id);
+  const note = useNote(id, setIsLoading);
   const [tabs, deleteTab] = useTabs(note, id);
   const editors = useRef(new Map());
 
@@ -61,6 +62,11 @@ export default function Editr() {
 
             <div className="flex-1 overflow-y-auto">
               <div className="h-full bg-zinc-50/80 px-3 py-2">
+                {isLoading && (
+                  <div className="absolute inset-0 bg-white/80 rounded flex items-center justify-center z-10">
+                    <LoadingLoader size="lg" color="blue" />
+                  </div>
+                )}
                 <MenuBar editor={editor} />
                 <div className="mt-2">
                   <EditorBubbleMenu editor={editor} />
