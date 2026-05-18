@@ -1,10 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiFetch } from "../../commons/apifetch";
-const API_URL = import.meta.env.VITE_API_URL;
 
 export const updateContentAsync = createAsyncThunk('notes-content/updateContent',async ({content,id})=>{
 console.log("id of note for updateContent in async thunk", id,JSON.stringify({content}));
-const res = await apiFetch(`${API_URL}/api/v1/users/notes/${id}`,{
+const res = await apiFetch(`/notes/${id}`,{
   method:"PATCH",
   body:{content}
 })

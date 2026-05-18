@@ -5,7 +5,6 @@ import { addNoteContent, updateNoteContent } from "../notesContentSlice";
 import { updateContentAsync } from "../notesContentThunks";
 import { apiFetch } from "../../../commons/apifetch";
 import { createNoteAsync } from "../notesThunks";
-const API_URL = import.meta.env.VITE_API_URL;
 
 export function useStorage(key, defaultVal) {
   const [Item, setItem] = useState(() => {
@@ -96,7 +95,7 @@ export function useNote(id, setIsLoading) {
       if (!note) {
         setIsLoading(true);
         const fetchContent = async () => {
-          const res = await apiFetch(`${API_URL}/api/v1/users/notes/${id}`, {
+          const res = await apiFetch(`/notes/${id}`, {
             method: "GET",
           });
           if (!res.ok) throw new Error("Unable to fetch Content");

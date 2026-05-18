@@ -7,7 +7,7 @@ export const createFlashcardAsync = createAsyncThunk(
     const newCard = { question, noteId, revisionMark, answer };
     console.log("thunk noteslice", newCard);
 
-    const res = await apiFetch(`${API_URL}/api/v1/users/flashcards`, {
+    const res = await apiFetch(`/flashcards`, {
       method: "POST",
       body: newCard,
     });
@@ -25,7 +25,7 @@ export const updateFlashcardAsync = createAsyncThunk(
     const { id, ...updateField } = obj;
     console.log("updateFlashcardsAsync", id, updateField);
 
-    const res = await apiFetch(`${API_URL}/api/v1/users/flashcards/${id}`, {
+    const res = await apiFetch(`/flashcards/${id}`, {
       method: "PATCH",
       body: updateField,
     });
@@ -40,7 +40,7 @@ export const deleteFlashcardsAsync = createAsyncThunk(
   async (ids) => {
     console.log("ids in deleteFlashcardAsync", ids);
 
-    const res = await apiFetch(`${API_URL}/api/v1/users/flashcards`, {
+    const res = await apiFetch(`/flashcards`, {
       method: "DELETE",
       body: { ids },
     });

@@ -11,14 +11,14 @@ import { AuthPage } from "./pages/signup-login.jsx";
 import ContentLayout from "./features/layout/contentLayout.jsx";
 import ErrorPage from "./pages/errorPage.jsx";
 import { apiFetch } from "./commons/apifetch.js";
-const API_URL = import.meta.env.VITE_API_URL;
+
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage />, errorElement: <ErrorPage /> },
   {
     path: "/home",
     element: <App/>,
     loader: async () => {
-      const res = await apiFetch(`${API_URL}/api/v1/users/workspace`, {
+      const res = await apiFetch(`/workspace`, {
         method: "GET",
       });
       if (!res.ok) throw new Error("Failed to fetch data");

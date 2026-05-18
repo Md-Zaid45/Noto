@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiFetch } from "../../commons/apifetch";
-const API_URL = import.meta.env.VITE_API_URL;
 
 export const createNoteAsync = createAsyncThunk(
   "notes/addNote",
@@ -8,7 +7,7 @@ export const createNoteAsync = createAsyncThunk(
     const newNote = { name, folderId, revisionMark, content };
     console.log("thunk noteslice", newNote);
 
-    const res = await apiFetch(`${API_URL}/api/v1/users/notes`, {
+    const res = await apiFetch(`/notes`, {
       method: "POST",
       body: newNote,
     });
@@ -26,7 +25,7 @@ export const updateNoteAsync = createAsyncThunk(
     const { id, ...updateField } = obj;
     console.log("update noteasync", id, updateField);
 
-    const res = await apiFetch(`${API_URL}/api/v1/users/notes/${id}`, {
+    const res = await apiFetch(`/notes/${id}`, {
       method: "PATCH",
       body: updateField,
     });
@@ -41,7 +40,7 @@ export const deleteNotesAsync = createAsyncThunk(
   async (ids) => {
     console.log("ids in deletenoteasync", ids);
 
-    const res = await apiFetch(`${API_URL}/api/v1/users/notes`, {
+    const res = await apiFetch(`/notes`, {
       method: "DELETE",
       body: { ids },
     });

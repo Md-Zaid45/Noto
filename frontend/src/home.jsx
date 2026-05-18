@@ -19,7 +19,6 @@ import { apiFetch } from "./commons/apifetch";
 import LoadingLoader from "./commons/loader";
 export const sidebarContext = createContext({});
 export const viewContext = createContext({});
-const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   const outlet = useOutlet();
@@ -62,7 +61,7 @@ function App() {
     }
     setLoading(true);
     const fetchData = async () => {
-      const res = await apiFetch(`${API_URL}/api/v1/users/me`, {
+      const res = await apiFetch(`/me`, {
         method: "POST",
       });
       const data = await res.json();

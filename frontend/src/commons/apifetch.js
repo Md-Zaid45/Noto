@@ -5,9 +5,8 @@ import appStore from "../store/appStore";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const apiFetch = async (url, options = {}) => {
-  let response = await fetch(url, {
+  let response = await fetch(API_URL + `/api/v1/users` + url, {
     credentials: "include",
-
     headers: {
       "Content-Type": "application/json",
       ...(options.headers || {}),
