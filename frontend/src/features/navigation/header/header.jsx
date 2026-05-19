@@ -47,34 +47,7 @@ export default function Header({
 
         <div className="hidden sm:flex items-center space-x-8 md:space-x-12">
           {auth.isLoggedIn ? (
-            <div className="flex items-center bg-stone-100 rounded-lg p-0.5">
-              <button
-                onClick={() => setView("note")}
-                className={`
-                  px-4 py-1 text-sm font-medium rounded-md transition-all duration-200
-                  ${
-                    view === "note"
-                      ? "bg-white text-indigo-700 shadow-sm"
-                      : "text-stone-500 hover:text-stone-700"
-                  }
-                `}
-              >
-                Notes
-              </button>
-              <button
-                onClick={() => setView("card")}
-                className={`
-                  px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
-                  ${
-                    view === "card"
-                      ? "bg-white text-indigo-700 shadow-sm"
-                      : "text-stone-500 hover:text-stone-700"
-                  }
-                `}
-              >
-                Cards
-              </button>
-            </div>
+            <></>
           ) : (
             <>
               {/* <NavLink

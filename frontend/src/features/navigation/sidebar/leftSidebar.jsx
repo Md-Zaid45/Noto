@@ -9,7 +9,7 @@ import Tree from "./treeRenderer";
 import { useParams } from "react-router-dom";
 import { BiLogoHeroku } from "react-icons/bi";
 
-export default function LeftSidebar({ ExpandLeftbar }) {
+export default function LeftSidebar({ ExpandLeftbar , view , setView}) {
   console.log("sidebar comp rendered");
 
   const { Active, setActive, Rename, setRename } = useContext(sidebarContext);
@@ -93,6 +93,36 @@ export default function LeftSidebar({ ExpandLeftbar }) {
                   setShowInputFolder={setShowInputFolder}
                   setShowInputNote={setShowInputNote}
                 />
+                          
+            <div className="flex items-center justify-center rounded-lg p-0.5">
+              <button
+                onClick={() => setView("note")}
+                className={`
+                  px-4 py-1 text-sm font-medium rounded-md transition-all duration-200
+                  ${
+                    view === "note"
+                      ? "bg-white text-indigo-700 shadow-sm"
+                      : "text-stone-500 hover:text-stone-700"
+                  }
+                `}
+              >
+                Notes
+              </button>
+              <button
+                onClick={() => setView("card")}
+                className={`
+                  px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
+                  ${
+                    view === "card"
+                      ? "bg-white text-indigo-700 shadow-sm"
+                      : "text-stone-500 hover:text-stone-700"
+                  }
+                `}
+              >
+                Cards
+              </button>
+            </div>
+          
                 <Tree folder={tree} />
               </div>
             </treeContext.Provider>

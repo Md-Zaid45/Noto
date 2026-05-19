@@ -84,8 +84,6 @@ function App() {
       {
         <div className="h-screen flex flex-col overflow-hidden">
           <Header
-            view={view}
-            setView={setView}
             ExpandLeftbar={ExpandLeftbar}
             ExpandRightbar={ExpandRightbar}
             setExpandLeftbar={setExpandLeftbar}
@@ -111,7 +109,11 @@ function App() {
                 </div>
               )}
               <div className="flex-1 flex overflow-hidden">
-                <LeftSidebar ExpandLeftbar={ExpandLeftbar} />
+                <LeftSidebar
+                  ExpandLeftbar={ExpandLeftbar}
+                  view={view}
+                  setView={setView}
+                />
 
                 <div className="flex-1 min-w-0 overflow-y-auto">
                   <viewContext.Provider value={{ view }}>
