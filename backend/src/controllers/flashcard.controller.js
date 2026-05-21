@@ -43,6 +43,24 @@ export const updateFlashcard = async (req, res, next) => {
   }
 };
 
+export const reviewUpdate = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { score } = req.body;
+    const card = await Flashcard.findById(id);
+    if (!card) throw new ApiError(404, "Flashcard not found");
+    const updatedCard = await card.reviewUpdate(score);
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "updated review successfully",
+        payload: { flashcard: updatedCard },
+      });
+  } catch (error) {
+    return next;
+  }
+};
 export const deleteFlashcards = async (req, res, next) => {
   try {
     const { ids } = req.body;
