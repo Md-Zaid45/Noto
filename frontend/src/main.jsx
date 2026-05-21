@@ -11,6 +11,7 @@ import { AuthPage } from "./pages/signup-login.jsx";
 import ContentLayout from "./features/layout/contentLayout.jsx";
 import ErrorPage from "./pages/errorPage.jsx";
 import { apiFetch } from "./commons/apifetch.js";
+import  Dashboard  from "./pages/dashboard.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage />, errorElement: <ErrorPage /> },
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
         path: "notes/:id",
         element: <ContentLayout />,
       },
+      {
+        path: "dashboard",
+        element: <Dashboard/>
+      }
     ],
   },
   {

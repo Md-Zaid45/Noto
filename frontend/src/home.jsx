@@ -17,6 +17,7 @@ import { setLoggedIn } from "./store/authSlice";
 import EmptyState from "./pages/emptyPage";
 import { apiFetch } from "./commons/apifetch";
 import LoadingLoader from "./commons/loader";
+import ActivityBar from "./features/navigation/activityBar/activitybar";
 export const sidebarContext = createContext({});
 export const viewContext = createContext({});
 
@@ -89,46 +90,48 @@ function App() {
             setExpandLeftbar={setExpandLeftbar}
             setExpandRightbar={setExpandRightbar}
           />
+          <div className="flex-2 flex overflow-hidden">
+           <ActivityBar setView={setView}/>
+            <div className="flex-1 flex overflow-hidden">
+              <sidebarContext.Provider
+                value={{
+                  ShowContextMenu,
+                  setShowContextMenu,
+                  Active,
+                  setActive,
+                  ContextMenuPos,
+                  setContextMenuPos,
+                  Rename,
+                  setRename,
+                }}
+              >
+                {loading && (
+                  <div className="absolute inset-0 bg-white/80 rounded flex items-center justify-center z-10">
+                    <LoadingLoader size="lg" color="blue" />
+                  </div>
+                )}
+                <div className="flex-1 flex overflow-hidden">
+                  <LeftSidebar
+                    ExpandLeftbar={ExpandLeftbar}
+                    view={view}
+                    setView={setView}
+                  />
 
-          <div className="flex-1 flex overflow-hidden">
-            <sidebarContext.Provider
-              value={{
-                ShowContextMenu,
-                setShowContextMenu,
-                Active,
-                setActive,
-                ContextMenuPos,
-                setContextMenuPos,
-                Rename,
-                setRename,
-              }}
-            >
-              {loading && (
-                <div className="absolute inset-0 bg-white/80 rounded flex items-center justify-center z-10">
-                  <LoadingLoader size="lg" color="blue" />
+                  <div className="flex-1 min-w-0 overflow-y-auto">
+                    <viewContext.Provider value={{ view }}>
+                      {outlet ? (
+                        <Outlet />
+                      ) : (
+                        <EmptyState setExpandLeftbar={setExpandLeftbar} />
+                      )}
+                    </viewContext.Provider>
+                  </div>
+
+                  <RightSidebar ExpandRightbar={ExpandRightbar} />
+                  <ContextMenu />
                 </div>
-              )}
-              <div className="flex-1 flex overflow-hidden">
-                <LeftSidebar
-                  ExpandLeftbar={ExpandLeftbar}
-                  view={view}
-                  setView={setView}
-                />
-
-                <div className="flex-1 min-w-0 overflow-y-auto">
-                  <viewContext.Provider value={{ view }}>
-                    {outlet ? (
-                      <Outlet />
-                    ) : (
-                      <EmptyState setExpandLeftbar={setExpandLeftbar} />
-                    )}
-                  </viewContext.Provider>
-                </div>
-
-                <RightSidebar ExpandRightbar={ExpandRightbar} />
-                <ContextMenu />
-              </div>
-            </sidebarContext.Provider>
+              </sidebarContext.Provider>
+            </div>
           </div>
         </div>
       }
