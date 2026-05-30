@@ -39,9 +39,9 @@ const flashcardSchema = new mongoose.Schema(
     easeScore: {
       type: Number,
       default: 2.5,
-      min: 1.3,          
+      min: 1.3,
     },
-    repetitions: {        // tracks consecutive correct answers
+    repetitions: {
       type: Number,
       default: 0,
       min: 0,
