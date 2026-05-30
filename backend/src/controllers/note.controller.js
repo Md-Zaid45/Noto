@@ -1,3 +1,4 @@
+import { Flashcard } from "../models/flashcard.model.js";
 import { Note } from "../models/note.model.js";
 import ApiError from "../utils/ApiError.js";
 
@@ -7,7 +8,7 @@ export const getNote = async (req, res, next) => {
     const note = await Note.findOne({ userId: req.user._id, _id: id });
     console.log("userID:", req.user._id, "id:", id, note);
 
-    if (!note) throw new ApiError(404, "Cannot find note");
+    if (!note) return res.status(404).json({ success: false });
     return res.status(200).json({
       success: true,
       payload: {
@@ -43,8 +44,8 @@ export const createNote = async (req, res, next) => {
 export const deleteNotes = async (req, res, next) => {
   try {
     const { ids } = req.body;
-    console.log('note controller deletion ids', ids);
-    
+    console.log("note controller deletion ids", ids);
+
     const deletedNotes = await Note.deleteMany({
       _id: { $in: ids },
       userId: req.user._id,
@@ -87,3 +88,19 @@ export const updateNote = async (req, res, next) => {
     return next(error);
   }
 };
+
+export const getNoteCount = async (req,res,next)=>{
+  try {
+    const userId = req.user._id;
+    const count = await Note.countDocumetns({_id:userId});
+
+    return res.status(200).json({
+      success: true,
+      payload: {
+        notesCount:count
+      }
+    })
+  } catch (error) {
+    return next(error);
+  }
+} 
