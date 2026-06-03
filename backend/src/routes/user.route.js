@@ -22,6 +22,9 @@ import {
   createFlashcard,
   deleteFlashcards,
   updateFlashcard,
+  getFlashcards,
+  reviewUpdate,
+  getFlashcardsActivity,
 } from "../controllers/flashcard.controller.js";
 import {
   checkUserExists,
@@ -120,4 +123,7 @@ router.delete(
   validate(deleteFlashcardsSchema),
   deleteFlashcards,
 );
+router.get("/flashcards/:id", verifyJwt , getFlashcards);
+router.patch("/flashcards/review/:id", verifyJwt , reviewUpdate);
+router.get("/flashcards/stats", verifyJwt , getFlashcardsActivity);
 export default router;
