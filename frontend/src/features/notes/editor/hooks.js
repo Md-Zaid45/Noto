@@ -119,32 +119,46 @@ export function useNote(id, setIsLoading) {
 }
 
 export function useTabs(note, id) {
-  const [Tabs, setTabs] = useStorage("tabs", []);
+  const [Tabs, setTabs] = useStorage("tabs", { activeTab: null, tabs: [] });
   const Notes = useSelector((state) => state.Notes);
 
   useEffect(() => {
-    setTabs((prev) =>
-      prev.filter((tab) => Notes.some((note) => note.id === tab.id)),
-    );
+    setTabs((prev) =>{
+      const newTabs = prev.tabs = prev.tabs.filter((tab) => Notes.find((note) => note.id === tab.id));
+      if(!newTabs.some((tab) => tab.id === prev.activeTab)){
+        if (newTabs.length > 1) {
+          return { activeTab: newTabs[newTabs.length-1].id, tabs: newTabs };
+        } else {
+          return { activeTab: null, tabs: [] };
+        }
+      } else {
+        return { ...prev, tabs: newTabs }
+      }}
+    )
   }, [Notes]);
 
   useEffect(() => {
     if (!note?.noteId) return;
     setTabs((prev) => {
-      if (prev.find((tab) => tab.id === note.noteId)) return prev;
-      const newTabs = [...prev, { id: note.noteId, name: note.name }];
-      return newTabs;
+      if (prev.tabs.find((tab) => tab.id === note.noteId)) return { ...prev , activeTab: note.noteId };
+      const newTabs = [...prev.tabs, { id: note.noteId, name: note.name }];
+      return { activeTab: note.noteId, tabs: newTabs };
     });
   }, [note?.noteId, note?.name]);
 
   const deleteTab = useCallback(
     (id) => {
       setTabs((prev) => {
-        return prev.filter((tab) => tab.id !== id);
+        if (prev.activeTab === id) {
+          const filteredTabs = prev.tabs.filter((tab) => tab.id !== id);
+          const newActiveTab = filteredTabs.length > 0 ? filteredTabs[filteredTabs.length - 1].id : null;
+          return { activeTab: newActiveTab, tabs: filteredTabs };
+        }
+        return { ...prev, tabs: prev.tabs.filter((tab) => tab.id !== id)};
       });
     },
     [id],
   );
 
-  return [Tabs, deleteTab];
+  return [Tabs.tabs, deleteTab];
 }

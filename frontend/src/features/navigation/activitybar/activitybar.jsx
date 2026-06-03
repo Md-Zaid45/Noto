@@ -23,8 +23,11 @@ export default function ActivityBar({ setView }) {
       name: "Notes",
       icon: <StickyNote size={24} />,
       action: () => {
-        navigate("./notes");
-      },
+        const activeTab = localStorage.getItem("tabs") ? JSON.parse(localStorage.getItem("tabs")).activeTab : null;
+        if(activeTab) {
+          navigate(`./notes/${activeTab}`);
+        } else  navigate("./home"); 
+      }
     },
     {
       name: "Contact",
