@@ -49,16 +49,17 @@ export const reviewUpdate = async (req, res, next) => {
     const { score } = req.body;
     const card = await Flashcard.findById(id);
     if (!card) throw new ApiError(404, "Flashcard not found");
-    const updatedCard = await card.reviewUpdate(score);
+    const updatedCard = await card.updateReview(score);
     return res.status(200).json({
       success: true,
       message: "updated review successfully",
       payload: { flashcard: updatedCard },
     });
   } catch (error) {
-    return next;
+    return next(error);
   }
 };
+
 export const deleteFlashcards = async (req, res, next) => {
   try {
     const { ids } = req.body;
@@ -81,7 +82,7 @@ export const deleteFlashcards = async (req, res, next) => {
   }
 };
 
-export const getFlashcardActivity = async (req, res, next) => {
+export const getFlashcardsActivity = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const start = new Date();
@@ -100,7 +101,7 @@ export const getFlashcardActivity = async (req, res, next) => {
       learningCards,
       newCards,
     ] = await Promise.all([
-      Flashcard.countDocumetns({ _id: userId }),
+      Flashcard.countDocuments({ _id: userId }),
       Flashcard.countDocuments({
         userId,
         revisionMark: true,
@@ -137,10 +138,28 @@ export const getFlashcardActivity = async (req, res, next) => {
     ]);
 
     const futureCards = await Flashcard.aggregate([
-      {$match:{userId, revisionMark: true, nextReview: { $gt: end, $lte: futureEnd }}},
-      {$group:{nextReview: { $dateToString: { format: "%Y-%m-%d", date: "$nextReview" } }, count: { $sum: 1 }}},
-      {$sort: { nextReview: 1 }}
-    ])
+      {
+        $match: {
+          userId,
+          revisionMark: true,
+          nextReview: { $gt: end, $lte: futureEnd },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$nextReview",
+            },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
     return res.status(200).json({
       success: true,
       payload: {
@@ -152,6 +171,30 @@ export const getFlashcardActivity = async (req, res, next) => {
         learningCards,
         newCards,
         futureCards,
+      },
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getFlashcards = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const query = {
+      userId,
+      revisionMark: true,
+      nextReview: { $lte: new Date() },
+    };
+    if (id) query.noteId = id;
+    const flashcards = await Flashcard.find(query)
+      .sort({ nextReview: 1 })
+      .limit(50);
+    return res.status(200).json({
+      success: true,
+      payload: {
+        flashcards,
       },
     });
   } catch (error) {
