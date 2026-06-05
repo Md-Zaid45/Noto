@@ -28,10 +28,6 @@ Noto is a modern, intuitive web‑based note‑taking and knowledge management a
 
 ---
 
-🌐 Live Demo
-Frontend: https://noto-rust.vercel.app
-Backend API: https://noto-1-qwzb.onrender.com
-
 ## 📁 Project Structure
 ```
 - `Noto/`
