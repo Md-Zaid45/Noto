@@ -180,7 +180,10 @@ export const getFlashcardsActivity = async (req, res, next) => {
 
 export const getFlashcards = async (req, res, next) => {
   try {
+    console.log("get flashcards controller hit", req.body, req.notes, req.folders, req.notesContent);
     const { id } = req.params;
+    const recents = req.body;
+    const ids = recents.tabs.map(tab => tab.id);
     const userId = req.user._id;
     const query = {
       userId,
@@ -188,9 +191,24 @@ export const getFlashcards = async (req, res, next) => {
       nextReview: { $lte: new Date() },
     };
     if (id) query.noteId = id;
+    else if(recents.tabs.length > 0){
+      query.noteId = { $in: ids };
+    }
     const flashcards = await Flashcard.find(query)
       .sort({ nextReview: 1 })
       .limit(50);
+    console.log("flashcards query", flashcards, req.notes, req.folders, req.notesContent);
+    if (recents.tabs.length != 0){
+      return res.status(200).json({
+        success: true,
+        payload: {
+          folders: req.folders,
+          notes: req.notes,
+          notesContent: req.notesContent,
+          flashcards,
+        },
+      });
+    }
     return res.status(200).json({
       success: true,
       payload: {

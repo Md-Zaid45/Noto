@@ -7,16 +7,11 @@ export const getFolderStructure = async (req, res, next) => {
   try {
     const folders = await Folder.find({ userId: req.user._id });
     const notes = await Note.find({ userId: req.user._id }).select('_id folderId name revisionMark type')
-    const notesContent = await Note.find({ userId: req.user._id }).select('_id  name content type')
-    const flashcards = await Flashcard.find({ userId: req.user._id });
-    return res.status(200).json({
-      payload: {
-        folders,
-        notes,
-        flashcards,
-        notesContent
-      },
-    });
+    req.folders=folders;
+    req.notes=notes;
+    console.log("folders and notes", req.folders, req.notes);
+    return next()
+    
   } catch (error) {
     next(error);
   }

@@ -15,11 +15,7 @@ export const checkUserExists = async (req, res, next) => {
   }
 };
 
-export const checkExists = (
-  model,
-  location = "params",
-  field = "id",
-) => {
+export const checkExists = (model, location = "params", field = "id") => {
   return async (req, res, next) => {
     try {
       const value = req[location]?.[field];
@@ -76,7 +72,7 @@ export const verifyJwt = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     const user = await User.findOne({ _id: decoded._id });
-    console.log("verifyjwt ", decoded, user, req.body );
+    console.log("verifyjwt ", decoded, user, req.body);
 
     if (!user) throw new ApiError(404, "user not found");
     req.user = user;
@@ -97,7 +93,7 @@ export const validate = (schema) => (req, res, next) => {
 
     return next();
   } catch (error) {
-    console.log("valiadte schema hit error " , error);
+    console.log("valiadte schema hit error ", error);
     return next(error);
   }
 };

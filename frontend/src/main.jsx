@@ -20,7 +20,8 @@ const router = createBrowserRouter([
     element: <App/>,
     loader: async () => {
       const res = await apiFetch(`/workspace`, {
-        method: "GET",
+        method: "POST",
+        body: JSON.parse(localStorage.getItem("tabs"))
       });
       if (!res.ok) throw new Error("Failed to fetch data");
       const data = await res.json();

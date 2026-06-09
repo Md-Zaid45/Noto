@@ -2,13 +2,17 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Inbox, RotateCcw, CheckCircle2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { apiFetch } from "../../commons/apifetch";
 
-export default function ReviewFlashcard({
-  onAgain = () => {},
-  onHard = () => {},
-  onGood = () => {},
-  onEasy = () => {},
-}) {
+const handleRating = async (rating, cardId) => {
+  const res = await apiFetch(`/flashcards/review/${cardId}`, {
+    method: "PATCH",
+    body: {score: rating},
+  });
+  const data = await res.json();
+  console.log("Review response:", data);
+};
+export default function ReviewFlashcard() {
   const { id } = useParams();
   const allCards = useSelector((state) => state.Flashcards);
   const flashcards = allCards.filter((card) => card.noteId === id);
@@ -163,31 +167,28 @@ export default function ReviewFlashcard({
           to rate
         </p>
 
-        <button
-          onClick={() => {
-            onAgain();
-            moveToNext();
-          }}
-          className="w-full flex items-center justify-between px-5 py-3 mb-3 rounded-xl
-                     bg-red-50 text-red-600 font-semibold text-sm
-                     hover:bg-red-100 active:scale-[0.98] transition-all duration-150"
-        >
-          <span className="flex items-center gap-2">
-            <kbd className="px-1.5 py-0.5 bg-white border border-red-200 rounded text-xs font-mono text-red-400">
-              1
-            </kbd>
-            AGAIN
-          </span>
-          <span className="text-red-300 text-xs font-medium">&lt; 1 min</span>
-        </button>
-
         <div className="grid grid-cols-3 gap-3">
           {[
+            {
+              label: "Forgot it", 
+              key: "0",
+              interval: "0m",
+              base: "bg-red-50 text-red-700 hover:bg-red-100",
+              badge: "border-red-200 text-red-400",
+              sub: "text-red-400",
+            },
+            {
+              label: "AGAIN",
+              key: "1",
+              interval: "10m",
+              base: "bg-red-50 text-red-700 hover:bg-red-100",
+              badge: "border-red-200 text-red-400",
+              sub: "text-red-100",
+            },
             {
               label: "HARD",
               key: "2",
               interval: "2d",
-              fn: onHard,
               base: "bg-orange-50 text-orange-700 hover:bg-orange-100",
               badge: "border-orange-200 text-orange-400",
               sub: "text-orange-400",
@@ -196,7 +197,6 @@ export default function ReviewFlashcard({
               label: "GOOD",
               key: "3",
               interval: "4d",
-              fn: onGood,
               base: "bg-blue-50 text-blue-700 hover:bg-blue-100",
               badge: "border-blue-200 text-blue-400",
               sub: "text-blue-400",
@@ -205,16 +205,25 @@ export default function ReviewFlashcard({
               label: "EASY",
               key: "4",
               interval: "7d",
-              fn: onEasy,
               base: "bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
               badge: "border-emerald-200 text-emerald-400",
               sub: "text-emerald-400",
+            },
+            {
+              label: "SKIP",
+              key: "5",
+              interval: "1d",
+              base: "bg-gray-50 text-gray-700 hover:bg-gray-100",
+              badge: "border-gray-200 text-gray-400",
+              sub: "text-gray-400",
             },
           ].map(({ label, key, interval, fn, base, badge, sub }) => (
             <button
               key={label}
               onClick={() => {
-                fn();
+                console.log(currentCard);
+                
+                handleRating(key, currentCard.id);
                 moveToNext();
               }}
               className={`flex flex-col items-center justify-center px-3 py-3 rounded-xl

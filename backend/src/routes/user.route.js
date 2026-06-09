@@ -11,6 +11,7 @@ import {
   updateNote,
   createNote,
   deleteNotes,
+  recentNotes,
 } from "../controllers/note.controller.js";
 import {
   createFolder,
@@ -80,7 +81,7 @@ router.post(
 router.delete("/notes", verifyJwt, validate(deleteNotesSchema), deleteNotes);
 
 // Folder Routes
-router.get("/workspace", verifyJwt, getFolderStructure);
+router.post("/workspace", verifyJwt, getFolderStructure, recentNotes, getFlashcards);
 router.patch(
   "/folders/:id",
   verifyJwt,
@@ -123,7 +124,7 @@ router.delete(
   validate(deleteFlashcardsSchema),
   deleteFlashcards,
 );
-router.get("/flashcards/:id", verifyJwt , getFlashcards);
-router.patch("/flashcards/review/:id", verifyJwt , reviewUpdate);
-router.get("/flashcards/stats", verifyJwt , getFlashcardsActivity);
+router.get("/flashcards/stats", verifyJwt, getFlashcardsActivity);
+router.patch("/flashcards/review/:id", verifyJwt, reviewUpdate);
+router.get("/flashcards/:id", verifyJwt, getFlashcards);
 export default router;
