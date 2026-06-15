@@ -26,6 +26,7 @@ import {
   getFlashcards,
   reviewUpdate,
   getFlashcardsActivity,
+  recentFlashcards,
 } from "../controllers/flashcard.controller.js";
 import {
   checkUserExists,
@@ -81,7 +82,7 @@ router.post(
 router.delete("/notes", verifyJwt, validate(deleteNotesSchema), deleteNotes);
 
 // Folder Routes
-router.post("/workspace", verifyJwt, getFolderStructure, recentNotes, getFlashcards);
+router.post("/workspace", verifyJwt, getFolderStructure, recentNotes, recentFlashcards);
 router.patch(
   "/folders/:id",
   verifyJwt,
