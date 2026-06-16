@@ -108,11 +108,11 @@ export const getNoteCount = async (req, res, next) => {
 export const recentNotes = async (req, res, next) => {
   try {
     const recents = req.body;
-    const ids = recents.tabs.map(tab => tab.id);
+    const ids = recents?.tabs.map(tab => tab.id);
     const recentNotes = await Note.find({ userId: req.user._id, _id: { $in: ids } }).select('_id name content type ')
     
     console.log("recent notes", recentNotes, req.notes, req.folders);
-    if(recents.tabs.length == 0 || recentNotes.length == 0){
+    if(recents?.tabs.length == 0 || recentNotes?.length == 0){
       return res.status(200).json({
         payload: {
           folders: req.folders,
