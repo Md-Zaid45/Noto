@@ -1,12 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiFetch } from "../../commons/apifetch";
-const API_URL = import.meta.env.VITE_API_URL;
 
 export const createFolderAsync = createAsyncThunk(
   "folders/createFolder",
   async ({ name, parentFolderId = null, revisionMark = false }) => {
     const newFolder = { name, revisionMark, folderId: parentFolderId };
-    const data = await apiFetch(`${API_URL}/api/v1/users/folders`, {
+    const data = await apiFetch(`/folders`, {
       method: "POST",
       body: newFolder,
     });
@@ -20,7 +19,7 @@ export const deleteFoldersAsync = createAsyncThunk(
   "folders/deleteFolders",
   async (ids) => {
     console.log("deletefolderasync ids", ids);
-    const res = await apiFetch(`${API_URL}/api/v1/users/folders`, {
+    const res = await apiFetch(`/folders`, {
       method: "DELETE",
       body: { ids },
     });
@@ -36,7 +35,7 @@ export const updateFolderAsync = createAsyncThunk(
   async (obj) => {
     const { id, ...updateField } = obj;
     console.log("updateFolderAsync ", obj, updateField);
-    const res = await apiFetch(`${API_URL}/api/v1/users/folders/${id}`, {
+    const res = await apiFetch(`/folders/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
