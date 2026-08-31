@@ -57,6 +57,7 @@ export const validateCredentials = async (req, res, next) => {
     req.user = user;
     return next();
   } catch (error) {
+    console.log(error.message);
     return next(error);
   }
 };
@@ -72,12 +73,13 @@ export const verifyJwt = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     const user = await User.findOne({ _id: decoded._id });
-    console.log("verifyjwt ", decoded, user, req.body);
+    console.log("verifyjwt ",token, decoded, user, req.body);
 
     if (!user) throw new ApiError(404, "user not found");
     req.user = user;
     return next();
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 };
