@@ -20,7 +20,12 @@ const noteSchema = new mongoose.Schema(
     },
     content: {
       type: mongoose.Schema.Types.Mixed,
-      default:{}
+      default: {},
+    },
+    isIndexed: {
+      type: Boolean,
+      dafault: false,
+      enum: [true, false],
     },
     revisionMark: {
       type: Boolean,

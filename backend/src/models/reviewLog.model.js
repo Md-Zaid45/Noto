@@ -3,13 +3,13 @@ import mongoose from "mongoose";
 const reviewLogSchema = new mongoose.Schema(
   {
     flashcardId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Flashcard",
       required: true,
       index: true,
     },
     userId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
       index: true,

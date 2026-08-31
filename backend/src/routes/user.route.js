@@ -25,6 +25,7 @@ import {
   updateFlashcard,
   getFlashcards,
   reviewUpdate,
+  getDeckStats,
   getFlashcardsActivity,
   recentFlashcards,
 } from "../controllers/flashcard.controller.js";
@@ -126,6 +127,7 @@ router.delete(
   deleteFlashcards,
 );
 router.get("/flashcards/stats", verifyJwt, getFlashcardsActivity);
+router.get("/flashcards/decks", verifyJwt, getDeckStats);
 router.patch("/flashcards/review/:id", verifyJwt, reviewUpdate);
 router.get("/flashcards/:id", verifyJwt, getFlashcards);
 export default router;

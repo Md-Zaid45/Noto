@@ -32,7 +32,7 @@ const embeddingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model(
+export const Embedding = mongoose.model(
   "Embedding",
   embeddingSchema
 );
