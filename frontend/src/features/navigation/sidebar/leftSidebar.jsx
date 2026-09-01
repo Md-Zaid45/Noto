@@ -1,17 +1,77 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { sidebarContext } from "../../../home";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { treeContext } from "./store";
 import { fileTree } from "./utils";
 import { UiController } from "../../../store/uiController";
 import SiderbarHeader from "./sidebarHeader";
 import Tree from "./treeRenderer";
-import { useParams } from "react-router-dom";
-import { BiLogoHeroku } from "react-icons/bi";
+import { useLocation, useParams } from "react-router-dom";
+import { HiDocumentText } from "react-icons/hi2";
+import { setManageSelectedId } from "../../flashcards/flashcardSlice";
 
-export default function LeftSidebar({ ExpandLeftbar , view , setView}) {
+function FlashcardList() {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const flashcards = useSelector((state) => state.Flashcards.cards);
+  const activeId = useSelector((state) => state.Flashcards.manageSelectedId);
+
+  const filtered = useMemo(
+    () => flashcards.filter((c) => c.noteId === id),
+    [flashcards, id],
+  );
+
+  return (
+    <div className="w-[210px] h-full overflow-y-auto">
+      <div className="px-3 py-2 text-[12.5px] font-medium text-[#4A4947] dark:text-stone-300 border-b border-[#E8E6E1] dark:border-stone-800">
+        Flashcards ({filtered.length})
+      </div>
+      <div className="text-[12.5px]">
+        {filtered.map((c) => (
+          <div
+            key={c.id}
+            className={`
+              flex items-center gap-1.5 pr-2 cursor-pointer
+              transition-all duration-150 text-[#6B6A65] dark:text-stone-400
+              ${
+                activeId === c.id
+                  ? "bg-[#ecfdf5] dark:bg-emerald-950/30 text-[#047857] dark:text-emerald-300 font-medium"
+                  : "hover:bg-[#d1fae5] dark:hover:bg-emerald-950/30 hover:text-[#059669] dark:hover:text-emerald-400"
+              }
+            `}
+            style={{
+              padding: "5px 8px 5px 22px",
+              borderLeft:
+                activeId === c.id
+                  ? "2px solid #34d399"
+                  : "2px solid transparent",
+            }}
+            onClick={() => dispatch(setManageSelectedId(c.id))}
+          >
+            <HiDocumentText
+              className={`shrink-0 text-[13px] ${
+                activeId === c.id
+                  ? "text-[#059669] dark:text-emerald-400"
+                  : "text-[#A8A7A2] dark:text-stone-500"
+              }`}
+            />
+            <span className="truncate text-[12.5px]">{c.question}</span>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <div className="px-3 py-2 text-[12.5px] text-[#A8A7A2] dark:text-stone-500">
+            No flashcards
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function LeftSidebar({ view, setView, treeOpen }) {
   console.log("sidebar comp rendered");
-
+  const { pathname } = useLocation();
+  const activeView = pathname.split("/")[2] || "";
   const { Active, setActive, Rename, setRename } = useContext(sidebarContext);
   const { id } = useParams();
   const activeRef = useRef(null);
@@ -25,7 +85,7 @@ export default function LeftSidebar({ ExpandLeftbar , view , setView}) {
   const [ShowInputFolder, setShowInputFolder] = useState(null);
   const [ShowInputNote, setShowInputNote] = useState(null);
   const renameRef = useRef(null);
-
+  const path = pathname.split("/")[3] || "";
   const tree = useMemo(() => {
     return fileTree(Folders, Notes);
   }, [Folders, Notes]);
@@ -59,22 +119,20 @@ export default function LeftSidebar({ ExpandLeftbar , view , setView}) {
     if (isEmpty) setActive("r");
   }, [tree.children, tree.notes]);
 
+  const isManage = path === "manage";
+
   return (
     <>
-      {
-        <div
-          data-left-sidebar
-          className={`
-        h-screen overflow-hidden shrink-0 mr-0.5 mt-0.5
-        bg-zinc-50 border-r border-gray-200 outline-zinc-300 o outline-1
-        transition-all duration-300 ease-in-out
-        select-none rounded-xl
-        ${ExpandLeftbar ? "w-60 opacity-100" : "w-0 opacity-0 overflow-hidden pointer-events-none"}
-      `}
-        >
-          <div className="w-60">
-            {" "}
-            {/* inner fixed width so content doesn't wrap when sidebar is 0 */}
+      <div
+        data-left-sidebar
+        className={`h-full overflow-hidden shrink-0 bg-[#f7f8f7] dark:bg-stone-950 border-r border-[#E8E6E1] dark:border-stone-800 select-none transition-all duration-200 ease-in-out ${
+          treeOpen ? "w-[210px] opacity-100" : "w-0 opacity-0"
+        }`}
+      >
+        {isManage ? (
+          <FlashcardList />
+        ) : (
+          <div className="w-[210px]">
             <treeContext.Provider
               value={{
                 renameRef,
@@ -84,51 +142,23 @@ export default function LeftSidebar({ ExpandLeftbar , view , setView}) {
                 inputRef,
                 ShowInputFolder,
                 setShowInputFolder,
+                activeView,
               }}
             >
-              <div data-tree-header className="mt-5 space-y-2 text-gray-800">
+              <div data-tree-header>
                 <SiderbarHeader
                   fileButtonRef={fileButtonRef}
                   folderButtonRef={folderButtonRef}
                   setShowInputFolder={setShowInputFolder}
                   setShowInputNote={setShowInputNote}
                 />
-                          
-            <div className="flex items-center justify-center rounded-lg p-0.5">
-              <button
-                onClick={() => setView("note")}
-                className={`
-                  px-4 py-1 text-sm font-medium rounded-md transition-all duration-200
-                  ${
-                    view === "note"
-                      ? "bg-white text-indigo-700 shadow-sm"
-                      : "text-stone-500 hover:text-stone-700"
-                  }
-                `}
-              >
-                Notes
-              </button>
-              <button
-                onClick={() => setView("card")}
-                className={`
-                  px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
-                  ${
-                    view === "card"
-                      ? "bg-white text-indigo-700 shadow-sm"
-                      : "text-stone-500 hover:text-stone-700"
-                  }
-                `}
-              >
-                Cards
-              </button>
-            </div>
-          
+
                 <Tree folder={tree} />
               </div>
             </treeContext.Provider>
           </div>
-        </div>
-      }
+        )}
+      </div>
     </>
   );
 }
