@@ -79,7 +79,8 @@ export const reviewUpdate = async (req, res, next) => {
 export const deleteFlashcards = async (req, res, next) => {
   try {
     const { ids } = req.body;
-
+   console.log('delete cards', ids);
+   
     const deletedFlashcards = await Flashcard.deleteMany({
       _id: { $in: ids },
       userId: req.user._id,
@@ -90,6 +91,7 @@ export const deleteFlashcards = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Flashcards deleted successfully",
+      payload: { ids },
       deletedCount: deletedFlashcards.deletedCount,
       requestCount: ids.length,
     });
@@ -155,7 +157,7 @@ export const getFlashcardsActivity = async (req, res, next) => {
         repetitions: { $gte: 0, $lte: 2 },
       }),
       ReviewLog.aggregate([
-        { $match: { userId,  } },
+        { $match: { userId  } },
         {
           $group: {
             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
@@ -220,7 +222,7 @@ export const getFlashcardsActivity = async (req, res, next) => {
       if (day._id === dayStr) streak++;
       else break;
     }
-    console.log(futureCards,'future cards');
+    console.log(weeklyActivity,'future cards');
     
     return res.status(200).json({
       success: true,
@@ -306,6 +308,23 @@ export const getFlashcards = async (req, res, next) => {
       payload: {
         flashcards,
       },
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getFlashcardsByNote = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    if (!id) throw new ApiError(402, "note id is empty");
+    const flashcards = await Flashcard.find({ userId, noteId: id }).sort({
+      createdAt: -1,
+    });
+    return res.status(200).json({
+      success: true,
+      payload: { flashcards },
     });
   } catch (error) {
     return next(error);

@@ -24,6 +24,7 @@ import {
   deleteFlashcards,
   updateFlashcard,
   getFlashcards,
+  getFlashcardsByNote,
   reviewUpdate,
   getDeckStats,
   getFlashcardsActivity,
@@ -121,13 +122,14 @@ router.post(
   createFlashcard,
 );
 router.delete(
-  "/flashcards/:id",
+  "/flashcards",
   verifyJwt,
   validate(deleteFlashcardsSchema),
   deleteFlashcards,
 );
 router.get("/flashcards/stats", verifyJwt, getFlashcardsActivity);
 router.get("/flashcards/decks", verifyJwt, getDeckStats);
+router.get("/flashcards/all/:id", verifyJwt, getFlashcardsByNote);
 router.patch("/flashcards/review/:id", verifyJwt, reviewUpdate);
 router.get("/flashcards/:id", verifyJwt, getFlashcards);
 export default router;
