@@ -5,8 +5,9 @@ import "./styles.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import Tabs from "./tabs";
 import { useEditor, useNote, useTabs } from "./hooks";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { HiOutlineCheckBadge } from "react-icons/hi2";
+import LoadingLoader from "../../../commons/loader";
 
 export default function Editr() {
   const { id } = useParams();
@@ -36,62 +37,59 @@ export default function Editr() {
     [tabs, deleteTab, id],
   );
 
-  useEffect(() => {
-    return () => {
-      for (const [editorId, edt] of [...editors.current]) {
-        edt.destroy();
-        editors.current.delete(editorId);
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     for (const [editorId, edt] of [...editors.current]) {
+  //       edt.destroy();
+  //       editors.current.delete(editorId);
+  //     }
+  //   };
+  // }, []);
 
   return (
-    <>
-      <div className="flex flex-col h-full bg-zinc-200">
-        <Tabs OpenTabs={tabs} deleteHandler={deleteHandler} />
+    <div className="flex flex-col h-full bg-white dark:bg-stone-900">
+      <Tabs OpenTabs={tabs} deleteHandler={deleteHandler} />
 
-        {editor ? (
-          <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Saved indicator */}
-            {isSaved === id && (
-              <div className="fixed top-20 right-8 z-50 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 shadow-sm border border-emerald-200 animate-fade-in">
-                <HiOutlineCheckBadge className="text-emerald-500 text-sm" />
-                <span>Saved</span>
-              </div>
-            )}
+      {editor ? (
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {isSaved === id && (
+            <div className="fixed top-20 right-8 z-50 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-950/30 animate-fade-in">
+              <HiOutlineCheckBadge className="text-emerald-500 dark:text-emerald-400 text-sm" />
+              <span>Saved</span>
+            </div>
+          )}
 
-            <div className="flex-1 overflow-y-auto">
-              <div className="h-full bg-zinc-50/80 px-3 py-2">
-                {isLoading && (
-                  <div className="absolute inset-0 bg-white/80 rounded flex items-center justify-center z-10">
-                    <LoadingLoader size="lg" color="blue" />
-                  </div>
-                )}
-                <MenuBar editor={editor} />
-                <div className="mt-2">
-                  <EditorBubbleMenu editor={editor} />
-                  <EditorContent
-                    editor={editor}
-                    className="tiptap focus:outline-none"
-                  />
+          <MenuBar editor={editor} />
+          <div className="flex-1 overflow-y-auto bg-white dark:bg-stone-900">
+            <div className="h-full bg-white dark:bg-stone-900">
+              {isLoading && (
+                <div className="absolute inset-0 bg-white/80 dark:bg-stone-900/80 flex items-center justify-center z-10">
+                  <LoadingLoader size="lg" color="blue" />
                 </div>
+              )}
+              <div className="pt-9 px-12" style={{ maxWidth: "700px" }}>
+                <EditorBubbleMenu editor={editor} />
+                <EditorContent
+                  editor={editor}
+                  className="tiptap focus:outline-none"
+                />
               </div>
             </div>
           </div>
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center bg-transparent">
-            <div className="w-24 h-24 mb-6 rounded-full bg-emerald-500/10 flex items-center justify-center animate-pulse">
-              <span className="text-4xl">🔍</span>
-            </div>
-            <div className="text-center">
-              <h1 className="text-4xl font-black bg-gradient-to-br from-emerald-400 to-emerald-700 bg-clip-text text-transparent">
-                No Note found
-              </h1>
-              <div className="h-1 w-12 bg-emerald-500/30 mx-auto mt-2 rounded-full"></div>
-            </div>
+        </div>
+      ) : (
+        <div className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-stone-900">
+          <div className="w-24 h-24 mb-6 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 flex items-center justify-center animate-pulse">
+            <span className="text-4xl">🔍</span>
           </div>
-        )}
-      </div>
-    </>
+          <div className="text-center">
+            <h1 className="text-4xl font-black bg-gradient-to-br from-emerald-400 dark:from-emerald-300 to-emerald-700 dark:to-emerald-500 bg-clip-text text-transparent">
+              No Note found
+            </h1>
+            <div className="h-1 w-12 bg-emerald-500/30 dark:bg-emerald-500/50 mx-auto mt-2 rounded-full"></div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

@@ -28,6 +28,29 @@ async function imagePicker() {
   }
   return url;
 }
+
+function Divider() {
+  return <div className="bg-[#E2E0DC] dark:bg-stone-700 h-4 w-[0.5px] mx-1" />;
+}
+
+function HeadingButton({ editor, level, active, icon }) {
+  return (
+    <button
+      type="button"
+      onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
+      className={`
+        px-2 py-0.5 text-[11px] font-medium rounded-[5px]
+        transition-all duration-150
+        ${active ? "bg-[#ecfdf5] dark:bg-emerald-950/30 text-[#059669] dark:text-emerald-400" : "text-[#6B6A65] dark:text-stone-400"}
+        hover:bg-[#ecfdf5] dark:hover:bg-emerald-950/30 hover:text-[#059669] dark:hover:text-emerald-400
+        active:scale-[0.97]
+      `}
+    >
+      {icon}
+    </button>
+  );
+}
+
 export function MenuBar({ editor }) {
   const inputRef = useRef(null);
   const editorState = useEditorState({
@@ -52,107 +75,111 @@ export function MenuBar({ editor }) {
   if (!editor) return null;
 
   return (
-    <div className=" flex gap-1 p-1 bg-gray-100">
+    <div className="flex items-center h-[36px] bg-white dark:bg-stone-900 border-b border-[#E8E6E1] dark:border-stone-800 px-4">
       <MenuButton
         active={editorState.isPara}
         onClick={() => {
           editor.chain().focus().setParagraph().run();
         }}
       >
-        <LuText className="h-4 w-4" />
+        <LuText className="h-[14px] w-[14px]" />
       </MenuButton>
       <MenuButton
         active={editorState.isBold}
         onClick={() => editor.chain().focus().toggleBold().run()}
       >
-        <LuBold className="h-4 w-4" />
+        <LuBold className="h-[14px] w-[14px]" />
       </MenuButton>
 
       <MenuButton
         active={editorState.isItalic}
         onClick={() => editor.chain().focus().toggleItalic().run()}
       >
-        <LuItalic className="h-4 w-4" />
+        <LuItalic className="h-[14px] w-[14px]" />
       </MenuButton>
 
       <MenuButton
         active={editorState.isStrike}
         onClick={() => editor.chain().focus().toggleStrike().run()}
       >
-        <LuStrikethrough className="h-4 w-4" />
+        <LuStrikethrough className="h-[14px] w-[14px]" />
       </MenuButton>
 
       <MenuButton
         active={editorState.isCode}
         onClick={() => editor.chain().focus().toggleCode().run()}
       >
-        <LuCode className="h-4 w-4" />
+        <LuCode className="h-[14px] w-[14px]" />
       </MenuButton>
 
-      <MenuButton
+      <Divider />
+
+      <HeadingButton
+        editor={editor}
+        level={1}
         active={editorState.isHeading1}
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={editorState.isHeading1 ? "is-active" : ""}
-      >
-        <LuHeading1 className="h-4 w-4" />
-      </MenuButton>
+        icon="H1"
+      />
 
-      <MenuButton
+      <HeadingButton
+        editor={editor}
+        level={2}
         active={editorState.isHeading2}
-        onClick={() => {
-          editor.chain().focus().toggleHeading({ level: 2 }).run();
-        }}
-      >
-        <LuHeading2 className="h-4 w-4" />
-      </MenuButton>
+        icon="H2"
+      />
 
-      <MenuButton
+      <HeadingButton
+        editor={editor}
+        level={3}
         active={editorState.isHeading3}
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-      >
-        <LuHeading3 className="h-4 w-4" />
-      </MenuButton>
+        icon="H3"
+      />
+
+      <Divider />
 
       <MenuButton
         active={editorState.isBulletList}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
       >
-        <LuList className="h-4 w-4" />
+        <LuList className="h-[14px] w-[14px]" />
       </MenuButton>
 
       <MenuButton
         active={editorState.isOrderedList}
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
       >
-        <LuListOrdered className="h-4 w-4" />
+        <LuListOrdered className="h-[14px] w-[14px]" />
       </MenuButton>
 
-      <MenuButton
-        active={editorState.isCodeBlock}
-        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-      >
-        <LuFileCode className="h-4 w-4" />
-      </MenuButton>
+      <Divider />
 
       <MenuButton
         active={editorState.isBlockquote}
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
       >
-        <LuQuote className="h-4 w-4" />
+        <LuQuote className="h-[14px] w-[14px]" />
       </MenuButton>
 
       <MenuButton
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
       >
-        <LuMinus className="h-4 w-4" />
+        <LuMinus className="h-[14px] w-[14px]" />
       </MenuButton>
+
       <MenuButton
         onClick={async () => {
           let url = await imagePicker();
           if (url) editor.chain().focus().setImage({ src: url }).run();
         }}
       >
-        <LuImage className="h-4 w-4" />
+        <LuImage className="h-[14px] w-[14px]" />
+      </MenuButton>
+
+      <MenuButton
+        active={editorState.isCodeBlock}
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+      >
+        <LuFileCode className="h-[14px] w-[14px]" />
       </MenuButton>
     </div>
   );

@@ -1,4 +1,4 @@
-import {  BubbleMenu } from "@tiptap/react/menus";
+import { BubbleMenu } from "@tiptap/react/menus";
 
 import { LuBold, LuItalic, LuStrikethrough, LuCode } from "react-icons/lu";
 import MenuButton from "./menuButton";
@@ -24,7 +24,7 @@ export function EditorBubbleMenu({ editor }) {
       options={{
         duration: 100,
       }}
-      className="flex gap-1 rounded-md border bg-white p-1 shadow"
+      className="flex gap-1 rounded-[6px] border-[0.5px] border-[#E2E0DC] dark:border-stone-700 bg-white dark:bg-stone-900 p-1"
     >
       <MenuButton
         active={editorState.isBold}
