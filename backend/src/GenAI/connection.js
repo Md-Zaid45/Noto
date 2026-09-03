@@ -1,8 +1,10 @@
-import {GoogleGenAI} from '@google/genai'
-import "./config/env.js";
+import "../config/env.js";
 
-const ai = new GoogleGenAI({
-  apiKey:process.env.GEMINI_API_KEY
-})
+import OpenAI from "openai";
+
+const ai = new OpenAI({
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.GEMINI_API_KEY,
+});
 
 export default ai;

@@ -4,9 +4,11 @@ import cors from "cors";
 import CookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandling.middleware.js";
 import "./config/env.js";
+import aiRouter from "./routes/ai.route.js";
 
 const app = express();
 const userRouter = router;
+const aiRoute = aiRouter
 app.use(
   cors({
     origin: process.env.ORIGIN,
@@ -17,6 +19,7 @@ app.use(
 app.use(express.json());
 app.use(CookieParser());
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/ai", aiRoute)
 app.use("/", errorHandler);
 
 export default app;
