@@ -50,17 +50,17 @@ export function SignUp() {
     };
   }, [success, navigate]);
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-        <h1 className="text-2xl font-semibold text-gray-800 text-center mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-stone-950 px-4">
+      <div className="w-full max-w-md bg-white dark:bg-stone-900 rounded-2xl shadow-lg dark:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-stone-800 p-8">
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-stone-100 text-center mb-2">
           Create an account
         </h1>
-        <p className="text-sm text-gray-500 text-center mb-6">
+        <p className="text-sm text-gray-500 dark:text-stone-400 text-center mb-6">
           Start building your knowledge base
         </p>
         {isLoading && (
-          <div className="absolute inset-0 bg-white/80 rounded flex items-center justify-center z-10">
-            <LoadingLoader size="lg" color="blue" />
+          <div className="absolute inset-0 bg-white/80 dark:bg-stone-900/80 rounded flex items-center justify-center z-10">
+            <LoadingLoader size="lg" color="green" />
           </div>
         )}
         <form noValidate onSubmit={signupHandler} className="space-y-5">
@@ -85,21 +85,21 @@ export function SignUp() {
           )}
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
           >
             Sign Up
           </button>
         </form>
         {success && (
-          <div className=" mt-1 w-full bg-green-100 text-green-800 border-b border-green-300 px-4 py-3 text-center font-medium animate-slideDown">
+          <div className=" mt-1 w-full bg-green-100 dark:bg-emerald-950/30 text-green-800 dark:text-emerald-300 border-b border-green-300 dark:border-emerald-800 px-4 py-3 text-center font-medium animate-slideDown">
             Registered Successfully !
           </div>
         )}
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-gray-500 dark:text-stone-400 mt-6">
           Already have an account?{" "}
           <NavLink
             to="/login"
-            className="text-indigo-600 font-medium hover:text-indigo-500 transition-colors"
+            className="text-emerald-600 font-medium hover:text-emerald-500 transition-colors"
           >
             Log in
           </NavLink>

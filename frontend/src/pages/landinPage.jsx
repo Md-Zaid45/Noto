@@ -14,13 +14,13 @@ import { useNavigate } from "react-router-dom";
 export default function LandingPage() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-emerald-200">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-sans selection:bg-emerald-200">
       <Header></Header>
       <main>
         <section className="relative pt-24 pb-20 md:pb-32 px-6 md:px-8 overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row items-end gap-8 mb-16">
-              <h1 className="font-extrabold text-5xl md:text-8xl tracking-tighter leading-none max-w-4xl text-black">
+              <h1 className="font-extrabold text-5xl md:text-8xl tracking-tighter leading-none max-w-4xl text-black dark:text-white">
                 Think. Write. Organize{" "}
                 <span className="text-emerald-700">all in one place.</span>
               </h1>
@@ -28,7 +28,7 @@ export default function LandingPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
               <div className="lg:col-span-5 space-y-8">
-                <p className="text-lg md:text-xl text-stone-500 leading-relaxed">
+                <p className="text-lg md:text-xl text-stone-500 dark:text-stone-400 leading-relaxed">
                   The professional workspace designed for deep focus and
                   effortless archival. No clutter, no distractions just your
                   thoughts in high definition.
@@ -46,7 +46,7 @@ export default function LandingPage() {
               </div>
 
               <div className="lg:col-span-7 relative">
-                <div className="aspect-video bg-stone-200 rounded-xl overflow-hidden shadow-2xl relative border border-stone-300/50 flex items-center justify-center p-4">
+                <div className="aspect-video bg-stone-200 dark:bg-stone-800 rounded-xl overflow-hidden shadow-2xl relative border border-stone-300/50 dark:border-stone-600/50 flex items-center justify-center p-4">
                   <svg
                     viewBox="0 0 800 500"
                     fill="none"
@@ -167,35 +167,35 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-20 md:py-24 px-6 md:px-8 bg-stone-100 border-y border-stone-200">
+        <section className="py-20 md:py-24 px-6 md:px-8 bg-stone-100 dark:bg-stone-800 border-y border-stone-200 dark:border-stone-700">
           <div className="max-w-7xl mx-auto">
             <div className="mb-12 md:mb-16">
               <span className="text-emerald-700 text-sm font-bold uppercase tracking-widest block mb-2">
                 Capabilities
               </span>
-              <h2 className="font-bold text-3xl md:text-4xl text-black tracking-tight">
+              <h2 className="font-bold text-3xl md:text-4xl text-black dark:text-white tracking-tight">
                 Engineered for Clarity
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div
-                className="md:col-span-2 bg-white p-8 md:p-10 rounded-xl flex flex-col justify-between
-               min-h-100 shadow-sm border border-stone-200"
+                className="md:col-span-2 bg-white dark:bg-stone-800 p-8 md:p-10 rounded-xl flex flex-col justify-between
+                min-h-100 shadow-sm border border-stone-200 dark:border-stone-700"
               >
                 <div>
                   <div className="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center mb-6 text-emerald-700">
                     <Edit3 size={24} />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-black">
+                  <h3 className="text-2xl font-bold mb-4 text-black dark:text-white">
                     Rich Editor
                   </h3>
-                  <p className="text-stone-500 leading-relaxed">
+                  <p className="text-stone-500 dark:text-stone-400 leading-relaxed">
                     Rich text writing experience with beautiful typography and
                     immersive focus modes.
                   </p>
                 </div>
-                <div className="mt-8 rounded-lg overflow-hidden h-48 bg-stone-50 border border-stone-100 flex items-center justify-center p-6">
+                  <div className="mt-8 rounded-lg overflow-hidden h-48 bg-stone-50 dark:bg-stone-900 border border-stone-100 dark:border-stone-700 flex items-center justify-center p-6">
                   <svg
                     viewBox="0 0 400 200"
                     fill="none"
@@ -238,20 +238,20 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <div className="md:col-span-2 bg-stone-200/50 p-8 md:p-10 rounded-xl flex flex-col justify-between min-h-[400px] border border-stone-200">
+              <div className="md:col-span-2 bg-stone-200/50 dark:bg-stone-800/50 p-8 md:p-10 rounded-xl flex flex-col justify-between min-h-[400px] border border-stone-200 dark:border-stone-700">
                 <div>
                   <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-6 text-black shadow-sm">
                     <FolderOpen size={24} />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-black">
+                  <h3 className="text-2xl font-bold mb-4 text-black dark:text-white">
                     Folder Organization
                   </h3>
-                  <p className="text-stone-600 leading-relaxed">
+                  <p className="text-stone-600 dark:text-stone-400 leading-relaxed">
                     Hierarchical structure that grows with your thoughts.
                     Infinite nesting for the ultimate taxonomist.
                   </p>
                 </div>
-                <div className="mt-8 bg-white rounded-lg p-6 h-48 border border-stone-200 shadow-sm flex flex-col justify-center">
+                <div className="mt-8 bg-white dark:bg-stone-900 rounded-lg p-6 h-48 border border-stone-200 dark:border-stone-700 shadow-sm flex flex-col justify-center">
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="w-4 h-4 rounded bg-stone-300"></div>
@@ -273,7 +273,7 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <div className="md:col-span-2 bg-black text-white p-8 md:p-10 rounded-xl flex flex-col sm:flex-row items-center gap-8 shadow-xl">
+              <div className="md:col-span-2 bg-black dark:bg-stone-950 text-white p-8 md:p-10 rounded-xl flex flex-col sm:flex-row items-center gap-8 shadow-xl">
                 <div className="w-full sm:w-1/2">
                   <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center mb-6 text-emerald-300">
                     <AppWindow size={24} />
@@ -281,7 +281,7 @@ export default function LandingPage() {
                   <h3 className="text-2xl font-bold mb-4">
                     Multi-Tab Workflow
                   </h3>
-                  <p className="text-stone-400 leading-relaxed">
+                  <p className="text-stone-400 dark:text-stone-500 leading-relaxed">
                     Switch between projects instantly. Your workspace remembers
                     exactly where you left off.
                   </p>
@@ -350,14 +350,14 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <div className="md:col-span-2 bg-emerald-50 p-8 md:p-10 rounded-xl flex flex-col justify-center text-center border border-emerald-100">
+              <div className="md:col-span-2 bg-emerald-50 dark:bg-emerald-950/40 p-8 md:p-10 rounded-xl flex flex-col justify-center text-center border border-emerald-100 dark:border-emerald-900/50">
                 <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-6 text-emerald-700">
                   <Zap size={32} />
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-emerald-900">
+                <h3 className="text-2xl font-bold mb-4 text-emerald-900 dark:text-emerald-300">
                   Fast & Minimal
                 </h3>
-                <p className="text-emerald-700/80 leading-relaxed max-w-xs mx-auto">
+                <p className="text-emerald-700/80 dark:text-emerald-400/80 leading-relaxed max-w-xs mx-auto">
                   Zero bloat. Instant sync. Built for those who value their time
                   and mental bandwidth.
                 </p>
@@ -366,49 +366,49 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-24 md:py-32 px-6 md:px-8 bg-stone-50">
+        <section className="py-24 md:py-32 px-6 md:px-8 bg-stone-50 dark:bg-stone-900">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16 md:mb-20">
-              <h2 className="font-bold text-3xl md:text-4xl text-black mb-4 tracking-tight">
+              <h2 className="font-bold text-3xl md:text-4xl text-black dark:text-white mb-4 tracking-tight">
                 Simple by Design
               </h2>
-              <p className="text-stone-500 max-w-2xl mx-auto text-lg">
+              <p className="text-stone-500 dark:text-stone-400 max-w-2xl mx-auto text-lg">
                 We've stripped away the noise to let your creativity take center
                 stage.
               </p>
             </div>
 
             <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
-              <div className="hidden md:block absolute top-6 left-[10%] w-[80%] h-[2px] bg-stone-200 -z-10"></div>
+              <div className="hidden md:block absolute top-6 left-[10%] w-[80%] h-[2px] bg-stone-200 dark:bg-stone-700 -z-10"></div>
 
               <div className="space-y-6 text-center md:text-left">
-                <div className="w-12 h-12 bg-black text-white flex items-center justify-center rounded-full font-bold text-xl mx-auto md:mx-0 ring-8 ring-stone-50 shadow-md">
+                <div className="w-12 h-12 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center rounded-full font-bold text-xl mx-auto md:mx-0 ring-8 ring-stone-50 dark:ring-stone-900 shadow-md">
                   1
                 </div>
-                <h4 className="font-bold text-xl text-black">Capture</h4>
-                <p className="text-stone-500 leading-relaxed">
+                <h4 className="font-bold text-xl text-black dark:text-white">Capture</h4>
+                <p className="text-stone-500 dark:text-stone-400 leading-relaxed">
                   Quickly jot down ideas using lightning-fast hotkeys and a
                   distraction-free modal.
                 </p>
               </div>
 
               <div className="space-y-6 text-center md:text-left">
-                <div className="w-12 h-12 bg-emerald-700 text-white flex items-center justify-center rounded-full font-bold text-xl mx-auto md:mx-0 ring-8 ring-stone-50 shadow-md">
+                <div className="w-12 h-12 bg-emerald-700 text-white flex items-center justify-center rounded-full font-bold text-xl mx-auto md:mx-0 ring-8 ring-stone-50 dark:ring-stone-900 shadow-md">
                   2
                 </div>
-                <h4 className="font-bold text-xl text-black">Refine</h4>
-                <p className="text-stone-500 leading-relaxed">
+                <h4 className="font-bold text-xl text-black dark:text-white">Refine</h4>
+                <p className="text-stone-500 dark:text-stone-400 leading-relaxed">
                   Use our rich formatting engine to turn raw thoughts into
                   structured knowledge.
                 </p>
               </div>
 
               <div className="space-y-6 text-center md:text-left">
-                <div className="w-12 h-12 bg-black text-white flex items-center justify-center rounded-full font-bold text-xl mx-auto md:mx-0 ring-8 ring-stone-50 shadow-md">
+                <div className="w-12 h-12 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center rounded-full font-bold text-xl mx-auto md:mx-0 ring-8 ring-stone-50 dark:ring-stone-900 shadow-md">
                   3
                 </div>
-                <h4 className="font-bold text-xl text-black">Archive</h4>
-                <p className="text-stone-500 leading-relaxed">
+                <h4 className="font-bold text-xl text-black dark:text-white">Archive</h4>
+                <p className="text-stone-500 dark:text-stone-400 leading-relaxed">
                   Organize effortlessly with smart folders and bi-directional
                   linking.
                 </p>
@@ -417,66 +417,66 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-20 md:py-24 px-6 md:px-8 bg-stone-200/50 border-t border-stone-200">
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-200">
-            <div className="p-10 border-b border-stone-200 bg-stone-50">
-              <h2 className="font-bold text-3xl text-black text-center tracking-tight">
+        <section className="py-20 md:py-24 px-6 md:px-8 bg-stone-200/50 dark:bg-stone-800/50 border-t border-stone-200 dark:border-stone-700">
+          <div className="max-w-4xl mx-auto bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700">
+            <div className="p-10 border-b border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-900">
+              <h2 className="font-bold text-3xl text-black dark:text-white text-center tracking-tight">
                 Why Noto?
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="p-10 md:p-12 border-b md:border-b-0 md:border-r border-stone-200 space-y-8">
-                <h5 className="text-xs uppercase tracking-widest font-bold text-stone-400">
+              <div className="p-10 md:p-12 border-b md:border-b-0 md:border-r border-stone-200 dark:border-stone-700 space-y-8">
+                <h5 className="text-xs uppercase tracking-widest font-bold text-stone-400 dark:text-stone-500">
                   The Old Way
                 </h5>
                 <ul className="space-y-5">
-                  <li className="flex items-center gap-3 text-stone-400 line-through">
+                  <li className="flex items-center gap-3 text-stone-400 dark:text-stone-500 line-through">
                     <X size={20} className="text-red-400 shrink-0" />
                     Cluttered interface
                   </li>
-                  <li className="flex items-center gap-3 text-stone-400 line-through">
+                  <li className="flex items-center gap-3 text-stone-400 dark:text-stone-500 line-through">
                     <X size={20} className="text-red-400 shrink-0" />
                     Constant distractions
                   </li>
-                  <li className="flex items-center gap-3 text-stone-400 line-through">
+                  <li className="flex items-center gap-3 text-stone-400 dark:text-stone-500 line-through">
                     <X size={20} className="text-red-400 shrink-0" />
                     Slow, bloated software
                   </li>
-                  <li className="flex items-center gap-3 text-stone-400 line-through">
+                  <li className="flex items-center gap-3 text-stone-400 dark:text-stone-500 line-through">
                     <X size={20} className="text-red-400 shrink-0" />
                     Fragmented workflow
                   </li>
                 </ul>
               </div>
 
-              <div className="p-10 md:p-12 space-y-8 bg-emerald-50/50">
-                <h5 className="text-xs uppercase tracking-widest font-bold text-emerald-700">
+              <div className="p-10 md:p-12 space-y-8 bg-emerald-50/50 dark:bg-emerald-950/30">
+                <h5 className="text-xs uppercase tracking-widest font-bold text-emerald-700 dark:text-emerald-400">
                   The Noto Way
                 </h5>
                 <ul className="space-y-5">
-                  <li className="flex items-center gap-3 text-black font-medium">
+                  <li className="flex items-center gap-3 text-black dark:text-white font-medium">
                     <CheckCircle2
                       size={20}
                       className="text-emerald-600 shrink-0"
                     />
                     Editorial-grade design
                   </li>
-                  <li className="flex items-center gap-3 text-black font-medium">
+                  <li className="flex items-center gap-3 text-black dark:text-white font-medium">
                     <CheckCircle2
                       size={20}
                       className="text-emerald-600 shrink-0"
                     />
                     Focus-first philosophy
                   </li>
-                  <li className="flex items-center gap-3 text-black font-medium">
+                  <li className="flex items-center gap-3 text-black dark:text-white font-medium">
                     <CheckCircle2
                       size={20}
                       className="text-emerald-600 shrink-0"
                     />
                     Blazing fast performance
                   </li>
-                  <li className="flex items-center gap-3 text-black font-medium">
+                  <li className="flex items-center gap-3 text-black dark:text-white font-medium">
                     <CheckCircle2
                       size={20}
                       className="text-emerald-600 shrink-0"
@@ -489,12 +489,12 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-32 px-6 md:px-8 text-center relative overflow-hidden bg-white">
+        <section className="py-32 px-6 md:px-8 text-center relative overflow-hidden bg-white dark:bg-stone-900">
           <div className="max-w-3xl mx-auto relative z-10">
-            <h2 className="font-extrabold text-4xl md:text-6xl tracking-tight text-black mb-8">
+            <h2 className="font-extrabold text-4xl md:text-6xl tracking-tight text-black dark:text-white mb-8">
               Ready to achieve total focus?
             </h2>
-            <p className="text-lg md:text-xl text-stone-500 mb-10">
+            <p className="text-lg md:text-xl text-stone-500 dark:text-stone-400 mb-10">
               Join 50,000+ thinkers and writers who have found their digital
               sanctuary with Noto.
             </p>
@@ -505,7 +505,7 @@ export default function LandingPage() {
               >
                 Get Started for Free
               </button>
-              <p className="text-sm text-stone-400 mt-4 sm:mt-0 sm:ml-4">
+              <p className="text-sm text-stone-400 dark:text-stone-500 mt-4 sm:mt-0 sm:ml-4">
                 No credit card required.
                 <br className="hidden sm:block" /> Cancel anytime.
               </p>
@@ -515,13 +515,13 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="w-full border-t border-stone-200 bg-stone-50">
+      <footer className="w-full border-t border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-900">
         <div className="flex flex-col md:flex-row justify-between items-center px-6 md:px-12 py-10 max-w-7xl mx-auto w-full">
           <div className="flex flex-col items-center md:items-start space-y-2">
-            <span className="text-xl font-black text-black tracking-tight">
+            <span className="text-xl font-black text-black dark:text-white tracking-tight">
               Noto
             </span>
-            <p className="text-xs uppercase tracking-widest text-stone-400">
+            <p className="text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500">
               © 2026 Noto Editorial Note-Taking. Built for focus.
             </p>
           </div>

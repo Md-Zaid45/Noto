@@ -2,12 +2,12 @@ import React from 'react';
 
 export default function ErrorPage() {
   return (
-    <div className="min-h-screen bg-[#F8FBF9] flex flex-col items-center justify-center p-6 text-center font-sans">
-      <div className="absolute top-10 right-10 w-24 h-24 bg-green-100 rounded-full blur-3xl opacity-50" />
-      <div className="absolute bottom-20 left-10 w-32 h-16 bg-gray-100 rounded-full blur-2xl opacity-60" />
+    <div className="min-h-screen bg-[#F8FBF9] dark:bg-stone-900 flex flex-col items-center justify-center p-6 text-center font-sans">
+      <div className="absolute top-10 right-10 w-24 h-24 bg-green-100 dark:bg-emerald-900/30 rounded-full blur-3xl opacity-50" />
+      <div className="absolute bottom-20 left-10 w-32 h-16 bg-gray-100 dark:bg-stone-800 rounded-full blur-2xl opacity-60" />
 
       <div className="relative mb-8">
-        <div className="w-32 h-40 bg-white rounded-lg shadow-sm border border-gray-100 flex items-center justify-center transform -rotate-2 relative">
+        <div className="w-32 h-40 bg-white dark:bg-stone-800 rounded-lg shadow-sm border border-gray-100 dark:border-stone-700 flex items-center justify-center transform -rotate-2 relative">
           <div className="w-12 h-12 border-2 border-[#1B4332] rounded-md flex items-center justify-center relative">
              <div className="w-full h-[2px] bg-[#1B4332] absolute top-1/2 -translate-y-1/2 rotate-45 scale-x-50 origin-left" />
              <div className="w-full h-[2px] bg-[#1B4332] absolute top-1/2 -translate-y-1/2 -rotate-45 scale-x-50 origin-right" />
@@ -23,25 +23,25 @@ export default function ErrorPage() {
       </div>
 
       <div className="max-w-md">
-        <p className="uppercase tracking-[0.2em] text-[10px] font-semibold text-gray-400 mb-4">
+        <p className="uppercase tracking-[0.2em] text-[10px] font-semibold text-gray-400 dark:text-stone-500 mb-4">
           Error 404
         </p>
         
-        <h1 className="text-5xl md:text-6xl font-bold text-black mb-6 tracking-tight">
-          Lost in the <span className="text-[#1B4332]">Vellum.</span>
+        <h1 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-6 tracking-tight">
+          Lost in the <span className="text-[#1B4332] dark:text-emerald-400">Vellum.</span>
         </h1>
         
-        <p className="text-gray-500 text-lg leading-relaxed mb-10 px-4">
+        <p className="text-gray-500 dark:text-stone-400 text-lg leading-relaxed mb-10 px-4">
           The page you're looking for has drifted away. Let's get you back to your notes.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <button className="bg-black text-white px-10 py-4 rounded-md font-bold text-xs tracking-widest uppercase hover:bg-gray-800 transition-colors w-full sm:w-auto">
+          <button className="bg-black dark:bg-white text-white dark:text-black px-10 py-4 rounded-md font-bold text-xs tracking-widest uppercase hover:bg-gray-800 dark:hover:bg-stone-200 transition-colors w-full sm:w-auto">
             Return Home
           </button>
         </div>
 
-        <button className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-gray-600 transition-colors">
+        <button className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-stone-500 hover:text-gray-600 dark:hover:text-stone-300 transition-colors">
           Contact Support
         </button>
       </div>
