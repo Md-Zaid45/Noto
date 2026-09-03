@@ -8,35 +8,63 @@ import { Provider } from "react-redux";
 import LandingPage from "./pages/landinPage.jsx";
 import Editr from "./features/notes/editor/editor.jsx";
 import { AuthPage } from "./pages/signup-login.jsx";
-import ContentLayout from "./features/layout/contentLayout.jsx";
 import ErrorPage from "./pages/errorPage.jsx";
 import { apiFetch } from "./commons/apifetch.js";
-import  Dashboard  from "./pages/dashboard.jsx";
-
+import Dashboard from "./pages/dashboard.jsx";
+import CardsPage from "./pages/revision.jsx";
+import ReviewFlashcard from "./features/flashcards/reviewFlashcard.jsx";
+import Quiz from "./features/quiz/quiz.jsx";
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage />, errorElement: <ErrorPage /> },
   {
     path: "/home",
-    element: <App/>,
+    element: <App />,
     loader: async () => {
       const res = await apiFetch(`/workspace`, {
         method: "POST",
-        body: JSON.parse(localStorage.getItem("tabs"))
+        body: JSON.parse(localStorage.getItem("tabs")),
       });
       if (!res.ok) throw new Error("Failed to fetch data");
       const data = await res.json();
       console.log(data);
       return data;
     },
+    shouldRevalidate() {
+      return false;
+    },
     children: [
       {
         path: "notes/:id",
-        element: <ContentLayout />,
+        element: <Editr />,
+      },
+      {
+        path: "cards",
+        element: <CardsPage />,
+      },
+      {
+        path: "cards/:id",
+        element: <CardsPage />,
+      },
+      {
+        path:'cards/manage/:id',
+        element:<Manage/>
+      },
+      {
+        path: "cards/review/:id",
+        element: <ReviewFlashcard/>
       },
       {
         path: "dashboard",
-        element: <Dashboard/>
-      }
+        element: <Dashboard />,
+      },
+      {
+        path: "quiz",
+        element: <Dashboard />,
+      },
+      {
+        path: "quiz/:id",
+        element: <Quiz />,
+      },
     ],
   },
   {
@@ -49,8 +77,15 @@ const router = createBrowserRouter([
   },
 ]);
 
+import { ThemeProvider } from "./store/themeContext.jsx";
+import Manage from "./features/flashcards/manage.jsx";
+
 createRoot(document.getElementById("root")).render(
-  <Provider store={appStore}>
-    <RouterProvider router={router} />
-  </Provider>,
+  <StrictMode>
+    <Provider store={appStore}>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </Provider>
+  </StrictMode>,
 );

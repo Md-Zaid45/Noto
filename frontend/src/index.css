@@ -1,18 +1,30 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased bg-[#F7F6F3] text-stone-900;
+  }
+
+  .dark body {
+    @apply bg-stone-950 text-stone-100;
+  }
+}
 .ProseMirror {
   outline: none;
   min-height: 100%;          
   background: transparent;   
   padding: 0;                
 }
-:root {
-  --black: #0d0c0c;
-  --white: #ffffff;
-  --gray-2: #e5e7eb;
-  --gray-3: #d1d5db;
-  --purple-light: #ede9fe;
-}
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@400;500;600;700;800&display=swap');
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
