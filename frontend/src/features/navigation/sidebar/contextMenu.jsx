@@ -32,7 +32,7 @@ export default function ContextMenu({}) {
       {ShowContextMenu ? (
         <div
           data-context-menu
-          className="absolute rounded-sm z-50 w-40 bg-black text-white text-sm"
+          className="absolute z-50 w-40 bg-[#1C1B22] dark:bg-stone-950 text-white text-[12.5px] rounded-[6px] border-[0.5px] border-[#E8E6E1] dark:border-stone-800 py-1"
           style={{
             left: `${ContextMenuPos.x}px`,
             top: `${ContextMenuPos.y}px`,
@@ -41,7 +41,7 @@ export default function ContextMenu({}) {
           {contextOptions.map((option) => (
             <div
               key={option}
-              className={`hover:bg-gray-600  '} shadow-2xl text-white py-1  pl-2 shadow-gray-600 cursor-pointer`}
+              className="hover:bg-[#2E2D3A] dark:hover:bg-stone-800 text-white py-1.5 pl-3 cursor-pointer transition-all duration-150"
               onClick={() => {
                 handleContextMenuAction(
                   option,

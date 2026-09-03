@@ -36,6 +36,7 @@ export default function Tree({ folder, level = -1 }) {
     setShowInputNote,
     setShowInputFolder,
     inputRef,
+    activeView
   } = useContext(treeContext);
 
   function toggleExpand(id) {
@@ -45,19 +46,19 @@ export default function Tree({ folder, level = -1 }) {
   return (
     <div>
       <div className={folder.parentFolderId ? "w-2" : ""}></div>
-      <div className="text-[14px]">
+      <div className="text-[12.5px]">
         {folder.id && folder.id !== "r" && (
           <div
             draggable
             ref={Rename === folder.id ? renameRef : null}
             contentEditable={Rename === folder.id}
             className={`
-              group flex items-center gap-1.5 py-1.5 pr-2 rounded-md cursor-pointer
-              transition-[background-color,color] duration-150
-              text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-300
-              ${Active && Active === folder.id ? "bg-indigo-50 text-indigo-700 font-medium" : ""}
+              group flex items-center gap-1.5 pr-2 cursor-pointer
+              transition-all duration-150 text-[#4A4947] dark:text-stone-300
+              ${Active && Active === folder.id ? "bg-[#ecfdf5] dark:bg-emerald-950/30 text-[#047857] dark:text-emerald-300 font-medium" : "hover:bg-[#d1fae5] dark:hover:bg-emerald-950/30 hover:text-[#059669] dark:hover:text-emerald-400"}
+            ${Active === folder.id ? "dark:border-emerald-500" : ""}
             `}
-            style={{ paddingLeft: `${level * 7 + 8}px` }}
+            style={{ padding: "5px 8px 5px 22px", paddingLeft: `${level * 12 + 8}px`, borderLeft: Active === folder.id ? "2px solid #34d399" : "2px solid transparent" }}
             onClick={() => {
               if (Rename !== folder.id) {
                 toggleExpand(folder.id);
@@ -85,30 +86,19 @@ export default function Tree({ folder, level = -1 }) {
               )
             }
           >
+            <span className={`shrink-0 transition-transform duration-200 ${ExpandFolder ? "rotate-90" : "rotate-0"} text-[#A8A7A2] dark:text-stone-500 text-[11px]`}>
+              {ExpandFolder ? (
+                <HiChevronDown contentEditable={false} className="text-[11px]" />
+              ) : (
+                <HiChevronRight contentEditable={false} className="text-[11px]" />
+              )}
+            </span>
             {ExpandFolder ? (
-              <>
-                <HiChevronDown
-                  contentEditable={false}
-                  className="text-slate-500 shrink-0 text-[15px]"
-                />
-                <HiFolderOpen
-                  contentEditable={false}
-                  className="text-gray-800 shrink-0 text-[15px]"
-                />
-              </>
+              <HiFolderOpen contentEditable={false} className="text-[#BA7517] shrink-0 text-[13px]" />
             ) : (
-              <>
-                <HiChevronRight
-                  contentEditable={false}
-                  className="text-slate-500 shrink-0 text-[15px]"
-                />
-                <HiFolder
-                  contentEditable={false}
-                  className="text-gray-500 shrink-0 text-[15px]"
-                />
-              </>
+              <HiFolder contentEditable={false} className="text-[#BA7517] shrink-0 text-[13px]" />
             )}
-            <span className="truncate">{folder.name}</span>
+            <span className="truncate text-[12.5px]">{folder.name}</span>
           </div>
         )}
 
@@ -145,16 +135,16 @@ export default function Tree({ folder, level = -1 }) {
               contentEditable={Rename === node.id}
               key={node.id}
               className={`
-                flex items-center gap-1.5 py-1.5 pr-2 rounded-md cursor-pointer
-                transition-[background-color,color] duration-150
-                text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-300
-                ${Active && Active === node.id ? "bg-indigo-50 text-indigo-700 font-medium" : ""}
+                flex items-center gap-1.5 pr-2 cursor-pointer
+                transition-all duration-150 text-[#6B6A65] dark:text-stone-400
+                ${Active && Active === node.id ? "bg-[#ecfdf5] dark:bg-emerald-950/30 text-[#047857] dark:text-emerald-300 font-medium" : "hover:bg-[#d1fae5] dark:hover:bg-emerald-950/30 hover:text-[#059669] dark:hover:text-emerald-400"}
+              ${Active === node.id ? "dark:border-emerald-500" : ""}
               `}
-              style={{ paddingLeft: `${level * 7 + 21 + 8}px` }}
+              style={{ padding: "5px 8px 5px 22px", paddingLeft: `${level * 12 + 8}px`, borderLeft: Active === node.id ? "2px solid #34d399" : "2px solid transparent" }}
               onClick={() => {
                 if (Rename !== node.id) {
                   setActive(node.id);
-                  navigate(`notes/${node.id}`);
+                  navigate(`${activeView==='cards'?'cards':'notes'}/${node.id}`);
                 }
               }}
               onContextMenu={(e) =>
@@ -180,9 +170,9 @@ export default function Tree({ folder, level = -1 }) {
             >
               <HiDocumentText
                 contentEditable={false}
-                className="text-gray-500 shrink-0 text-[15px]"
+                className={`shrink-0 text-[13px] ${Active === node.id ? "text-[#059669] dark:text-emerald-400" : "text-[#A8A7A2] dark:text-stone-500"}`}
               />
-              <span className="truncate" contentEditable={Rename === node.id}>
+              <span className="truncate text-[12.5px]" contentEditable={Rename === node.id}>
                 {node.name}
               </span>
             </div>
