@@ -8,7 +8,7 @@ const LoadingLoader = ({ size = "md", color = "blue", fullScreen = false }) => {
   };
 
   const colorClasses = {
-    blue: "border-blue-500",
+    blue: "border-emerald-500",
     gray: "border-gray-500",
     red: "border-red-500",
     green: "border-green-500",

@@ -4,7 +4,7 @@ import { apiFetch } from "../../commons/apifetch";
 export const createNoteAsync = createAsyncThunk(
   "notes/addNote",
   async ({ name, folderId = null, revisionMark = false, content = "" }) => {
-    const newNote = { name, folderId, revisionMark, content };
+    const newNote = { name, folderId, revisionMark, content, };
     console.log("thunk noteslice", newNote);
 
     const res = await apiFetch(`/notes`, {
