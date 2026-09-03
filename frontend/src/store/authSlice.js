@@ -24,5 +24,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setLoggedIn, setLoggedOut } = authSlice.actions;
+export const { setLoggedIn, setLoggedOut, toggleIsAuthChecked } =
+  authSlice.actions;
 export default authSlice;

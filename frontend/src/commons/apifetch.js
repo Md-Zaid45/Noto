@@ -1,11 +1,10 @@
 import { useDispatch } from "react-redux";
-import { setLoggedIn } from "../store/authSlice";
+import { setLoggedIn, toggleIsAuthChecked } from "../store/authSlice";
 import appStore from "../store/appStore";
 
 const API_URL = import.meta.env.VITE_API_URL;
-
 export const apiFetch = async (url, options = {}) => {
-  let response = await fetch(API_URL + `/api/v1/users` + url, {
+  let response = await fetch(API_URL + `/api/v1${url.slice(1,3)=='ai'?'':'/users'}` + url, {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
@@ -26,7 +25,7 @@ export const apiFetch = async (url, options = {}) => {
     if (refreshRes.ok) {
       const data = await refreshRes.json();
       appStore.dispatch(setLoggedIn(data.payload.name));
-      response = await fetch(url, {
+      response = await fetch(API_URL + `/api/v1${url.slice(1,3)=='ai'?'':'/users'}` + url, {
         credentials: "include",
 
         headers: {
@@ -42,7 +41,6 @@ export const apiFetch = async (url, options = {}) => {
       appStore.dispatch(setLoggedIn(false));
       appStore.dispatch(toggleIsAuthChecked(false));
       console.log("failed req in apifetch");
-      return;
     }
   }
   console.log("apifetch response return", response);

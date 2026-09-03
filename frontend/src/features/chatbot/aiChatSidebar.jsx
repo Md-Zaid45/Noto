@@ -1,30 +1,36 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useParams } from "react-router-dom";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Send, 
-  Sparkles, 
-  Trash2, 
-  User, 
-  Bot 
-} from 'lucide-react';
-import { useSelector } from 'react-redux';
+import React, { useState, useRef, useEffect } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { ChevronRight, Sparkles, Trash2 } from "lucide-react";
+import { useSelector } from "react-redux";
+import { apiFetch } from "../../commons/apifetch";
 
 export default function AiChatSidebar() {
+  const {pathname} = useLocation()
+  const activeView = pathname.split("/")[2] || "";
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { id: 1, text: "Hello! I'm your AI assistant. How can I help you today?"+`${id}`, sender: 'ai' }
+    {
+      id: 1,
+      text:
+        "Hello! I'm your AI assistant. How can I help you today?" +
+        `${id ? " (Note " + id + ")" : ""}`,
+      sender: "ai",
+    },
   ]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
-  const note=useSelector((state) => state.NotesContent.find(note => note.id === id));
+  const note = useSelector((state) =>
+    state.NotesContent.find((note) => note.id === id),
+  );
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  useEffect(() => {
+    const fetchData = async () => {};
+  }, []);
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
@@ -36,149 +42,174 @@ export default function AiChatSidebar() {
     const userMessage = {
       id: Date.now(),
       text: inputValue,
-      sender: 'user'
+      sender: "user",
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
+    setInputValue("");
     setIsLoading(true);
+    const res = await apiFetch(`/ai/ask/${id}`, {
+      method: "POST",
+      body: {
+        query: inputValue,
+      },
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    const aiMessage = {
+      id: Date.now() + 1,
+      text: data.paylaod.answer,
+      sender: "ai",
+    };
 
-    // Simulate AI Response (Replace with your actual API call)
-    setTimeout(() => {
-      const aiMessage = {
-        id: Date.now() + 1,
-        text: `This is a mock response to: "${userMessage.text}" ${note?.content}. Integrate your LLM API here!`,
-        sender: 'ai'
-      };
-      setMessages((prev) => [...prev, aiMessage]);
-      setIsLoading(false);
-    }, 1200);
+    setMessages((prev) => [...prev, aiMessage]);
+    setIsLoading(false);
   };
 
   const clearChat = () => {
     if (window.confirm("Are you sure you want to clear this conversation?")) {
-      setMessages([{ id: Date.now(), text: "Hello! Chat cleared. How can I help you now?", sender: 'ai' }]);
+      setMessages([
+        {
+          id: Date.now(),
+          text: "Hello! Chat cleared. How can I help you now?",
+          sender: "ai",
+        },
+      ]);
     }
   };
 
   return (
     <>
-      {/* Floating Toggle Button - only shown when sidebar is closed */}
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed right-4 top-4 z-50 p-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-full shadow-lg hover:from-indigo-700 hover:to-indigo-800 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          title="Open AI Assistant"
-          aria-label="Open AI Assistant"
-        >
-          <Sparkles className="w-5 h-5" />
-        </button>
-      )}
-
-      {/* Sidebar Overlay - subtle backdrop when open on mobile */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+      {isOpen && activeView==='notes' && (
+        <div
+          className="fixed inset-0 bg-stone-900/20 z-40 md:hidden transition-opacity duration-300"
           onClick={() => setIsOpen(false)}
         />
       )}
 
-      {/* Sidebar Container */}
       <div
-        className={`mt-10 h-full bg-white shadow-2xl flex flex-col transition-all duration-300 ease-out 
-          ${isOpen ? 'w-full sm:w-96 translate-x-0' : 'w-0 opacity-0 translate-x-full '}`}
-        style={{ boxShadow: '-5px 0 25px -5px rgba(0,0,0,0.1)' }}
+        className={`fixed top-0 right-0 h-full bg-[#FAFAF9] dark:bg-stone-950 border-l border-[#E8E6E1] dark:border-stone-800 flex flex-col transition-transform duration-300 ease-in-out z-50
+          ${isOpen ? "w-full sm:w-[400px] translate-x-0" : "w-[400px] translate-x-full"}`}
       >
-        {/* Sidebar Header */}
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-gray-50 to-white">
-          <div className="flex items-center gap-2.5">
-            <div className="p-1.5 bg-indigo-100 rounded-lg">
-              <Sparkles className="w-4 h-4 text-indigo-600" />
-            </div>
-            <span className="font-semibold text-gray-800">AI Assistant</span>
+        <div className="h-[38px] border-b border-[#E8E6E1] dark:border-stone-800 flex items-center justify-between px-3 shrink-0">
+          <div className="flex items-center gap-2">
+            <span
+              className="material-symbols-outlined text-[#059669] dark:text-emerald-400 text-[17px]"
+              style={{ fontSize: "17px" }}
+            >
+              auto_awesome
+            </span>
+            <span className="text-[12.5px] font-medium text-[#1C1B22] dark:text-stone-100">
+              AI Assistant
+            </span>
           </div>
           <div className="flex items-center gap-1">
             <button
               onClick={clearChat}
-              className="p-2 text-gray-400 hover:text-red-500 rounded-lg transition-colors hover:bg-red-50"
+              className="w-[28px] h-[26px] flex items-center justify-center text-[#6B6A65] dark:text-stone-400 hover:text-[#059669] dark:hover:text-emerald-400 rounded-[5px] hover:bg-[#ecfdf5] dark:hover:bg-emerald-950/30 transition-all duration-150 active:scale-[0.97]"
               title="Clear conversation"
               aria-label="Clear conversation"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-[14px] h-[14px]" />
             </button>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-2 text-gray-400 hover:text-gray-700 rounded-lg transition-colors hover:bg-gray-100"
+              className="w-[28px] h-[26px] flex items-center justify-center text-[#6B6A65] dark:text-stone-400 hover:text-[#059669] dark:hover:text-emerald-400 rounded-[5px] hover:bg-[#ecfdf5] dark:hover:bg-emerald-950/30 transition-all duration-150 active:scale-[0.97]"
               title="Close sidebar"
               aria-label="Close sidebar"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-[14px] h-[14px]" />
             </button>
           </div>
         </div>
 
-        {/* Message List */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/30">
+        <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-[#FAFAF9] dark:bg-stone-950">
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+              className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
             >
-              {/* Avatar */}
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm ${
-                msg.sender === 'user' ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700'
-              }`}>
-                {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-              </div>
-
-              {/* Message Bubble */}
-              <div className={`max-w-[85%] rounded-2xl p-3 text-sm leading-relaxed shadow-sm transition-all ${
-                msg.sender === 'user'
-                  ? 'bg-indigo-600 text-white rounded-tr-sm'
-                  : 'bg-white text-gray-800 border border-gray-100 rounded-tl-sm'
-              }`}>
+              {msg.sender === "ai" && (
+                <div className="w-[26px] h-[26px] rounded-full bg-[#ecfdf5] flex items-center justify-center flex-shrink-0 mr-[7px] mt-0.5">
+                  <span
+                    className="material-symbols-outlined text-[13px] text-[#059669] dark:text-emerald-400"
+                    style={{ fontSize: "13px" }}
+                  >
+                    auto_awesome
+                  </span>
+                </div>
+              )}
+              <div
+                className={`${
+                  msg.sender === "ai"
+                    ? "bg-[#ecfdf5] text-[#064e3b] dark:text-emerald-200 rounded-[10px] p-[9px_11px] max-w-[90%]"
+                    : "bg-[#059669] dark:bg-emerald-600 text-white rounded-[10px] p-[9px_11px] max-w-[90%]"
+                } text-[12.5px] leading-relaxed`}
+              >
                 {msg.text}
               </div>
             </div>
           ))}
 
-          {/* Typing Indicator */}
           {isLoading && (
-            <div className="flex gap-3 flex-row">
-              <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 shadow-sm">
-                <Bot className="w-4 h-4" />
+            <div className="flex">
+              <div className="w-[26px] h-[26px] rounded-full bg-[#ecfdf5] flex items-center justify-center flex-shrink-0 mr-[7px] mt-0.5">
+                <span
+                  className="material-symbols-outlined text-[13px] text-[#059669] dark:text-emerald-400"
+                  style={{ fontSize: "13px" }}
+                >
+                  auto_awesome
+                </span>
               </div>
-              <div className="bg-white border border-gray-100 rounded-2xl rounded-tl-sm p-3 shadow-sm flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+              <div className="bg-[#ecfdf5] text-[#064e3b] dark:text-emerald-200 rounded-[10px] p-[9px_11px] text-[12.5px]">
+                <div className="flex gap-1">
+                  <span
+                    className="w-1.5 h-1.5 bg-[#059669] dark:bg-emerald-600 rounded-full animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  ></span>
+                  <span
+                    className="w-1.5 h-1.5 bg-[#059669] dark:bg-emerald-600 rounded-full animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  ></span>
+                  <span
+                    className="w-1.5 h-1.5 bg-[#059669] dark:bg-emerald-600 rounded-full animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  ></span>
+                </div>
               </div>
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Form */}
-        <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-200 bg-white">
-          <div className="relative flex items-center">
+        <form
+          onSubmit={handleSendMessage}
+          className="border-t border-[#E8E6E1] dark:border-stone-800 p-[10px_12px] bg-[#FAFAF9] dark:bg-stone-950"
+        >
+          <div className="flex items-center gap-1.5">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask me anything..."
+              placeholder="Ask me anything…"
               disabled={isLoading}
-              className="w-full pl-4 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 disabled:opacity-60 disabled:bg-gray-100 transition-all"
+              className="flex-1 px-[10px] py-[6px] border-[0.5px] border-[#E2E0DC] dark:border-stone-700 rounded-full bg-white dark:bg-stone-900 text-[#1C1B22] dark:text-stone-100 text-[12.5px] placeholder-[#C4C3BE] dark:placeholder-stone-600 focus:border-[#6ee7b7] dark:focus:border-emerald-500 focus:ring-0 outline-none transition-all duration-150"
             />
             <button
               type="submit"
               disabled={!inputValue.trim() || isLoading}
-              className="absolute right-2 p-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-40 disabled:hover:bg-indigo-600 transition-colors"
+              className="w-[28px] h-[28px] rounded-full bg-[#059669] dark:bg-emerald-600 flex items-center justify-center flex-shrink-0 text-white cursor-pointer hover:bg-[#047857] dark:hover:bg-emerald-700 transition-all duration-150 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed border-none"
               aria-label="Send message"
             >
-              <Send className="w-4 h-4" />
+              <span
+                className="material-symbols-outlined text-[13px]"
+                style={{ fontSize: "13px" }}
+              >
+                arrow_upward
+              </span>
             </button>
           </div>
-          <p className="text-xs text-gray-400 mt-2 text-center">
+          <p className="text-[10px] text-[#A8A7A2] dark:text-stone-500 text-center pt-2">
             AI may produce inaccurate information
           </p>
         </form>
