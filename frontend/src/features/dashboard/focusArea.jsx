@@ -1,59 +1,34 @@
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Zap, CheckCircle, Clock, Percent, Flame, AlertCircle, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
-export default function FocusAreas() {
+export default function FocusAreas({ decks }) {
+  const items = (decks || []).filter((d) => d.totalCards > 0).slice(0, 5);
+
   return (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between">
+    <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-[#e5e7eb] dark:border-stone-800 flex flex-col justify-between">
       <div>
-        <h2 className="font-bold text-gray-800 mb-4">Focus Areas</h2>
+        <h2 className="font-bold text-[#111827] dark:text-stone-100 mb-4">Focus Areas</h2>
 
         <div className="space-y-4">
-          {/* Organic Chem */}
-          <div>
-            <div className="flex justify-between text-xs font-semibold mb-1">
-              <span className="text-gray-600">Organic Chemistry</span>
-              <span className="text-gray-400">82%</span>
+          {items.length > 0 ? items.map((d) => (
+            <div key={d.noteId}>
+              <div className="flex justify-between text-xs font-semibold mb-1">
+                <span className="text-[#111827] dark:text-stone-100">{d.name}</span>
+                <span className="text-[#6b7280] dark:text-stone-400">{d.mastery}%</span>
+              </div>
+              <div className="w-full bg-[#e5e7eb] dark:bg-stone-800 h-2 rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full"
+                  style={{ width: `${d.mastery}%`, backgroundColor: d.mastery >= 70 ? '#1a5c3a' : '#6ee7b7' }}
+                />
+              </div>
             </div>
-            <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-              <div
-                className="bg-[#6366F1] h-full rounded-full"
-                style={{ width: "82%" }}
-              />
-            </div>
-          </div>
-
-          {/* Legal Ethics */}
-          <div>
-            <div className="flex justify-between text-xs font-semibold mb-1">
-              <span className="text-gray-600">Legal Ethics</span>
-              <span className="text-gray-400">45%</span>
-            </div>
-            <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-              <div
-                className="bg-[#6366F1] h-full rounded-full"
-                style={{ width: "45%" }}
-              />
-            </div>
-          </div>
-
-          {/* Data Structures */}
-          <div>
-            <div className="flex justify-between text-xs font-semibold mb-1">
-              <span className="text-gray-600">Data Structures</span>
-              <span className="text-gray-400">94%</span>
-            </div>
-            <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-              <div
-                className="bg-[#6366F1] h-full rounded-full"
-                style={{ width: "94%" }}
-              />
-            </div>
-          </div>
+          )) : (
+            <p className="text-sm text-[#9ca3af] dark:text-stone-500 text-center py-4">No deck data available</p>
+          )}
         </div>
       </div>
 
-      <button className="w-full mt-6 text-center text-xs font-semibold text-gray-500 border border-gray-200 rounded-xl py-2.5 hover:bg-gray-50 transition-colors flex items-center justify-center gap-1">
+      <button className="w-full mt-6 text-center text-xs font-semibold text-[#6b7280] dark:text-stone-400 border border-[#d1d5db] dark:border-stone-700 rounded-xl py-2.5 bg-white dark:bg-stone-900 hover:bg-[#f9fafb] dark:hover:bg-stone-800 transition-colors flex items-center justify-center gap-1">
         View Detailed Breakdown
         <ChevronRight className="w-3.5 h-3.5" />
       </button>
