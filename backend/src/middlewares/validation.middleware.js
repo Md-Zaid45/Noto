@@ -7,7 +7,7 @@ export const checkUserExists = async (req, res, next) => {
     const { email } = req.body;
     const user = await User.exists({ email });
     if (user) {
-      throw new ApiError(409, "user already existed");
+      throw new ApiError(409, "User already existed");
     }
     return next();
   } catch (error) {
@@ -52,7 +52,7 @@ export const validateCredentials = async (req, res, next) => {
     }
     const validPass = await user.isPasswordCorrect(password);
     if (!validPass) {
-      throw new ApiError(401, "incorrect password");
+      throw new ApiError(401, "Incorrect password");
     }
     req.user = user;
     return next();
@@ -75,7 +75,7 @@ export const verifyJwt = async (req, res, next) => {
     const user = await User.findOne({ _id: decoded._id });
     console.log("verifyjwt ",token, decoded, user, req.body);
 
-    if (!user) throw new ApiError(404, "user not found");
+    if (!user) throw new ApiError(404, "User not found");
     req.user = user;
     return next();
   } catch (error) {
@@ -91,11 +91,11 @@ export const validate = (schema) => (req, res, next) => {
     if (parsed.body !== undefined) req.body = parsed.body;
     if (parsed.params !== undefined) req.params = parsed.params;
     if (parsed.query !== undefined) req.query = parsed.query;
-    console.log("valiadte schema hit next ");
+    console.log("Valiadte schema hit next ");
 
     return next();
   } catch (error) {
-    console.log("valiadte schema hit error ", error);
+    console.log("Valiadte schema hit error ", error);
     return next(error);
   }
 };
