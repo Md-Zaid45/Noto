@@ -78,7 +78,6 @@ export const updateNote = async (req, res, next) => {
       { returnDocument: "after", runValidators: true },
     );
     if (!updatedNote) throw new ApiError(404, "Unable to find note");
-    console.log("update note", updatedNote, id);
 
     return res.json({
       success: true,
@@ -114,7 +113,6 @@ export const recentNotes = async (req, res, next) => {
       _id: { $in: ids },
     }).select("_id name content type ");
 
-    console.log("recent notes", recentNotes, req.notes, req.folders);
     if (recents?.tabs.length == 0 || recentNotes?.length == 0) {
       return res.status(200).json({
         payload: {
