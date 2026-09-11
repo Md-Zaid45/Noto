@@ -33,7 +33,7 @@ export const updateFlashcard = async (req, res, next) => {
       { new: true, runValidators: true },
     );
     if (!updatedFlashcard)
-      throw new ApiError(500, "Failed to update flashcard");
+      throw new ApiError(404, "Failed to update flashcard");
     return res.status(200).json({
       success: true,
       payload: {
@@ -86,7 +86,7 @@ export const deleteFlashcards = async (req, res, next) => {
       userId: req.user._id,
     });
     if (deletedFlashcards.deletedCount === 0)
-      throw new ApiError(500, "Failed to delete flashcards");
+      throw new ApiError(404, "Failed to delete flashcards");
 
     return res.status(200).json({
       success: true,
@@ -299,7 +299,7 @@ export const getFlashcards = async (req, res, next) => {
       nextReview: { $lte: new Date() },
     };
     if (id) query.noteId = id;
-    else throw new ApiError(402, "note id is empty");
+    else throw new ApiError(400, "note id is empty");
     const flashcards = await Flashcard.find(query)
       .sort({ nextReview: 1 })
       .limit(50);
@@ -318,7 +318,7 @@ export const getFlashcardsByNote = async (req, res, next) => {
   try {
     const { id } = req.params;
     const userId = req.user._id;
-    if (!id) throw new ApiError(402, "note id is empty");
+    if (!id) throw new ApiError(400, "note id is empty");
     const flashcards = await Flashcard.find({ userId, noteId: id }).sort({
       createdAt: -1,
     });
