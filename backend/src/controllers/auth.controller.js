@@ -6,7 +6,7 @@ export const registerUser = async (req, res, next) => {
   try {
     const user = await User.create(req.body);
 
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
       user: { userId: user._id, name: user.name, email: user.email },
       message: "user successfully created",
