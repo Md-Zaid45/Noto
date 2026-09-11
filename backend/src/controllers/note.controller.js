@@ -79,7 +79,7 @@ export const updateNote = async (req, res, next) => {
     );
     if (!updatedNote) throw new ApiError(404, "Unable to find note");
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       payload: { note: updatedNote },
     });
