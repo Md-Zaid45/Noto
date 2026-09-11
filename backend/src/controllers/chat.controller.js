@@ -74,10 +74,11 @@ export const getNoteSummary = async (req, res, next) => {
     const noteDoc = await Note.findById(id).select("content");
     if (!noteDoc.content)
       return res
+        .status(200)
         .json({
+          success: true,
           message: "No content to summarize! Add some text to use this feature",
-        })
-        .status(200);
+        });
     const context = getText(noteDoc.content);
     const summary = await summariseNote(context);
     if (!summary) throw new ApiError(500, "Failed to generate summary");
@@ -141,10 +142,13 @@ export const chatResponse = async (req, res, next) => {
 
     const answer = await answerQuestion(query, contextText, chat.history);
     if (!answer)
-      res.json({ payload: { answer: "Try again later" } }).status(200);
-    return res.json({
+      return res.status(200).json({ 
+        success: true,
+        payload: { answer: "Try again later" } 
+      });
+    return res.status(200).json({
       success: true,
-      paylaod: {
+      payload: {
         answer: answer.answer,
       },
     });
