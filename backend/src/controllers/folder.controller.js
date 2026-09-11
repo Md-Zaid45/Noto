@@ -48,7 +48,7 @@ export const deleteFolders = async (req, res, next) => {
     });
 
     if (deletedFolders.deletedCount === 0)
-      throw new ApiError(500, "Unable to delete folders");
+      throw new ApiError(404, "Unable to delete folders");
 
     return res.status(200).json({
       success: true,
@@ -75,7 +75,7 @@ export const updateFolder = async (req, res, next) => {
       { new: true, runValidators: true },
     );
 
-    if (!updatedFolder) throw new ApiError(500, "Failed to update the folder");
+    if (!updatedFolder) throw new ApiError(404, "Failed to update the folder");
 
     return res.status(200).json({
       success: true,
