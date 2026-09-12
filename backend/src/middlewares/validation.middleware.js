@@ -57,7 +57,6 @@ export const validateCredentials = async (req, res, next) => {
     req.user = user;
     return next();
   } catch (error) {
-    console.log(error.message);
     return next(error);
   }
 };
@@ -73,29 +72,23 @@ export const verifyJwt = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     const user = await User.findOne({ _id: decoded._id });
-    console.log("verifyjwt ",token, decoded, user, req.body);
-
     if (!user) throw new ApiError(404, "User not found");
     req.user = user;
     return next();
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 };
 
 export const validate = (schema) => (req, res, next) => {
-  console.log("valiadte schema hit ");
   try {
     const parsed = schema.parse(req);
     if (parsed.body !== undefined) req.body = parsed.body;
     if (parsed.params !== undefined) req.params = parsed.params;
     if (parsed.query !== undefined) req.query = parsed.query;
-    console.log("Valiadte schema hit next ");
 
     return next();
   } catch (error) {
-    console.log("Valiadte schema hit error ", error);
     return next(error);
   }
 };
