@@ -5,7 +5,6 @@ export const UiController = {
   resetActive: null,
   handler(e) {
     if (this.activeInput && !e.target.closest("[data-input-file]")) {
-      console.log("inside uicontroller", this.activeInput);
       this.activeInput.close();
     }
     if (this.sidebarContextMenu && !e.target.closest("[data-context-menu]")) {

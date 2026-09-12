@@ -44,7 +44,6 @@ export default function useFormHandlers(
       if (result.ok) setSuccess(true);
       else {
         setErrors((prev) => ({ ...prev, res: r.message }));
-        console.log("Validation failed:", allErrors);
       }
     }
   };
@@ -81,7 +80,6 @@ export default function useFormHandlers(
         dispatch(setLoggedIn(name));
       } else {
         setErrors((prev) => ({ ...prev, res: "Incorrect email or password" }));
-        console.log("Validation failed:", allErrors);
       }
     }
   };

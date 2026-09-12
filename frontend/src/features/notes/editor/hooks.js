@@ -54,8 +54,6 @@ export function useEditor(editors, OpenTabs, note) {
     function saveContent() {
       if (clearTimeoutId.current) clearTimeout(clearTimeoutId.current);
       clearTimeoutId.current = setTimeout(() => {
-        console.log("debounce auto save...........");
-
         if (note)
           dispatch(
             updateNoteContent({

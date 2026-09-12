@@ -32,7 +32,6 @@ export function handleInput(
       dispatch(addNote({ name: e.target.value, folderId: folder.id, tempId }));
       dispatch(createNoteAsync({ name: e.target.value, folderId, tempId }));
       setShowInputNote(null);
-      console.log("this is input tab", ShowInputNote);
     }
     if (ShowInputFolder) {
       dispatch(
@@ -51,7 +50,6 @@ export function handleInput(
       );
 
       setShowInputFolder(null);
-      console.log("this is input tab", ShowInputFolder);
     }
   }
 }
@@ -97,13 +95,11 @@ export function handleContextMenuAction(
     setRename(ShowContextMenu.id);
   } else if (ShowContextMenu && option === "Delete") {
     if (ShowContextMenu.type === "file") {
-      console.log(ShowContextMenu);
       dispatch(deleteNotesContent([ShowContextMenu]));
       dispatch(deleteNote(ShowContextMenu.id));
       dispatch(deleteNotesAsync([ShowContextMenu.id]));
     } else if (ShowContextMenu.type === "folder") {
       let ids = childrenIds(ShowContextMenu.id, Notes, Folders);
-      console.log("folder deletion in handler hit", ids);
       dispatch(deleteNotesContent(ids));
       dispatch(deleteFolder(ids));
       dispatch(deleteChildrenNotes(ids));
@@ -149,7 +145,6 @@ export function keydownHandler(
         updateNoteAsync({ name: e.currentTarget.innerText, id: node.id }),
       );
     }
-    console.log("handler", node.id);
     setRename(null);
   }
 

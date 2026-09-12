@@ -17,6 +17,5 @@ export function menuPosition(e) {
   
   x = Math.max(0, Math.min(x, vw - MENU_WIDTH));
   y = Math.max(0, Math.min(y, vh - MENU_HEIGHT));
-console.log( { x, y })
   return { x, y }
 }
