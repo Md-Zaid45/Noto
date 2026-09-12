@@ -125,8 +125,6 @@ export const me = async (req, res, next) => {
     const accessToken =
       req.cookies.accessToken ||
       req.headers.authorization?.replace("Bearer ", "");
-    console.log("accesstoken in me", accessToken);
-
     const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
     return res.status(200).json({
       success: true,

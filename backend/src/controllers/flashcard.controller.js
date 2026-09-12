@@ -79,8 +79,6 @@ export const reviewUpdate = async (req, res, next) => {
 export const deleteFlashcards = async (req, res, next) => {
   try {
     const { ids } = req.body;
-   console.log('delete cards', ids);
-   
     const deletedFlashcards = await Flashcard.deleteMany({
       _id: { $in: ids },
       userId: req.user._id,
@@ -222,8 +220,6 @@ export const getFlashcardsActivity = async (req, res, next) => {
       if (day._id === dayStr) streak++;
       else break;
     }
-    console.log(weeklyActivity,'future cards');
-    
     return res.status(200).json({
       success: true,
       payload: {
@@ -333,13 +329,6 @@ export const getFlashcardsByNote = async (req, res, next) => {
 
 export const recentFlashcards = async (req, res, next) => {
   try {
-    console.log(
-      "get flashcards controller hit",
-      req.body,
-      req.notes,
-      req.folders,
-      req.notesContent,
-    );
     const recents = req.body;
 
     const userId = req.user._id;

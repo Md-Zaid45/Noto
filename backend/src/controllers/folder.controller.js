@@ -9,7 +9,6 @@ export const getFolderStructure = async (req, res, next) => {
     const notes = await Note.find({ userId: req.user._id }).select('_id folderId name revisionMark type')
     req.folders=folders;
     req.notes=notes;
-    console.log("folders and notes", req.folders, req.notes);
     return next()
     
   } catch (error) {
@@ -40,8 +39,6 @@ export const createFolder = async (req, res, next) => {
 export const deleteFolders = async (req, res, next) => {
   try {
     const { ids } = req.body;
-  console.log("folder controller deletion ids");
-  
     const deletedFolders = await Folder.deleteMany({
       _id: { $in: ids },
       userId: req.user._id,

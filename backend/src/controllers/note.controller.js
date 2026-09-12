@@ -6,8 +6,6 @@ export const getNote = async (req, res, next) => {
   try {
     const { id } = req.params;
     const note = await Note.findOne({ userId: req.user._id, _id: id });
-    console.log("userID:", req.user._id, "id:", id, note);
-
     if (!note) return res.status(404).json({ success: false });
     return res.status(200).json({
       success: true,
@@ -21,8 +19,6 @@ export const getNote = async (req, res, next) => {
 };
 
 export const createNote = async (req, res, next) => {
-  console.log("notecontroller hit", req.body);
-
   try {
     const newNote = await Note.create({
       ...req.body,
@@ -44,8 +40,6 @@ export const createNote = async (req, res, next) => {
 export const deleteNotes = async (req, res, next) => {
   try {
     const { ids } = req.body;
-    console.log("note controller deletion ids", ids);
-
     const deletedNotes = await Note.deleteMany({
       _id: { $in: ids },
       userId: req.user._id,
@@ -67,8 +61,6 @@ export const deleteNotes = async (req, res, next) => {
 export const updateNote = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log("update note controller hit", id);
-
     const updatedNote = await Note.findOneAndUpdate(
       {
         _id: id,

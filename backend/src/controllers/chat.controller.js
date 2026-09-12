@@ -153,7 +153,6 @@ export const chatResponse = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error.message);
     return next(error);
   }
 };
