@@ -6,14 +6,12 @@ const notesSlice = createSlice({
   reducers: {
     renameNote: (state, action) => {
       const { id, name } = action.payload;
-      console.log("noteslice", action.payload);
 
       const note = state.find((node) => node.id == id);
       note.name = name;
     },
     addNote: (state, action) => {
       const { name, folderId, tempId } = action.payload;
-      console.log("noteslice temp addnote", action.payload);
       const newNote = {
         id: tempId,
         folderId,
@@ -26,12 +24,10 @@ const notesSlice = createSlice({
     },
     deleteNote: (state, action) => {
       const id = action.payload;
-      console.log(id, "noteslice");
       if (id) return state.filter((node) => node.id != id);
     },
     deleteChildrenNotes: (state, action) => {
       const deletionIds = action.payload;
-      console.log(deletionIds, "noteslice");
       if (deletionIds)
         return state.filter((node) => !deletionIds.includes(node.id));
     },
@@ -56,8 +52,6 @@ const notesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase("HYDRATE_APP", (state, action) => {
-      console.log("CASE CALLED, payload is:", action.payload);
-
       const newState = action.payload?.notes.map((note) => ({
         name: note.name,
         id: note._id,
@@ -69,7 +63,6 @@ const notesSlice = createSlice({
     });
 
     builder.addCase("notes/addNote/fulfilled", (state, action) => {
-      console.log("builder note add from backend");
       const newFolder = {
         name: action.payload.name,
         id: action.payload._id,
@@ -81,7 +74,6 @@ const notesSlice = createSlice({
       const index = state.findIndex((note) => note?.tempId === id);
       if (index !== -1) state[index] = newFolder;
       else state.push(newFolder);
-      console.log("builder note add from backend", newFolder);
     });
   },
 });

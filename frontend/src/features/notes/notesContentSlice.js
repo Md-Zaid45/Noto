@@ -5,17 +5,13 @@ const notesContentSlice = createSlice({
   initialState: [],
   reducers: {
     updateNoteContent: (state, action) => {
-      console.log("update NoteContent", action.payload);
       const note = state?.find((note) => note.noteId === action.payload.id);
       if (note) {
         note.content = action.payload.content;
-      } else {
-        console.log("invalid note.id for update NoteContent", action.payload);
       }
     },
     addNoteContent: (state, action) => {
       if (action.payload) {
-        console.log("add NoteContent", action.payload);
         const newNote = {
           id: action.payload.noteId,
           noteId: action.payload.noteId,
@@ -23,8 +19,6 @@ const notesContentSlice = createSlice({
           content: action.payload.content || {},
         };
         state.push(newNote);
-      } else {
-        console.log("Empty payload for adding noteContent", action.payload);
       }
     },
 
@@ -34,7 +28,6 @@ const notesContentSlice = createSlice({
       }
     },
     deleteNotesContent: (state, action) => {
-      console.log("notescontent................", state, action.payload);
       if (action.payload) {
         return state.filter((note) => !action.payload.includes(note.noteId));
       }
@@ -49,7 +42,6 @@ const notesContentSlice = createSlice({
           noteId: note._id,
           content: note.content,
         }));
-        console.log("notescntentSlice", newState);
 
         return newState;
       });

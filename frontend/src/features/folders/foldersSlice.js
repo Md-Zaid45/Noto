@@ -8,7 +8,6 @@ const foldersSlice = createSlice({
   reducers: {
     renameFolder: (state, action) => {
       const { id, name } = action.payload;
-      console.log("folderslice", name);
       const folder = state.find((node) => node.id === id);
       if (folder) folder.name = name;
     },
@@ -22,11 +21,9 @@ const foldersSlice = createSlice({
         type: "folder",
         tempId: tempId,
       };
-      console.log(newFolder);
       state.push(newFolder);
     },
     deleteFolder: (state, action) => {
-      console.log(action.payload);
       const deletionIds = action.payload;
       if (deletionIds) {
         return state.filter((node) => !deletionIds.includes(node.id));
@@ -55,8 +52,6 @@ const foldersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase("HYDRATE_APP", (state, action) => {
-      console.log("CASE CALLED, payload is:", action.payload);
-      console.log("folders:", action.payload?.folders);
       const newState = action.payload?.folders.map((folder) => {
         return {
           id: folder._id,
@@ -69,7 +64,6 @@ const foldersSlice = createSlice({
       return newState || [];
     });
     builder.addCase("folders/createFolder/fulfilled", (state, action) => {
-      console.log("asyncthunk", action.payload);
       const newFolder = {
         id: action.payload._id,
         name: action.payload.name,
@@ -79,7 +73,6 @@ const foldersSlice = createSlice({
       };
       const id = action.meta.arg.tempId;
       const index = state.findIndex((folder) => folder?.tempId === id);
-      console.log("index of folder", index);
 
       if (index !== -1) state[index] = newFolder;
       else state.push(newFolder);

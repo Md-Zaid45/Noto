@@ -6,7 +6,6 @@ const flashcardSlice = createSlice({
   initialState: { cards: [], manageSelectedId: null },
   reducers: {
     addFlashcard: (state, action) => {
-      console.log("addFlashcard in slice", action.payload);
       const id = nanoid(5);
       const newCard = {
         id,
@@ -36,7 +35,6 @@ const flashcardSlice = createSlice({
 
     deleteFlashcards: (state, action) => {
       const deletionIds = action.payload;
-      console.log(deletionIds, "flashcardSlice");
       if (deletionIds)
         state.cards = state.cards.filter(
           (node) => !deletionIds.includes(node.id),
@@ -66,7 +64,6 @@ const flashcardSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase("HYDRATE_APP", (state, action) => {
-      console.log("CASE CALLED, payload is:", action.payload);
       state.cards = action.payload?.flashcards.map((flashcard) => ({
         question: flashcard.question,
         answer: flashcard.answer,
@@ -79,7 +76,6 @@ const flashcardSlice = createSlice({
     });
 
     builder.addCase("flashcard/addFlashcard/fulfilled", (state, action) => {
-      console.log("builder note add from backend");
       const newFolder = {
         question: action.payload.question,
         answer: action.payload.answer,
@@ -93,7 +89,6 @@ const flashcardSlice = createSlice({
       const index = state.cards.findIndex((note) => note?.tempId === id);
       if (index !== -1) state.cards[index] = newFolder;
       else state.cards.push(newFolder);
-      console.log("builder note add from backend", newFolder);
     });
 
     builder.addCase("flashcard/updateFlashcard/fulfilled", (state, action) => {

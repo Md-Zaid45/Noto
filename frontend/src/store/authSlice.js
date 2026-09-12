@@ -9,7 +9,6 @@ const authSlice = createSlice({
   },
   reducers: {
     setLoggedIn: (state, action) => {
-      console.log("authslice setloggedin", action.payload);
       state.isAuthChecked = true;
       state.user = action.payload;
       state.isLoggedIn = true;
