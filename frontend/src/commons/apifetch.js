@@ -40,10 +40,8 @@ export const apiFetch = async (url, options = {}) => {
     } else {
       appStore.dispatch(setLoggedIn(false));
       appStore.dispatch(toggleIsAuthChecked(false));
-      console.log("failed req in apifetch");
     }
   }
-  console.log("apifetch response return", response);
 
   return response;
 };

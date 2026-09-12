@@ -69,7 +69,6 @@ function FlashcardList() {
 }
 
 export default function LeftSidebar({ view, setView, treeOpen }) {
-  console.log("sidebar comp rendered");
   const { pathname } = useLocation();
   const activeView = pathname.split("/")[2] || "";
   const { Active, setActive, Rename, setRename } = useContext(sidebarContext);

@@ -30,16 +30,6 @@ function App() {
   const Folders = useSelector((state) => state.Folders);
   const NotesContent = useSelector((state) => state.NotesContent);
   const Flashcards = useSelector((state) => state.Flashcards.cards);
-  console.log(
-    "this is redux store data",
-    Notes,
-    Folders,
-    NotesContent,
-    Flashcards,
-    "loader data",
-    data,
-  );
-  console.log("App comp rendered ");
   const [ContextMenuPos, setContextMenuPos] = useState({});
   const [Rename, setRename] = useState(null);
   const [ShowContextMenu, setShowContextMenu] = useState(null);

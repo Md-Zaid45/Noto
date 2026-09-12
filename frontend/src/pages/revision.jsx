@@ -255,7 +255,6 @@ export default function CardsPage({ decks = MOCK_DECKS }) {
     childs = notes.filter((note) => ids.includes(note.id));
   }
   else if(note) childs.push(note)
-  console.log(childs, "childs");
 
   // useEffect(() => {
   //   const fechData = async () => {

@@ -11,12 +11,10 @@ const handleRating = async (rating,timeSpent, cardId) => {
     body: { score: rating , timeSpent},
   });
   const data = await res.json();
-  console.log("Review response:", data);
 };
 export default function ReviewFlashcard() {
   const [time, setTime] = useState()
   const { id } = useParams();
-  console.log("ReviewFlashcard component mounted with id:", id);
   const dispatch = useDispatch();
   useEffect(() => {
     if (!id) return;
@@ -24,7 +22,6 @@ export default function ReviewFlashcard() {
       const res = await apiFetch(`/flashcards/${id}`, { method: "GET" });
       const data = await res.json();
       dispatch(addFlashcards(data.payload));
-      console.log("Fetched flashcards for review:", data);
     };
     fetchCards();
   }, [id]);
@@ -243,8 +240,6 @@ export default function ReviewFlashcard() {
             <button
               key={label}
               onClick={() => {
-                console.log(currentCard);
-
                 handleRating(key, currentCard.id);
                 moveToNext();
               }}

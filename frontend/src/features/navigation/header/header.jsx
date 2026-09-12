@@ -64,7 +64,6 @@ export default function Header({
                   credentials: "include",
                 });
                 const data = await res.json();
-                console.log("logout res", data);
               }}
               className="text-[#6B6A65] dark:text-stone-400 hover:text-[#059669] dark:hover:text-emerald-400 p-2 rounded-[5px] transition-all duration-150 hover:bg-[#ecfdf5] dark:hover:bg-emerald-950/30 active:scale-[0.97]"
               title="Logout"
