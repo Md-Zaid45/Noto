@@ -10,7 +10,6 @@ export const createFolderAsync = createAsyncThunk(
       body: newFolder,
     });
     const res = await data.json();
-    console.log("res of createfolder", res);
     return res.payload.folder;
   },
 );
@@ -18,14 +17,12 @@ export const createFolderAsync = createAsyncThunk(
 export const deleteFoldersAsync = createAsyncThunk(
   "folders/deleteFolders",
   async (ids) => {
-    console.log("deletefolderasync ids", ids);
     const res = await apiFetch(`/folders`, {
       method: "DELETE",
       body: { ids },
     });
     if (!res.ok) throw new Error("res error at deleteFolderAsync");
     const data = await res.json();
-    console.log("res in deleteFolderAsync", data, ids);
     return data;
   },
 );
@@ -34,7 +31,6 @@ export const updateFolderAsync = createAsyncThunk(
   "folders/updateFolder",
   async (obj) => {
     const { id, ...updateField } = obj;
-    console.log("updateFolderAsync ", obj, updateField);
     const res = await apiFetch(`/folders/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -43,7 +39,6 @@ export const updateFolderAsync = createAsyncThunk(
     });
     if (!res.ok) throw new Error("res error at updateFolderAsync");
     const data = await res.json();
-    console.log("res at updateFolderAsync", data);
     return data?.payload?.folder;
   },
 );

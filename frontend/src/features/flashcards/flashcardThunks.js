@@ -5,7 +5,6 @@ export const createFlashcardAsync = createAsyncThunk(
   "flashcard/addFlashcard",
   async ({ question, noteId, revisionMark = true, answer }) => {
     const newCard = { question, noteId, revisionMark, answer };
-    console.log("thunk noteslice", newCard);
 
     const res = await apiFetch(`/flashcards`, {
       method: "POST",
@@ -14,7 +13,6 @@ export const createFlashcardAsync = createAsyncThunk(
     if (!res.ok) throw new Error("response failure in createFlashcardAsync");
 
     const data = await res.json();
-    console.log("createFlashcardAsync res ", data);
     return data.payload.flashcard;
   },
 );
@@ -23,7 +21,6 @@ export const updateFlashcardAsync = createAsyncThunk(
   "flashcard/updateFlashcard",
   async (obj) => {
     const { id, ...updateField } = obj;
-    console.log("updateFlashcardsAsync", id, updateField);
 
     const res = await apiFetch(`/flashcards/${id}`, {
       method: "PATCH",
@@ -38,15 +35,12 @@ export const updateFlashcardAsync = createAsyncThunk(
 export const deleteFlashcardsAsync = createAsyncThunk(
   "flashcard/deleteFlashcards",
   async (ids) => {
-    console.log("ids in deleteFlashcardAsync", ids);
-
     const res = await apiFetch(`/flashcards`, {
       method: "DELETE",
       body: { ids },
     });
     if (!res.ok) throw new Error("response failure in deleteFlashcardAsync");
     const data = await res.json();
-    console.log("res in deleteFlashcardAsync", data, ids);
     return data.payload;
   },
 );
