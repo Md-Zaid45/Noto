@@ -72,11 +72,8 @@ export const generateEmbeddings = async (doc) => {
         };
       }),
     );
-    console.log(embeddings);
     return embeddings;
   } catch (error) {
-    console.log(error.message);
-
     throw new ApiError(500, "Failed to generate embeddings");
   }
 };
@@ -89,7 +86,6 @@ export const getRelevantEmbeddings = async (query, userId, noteId) => {
     });
 
     const queryVector = response.data[0].embedding;
-    console.log('query vector',queryVector);
     
     const noteEmbeddings = await Embedding.aggregate([
       {
@@ -115,11 +111,9 @@ export const getRelevantEmbeddings = async (query, userId, noteId) => {
         },
       },
     ]);
-    console.log(noteEmbeddings.length, "relevant embedddings");
-
     return noteEmbeddings;
   } catch (error) {
-    console.error(error);
+    console.error("Embedding search error:", error.message);
     throw new ApiError(500, "Unable to search embeddings");
   }
 };
@@ -141,7 +135,6 @@ export const createUpdateEmbeddings = async (note, embeddings) => {
     const embeddings = docs.map((doc) => doc.embedding);
     return embeddings;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

@@ -19,17 +19,10 @@ async function generate(prompt, jsonMode = true) {
     });
 
     const text = completion.choices[0].message.content;
-    console.log(jsonMode ? JSON.parse(text) : text);
-    
     return jsonMode ? JSON.parse(text) : text;
   } catch (error) {
-  console.log("FULL ERROR:", error);
-
-  if (error.response?.data) {
-    console.log(error.response.data);
-  }
-
-  throw error;
+    console.error("AI generation error:", error.message);
+    throw error;
 }
 }
 export async function generateFlashcards(context, count = 10) {
@@ -56,8 +49,6 @@ Rules:
   if (!result.flashcards || !Array.isArray(result.flashcards)) {
     throw new ApiError(500, "Malformed flashcard response from AI");
   }
-  console.log(result,context);
-  
   return result.flashcards;
 }
 
@@ -169,6 +160,5 @@ Return a JSON object:
 `;
   const result = await generate(prompt);
   if (!result.answer) throw new ApiError(500, "Malformed QnA response from AI");
-  console.log(result);
   return result;
 }
