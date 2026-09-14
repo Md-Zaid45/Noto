@@ -97,11 +97,11 @@ const Manage = () => {
             onSubmit={handleUpdate}
           >
             <div className="flex flex-col gap-1">
-              <label className="text-white/50 text-xs uppercase tracking-wide">
+              <label className="text-stone-500 dark:text-white/50 text-xs uppercase tracking-wide">
                 Question
               </label>
               <textarea
-                className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white resize-none focus:outline-none focus:border-white/30 transition-colors"
+                className="w-full bg-white border border-stone-200 dark:bg-white/5 dark:border-white/10 rounded px-3 py-2 text-stone-900 dark:text-white resize-none focus:outline-none focus:border-stone-400 dark:focus:border-white/30 transition-colors"
                 rows={3}
                 name="question"
                 value={editState.question}
@@ -115,11 +115,11 @@ const Manage = () => {
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-white/50 text-xs uppercase tracking-wide">
+              <label className="text-stone-500 dark:text-white/50 text-xs uppercase tracking-wide">
                 Answer
               </label>
               <textarea
-                className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white resize-none focus:outline-none focus:border-white/30 transition-colors"
+                className="w-full bg-white border border-stone-200 dark:bg-white/5 dark:border-white/10 rounded px-3 py-2 text-stone-900 dark:text-white resize-none focus:outline-none focus:border-stone-400 dark:focus:border-white/30 transition-colors"
                 rows={5}
                 name="answer"
                 value={editState.answer}
@@ -132,21 +132,21 @@ const Manage = () => {
             <div className="flex items-center gap-3 mt-2">
               <button
                 type="submit"
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded text-white transition-colors"
+                className="px-4 py-2 bg-stone-200 hover:bg-stone-300 dark:bg-white/10 dark:hover:bg-white/20 rounded text-stone-700 dark:text-white transition-colors"
               >
                 Update
               </button>
               <button
                 type="button"
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded transition-colors"
+                className="px-4 py-2 bg-red-100 hover:bg-red-200 dark:bg-red-500/20 dark:hover:bg-red-500/40 text-red-600 dark:text-red-300 rounded transition-colors"
               >
                 Delete
               </button>
             </div>
           </form>
         ) : (
-          <div className="flex items-center justify-center h-full text-white/30">
+          <div className="flex items-center justify-center h-full text-stone-400 dark:text-white/30">
             {loading ? "" : "Select a flashcard to edit"}
           </div>
         )}
