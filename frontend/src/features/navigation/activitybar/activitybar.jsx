@@ -1,5 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../../store/themeContext";
+import { BookOpen, Layers, LayoutDashboard, Mail, Sun, Moon, Settings, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Button } from "../../../components/ui/button";
 
 export default function ActivityBar({ treeOpen, setTreeOpen }) {
   const { pathname } = useLocation();
@@ -11,7 +13,7 @@ export default function ActivityBar({ treeOpen, setTreeOpen }) {
   const items = [
     {
       name: "Notes",
-      icon: "note_stack",
+      icon: BookOpen,
       view: "notes",
       action: () => {
         const activeTab = localStorage.getItem("tabs")
@@ -24,7 +26,7 @@ export default function ActivityBar({ treeOpen, setTreeOpen }) {
     },
     {
       name: "Cards",
-      icon: "layers",
+      icon: Layers,
       view: "cards",
       action: () => {
         const activeTab = localStorage.getItem("tabs")
@@ -37,7 +39,7 @@ export default function ActivityBar({ treeOpen, setTreeOpen }) {
     },
     {
       name: "Dashboard",
-      icon: "dashboard",
+      icon: LayoutDashboard,
       view: "dashboard",
       action: () => {
         navigate("./dashboard");
@@ -45,7 +47,7 @@ export default function ActivityBar({ treeOpen, setTreeOpen }) {
     },
     {
       name: "Contact",
-      icon: "mail",
+      icon: Mail,
       view: "contact",
       action: () => {},
     },
@@ -54,70 +56,78 @@ export default function ActivityBar({ treeOpen, setTreeOpen }) {
   const bottomItems = [
     {
       name: "Settings",
-      icon: "settings",
+      icon: Settings,
       action: () => {},
     },
   ];
 
   return (
-    <aside className="flex flex-col items-center w-[44px] bg-[#1d2624] shrink-0">
+    <aside className="flex flex-col  items-center w-[47px] bg-[#efeeeb] dark:bg-stone-900 shrink-0 border-r border-[#E8E6E1] dark:border-stone-800">
       <div className="flex flex-col items-center py-3">
-        <span className="text-[13px] font-medium text-white text-center block mb-[10px]">N</span>
-        <button
+        <span className="text-[13px] font-medium text-stone-700 dark:text-white text-center block mb-[10px]">N</span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="w-[32px] h-[32px] !text-stone-500 dark:!text-[#6B6A80] hover:!bg-stone-200 dark:hover:!bg-[#2E2D3A] hover:!text-emerald-600 dark:hover:!text-[#6ee7b7] mb-1.5"
           onClick={() => setTreeOpen(!treeOpen)}
-          className="w-[32px] h-[32px] flex items-center justify-center rounded-lg text-[#6B6A80] hover:bg-[#2E2D3A] hover:text-[#6ee7b7] transition-all duration-150 mb-2"
           title="Toggle sidebar"
         >
-          <span className="material-symbols-outlined" style={{fontSize:'17px'}}>
-            {treeOpen ? 'left_panel_close' : 'left_panel_open'}
-          </span>
-        </button>
+          {treeOpen ? <PanelLeftClose size={17} /> : <PanelLeftOpen size={17} />}
+        </Button>
         {items.map((item, index) => {
           const isActive = activeView === item.view;
           return (
-            <button
-              key={index}
-              className={`group relative flex items-center justify-center w-[32px] h-[32px] rounded-lg transition-all duration-150 ${
-                isActive
-                  ? "bg-[#2E2D3A] text-[#6ee7b7]"
-                  : "text-[#6B6A80] hover:bg-[#2E2D3A] hover:text-[#6ee7b7]"
-              }`}
-              onClick={() => item.action()}
-              aria-label={item.name}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: "17px" }}>{item.icon}</span>
-              <span className="absolute left-10 top-1/2 -translate-y-1/2 whitespace-nowrap bg-[#1C1B22] dark:bg-stone-950 text-white text-xs font-medium px-2.5 py-1 rounded-[5px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border-[0.5px] border-[#E8E6E1] dark:border-stone-800">
+            <div key={index} className="group relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`w-[32px] h-[32px] mt-1 ${
+                  isActive
+                    ? "!bg-blue-300 dark:!bg-blue-900 !text-stone-900 dark:!text-[#6ee7b7]"
+                    : "!text-stone-500 dark:!text-[#6B6A80] hover:!bg-stone-200 dark:hover:!bg-[#2E2D3A] hover:!text-emerald-600 dark:hover:!text-[#6ee7b7]"
+                }`}
+                onClick={() => item.action()}
+                aria-label={item.name}
+              >
+                <item.icon size={17} />
+              </Button>
+              <span className="absolute left-10 top-1/2 -translate-y-1/2 whitespace-nowrap bg-white dark:bg-[#1C1B22] text-stone-700 dark:text-white text-xs font-medium px-2.5 py-1 rounded-[5px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border border-stone-200 dark:border-[#E8E6E1] dark:border-stone-800 shadow-sm">
                 {item.name}
               </span>
-            </button>
+            </div>
           );
         })}
       </div>
       <div className="mt-auto flex flex-col items-center pb-3">
-        <button
-          className="group relative flex items-center justify-center w-[32px] h-[32px] rounded-lg text-[#6B6A80] hover:bg-[#2E2D3A] hover:text-[#6ee7b7] transition-all duration-150 mb-1"
-          onClick={toggleTheme}
-          aria-label={theme === "dark" ? "Light mode" : "Dark mode"}
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: "17px" }}>
-            {theme === "dark" ? "light_mode" : "dark_mode"}
-          </span>
-          <span className="absolute left-10 top-1/2 -translate-y-1/2 whitespace-nowrap bg-[#1C1B22] dark:bg-stone-950 text-white text-xs font-medium px-2.5 py-1 rounded-[5px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border-[0.5px] border-[#E8E6E1] dark:border-stone-800">
+        <div className="group relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-[32px] h-[32px] !text-stone-500 dark:!text-[#6B6A80] hover:!bg-stone-200 dark:hover:!bg-[#2E2D3A] hover:!text-emerald-600 dark:hover:!text-[#6ee7b7] mb-1"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Light mode" : "Dark mode"}
+          >
+            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
+          </Button>
+          <span className="absolute left-10 top-1/2 -translate-y-1/2 whitespace-nowrap bg-white dark:bg-[#1C1B22] text-stone-700 dark:text-white text-xs font-medium px-2.5 py-1 rounded-[5px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border border-stone-200 dark:border-[#E8E6E1] dark:border-stone-800 shadow-sm">
             {theme === "dark" ? "Light mode" : "Dark mode"}
           </span>
-        </button>
+        </div>
         {bottomItems.map((item, index) => (
-          <button
-            key={index}
-            className="group relative flex items-center justify-center w-[32px] h-[32px] rounded-lg text-[#6B6A80] hover:bg-[#2E2D3A] hover:text-[#6ee7b7] transition-all duration-150"
-            onClick={() => item.action()}
-            aria-label={item.name}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: "17px" }}>{item.icon}</span>
-            <span className="absolute left-10 top-1/2 -translate-y-1/2 whitespace-nowrap bg-[#1C1B22] text-white text-xs font-medium px-2.5 py-1 rounded-[5px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border-[0.5px] border-[#E8E6E1]">
+          <div key={index} className="group relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-[32px] h-[32px] !text-stone-500 dark:!text-[#6B6A80] hover:!bg-stone-200 dark:hover:!bg-[#2E2D3A] hover:!text-emerald-600 dark:hover:!text-[#6ee7b7]"
+              onClick={() => item.action()}
+              aria-label={item.name}
+            >
+              <item.icon size={17} />
+            </Button>
+            <span className="absolute left-10 top-1/2 -translate-y-1/2 whitespace-nowrap bg-white dark:bg-[#1C1B22] text-stone-700 dark:text-white text-xs font-medium px-2.5 py-1 rounded-[5px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border border-stone-200 dark:border-[#E8E6E1] dark:border-stone-800 shadow-sm">
               {item.name}
             </span>
-          </button>
+          </div>
         ))}
       </div>
     </aside>

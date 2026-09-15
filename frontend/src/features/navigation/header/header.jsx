@@ -27,7 +27,7 @@ export default function Header({
     <nav className="w-full top-0 sticky z-[60] h-12 bg-[#f5f6f5] dark:bg-stone-900 border-b border-[#E8E6E1] dark:border-stone-800 select-none">
       <div className="flex justify-between items-center px-4 h-full">
         <div className="flex items-center gap-4">
-          <div className="text-sm font-medium text-[#1C1B22] dark:text-stone-100">Noto</div>
+          <div className="text-sm font-medium text-[#1C1B22] dark:text-stone-100 font-heading">Noto</div>
         </div>
 
         <div className="flex items-center gap-2">
