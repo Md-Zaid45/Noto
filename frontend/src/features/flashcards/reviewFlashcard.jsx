@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { apiFetch } from "../../commons/apifetch";
 import { useDispatch } from "react-redux";
 import { addFlashcards } from "./flashcardSlice";
+import Tabs from "../notes/editor/tabs";
 const handleRating = async (rating,timeSpent, cardId) => {
   const res = await apiFetch(`/flashcards/review/${cardId}`, {
     method: "PATCH",
@@ -58,37 +59,47 @@ export default function ReviewFlashcard() {
 
   if (!flashcards.length) {
     return (
-      <EmptyState
-        title="No cards to review"
-        subtitle="You're all caught up! Come back later for more."
-      />
+      <div className="flex flex-col h-full bg-white dark:bg-stone-900">
+        <Tabs OpenTabs={[]} hideTabs={true} />
+        <div className="flex-1 overflow-y-auto">
+          <EmptyState
+            title="No cards to review"
+            subtitle="You're all caught up! Come back later for more."
+          />
+        </div>
+      </div>
     );
   }
 
   if (done) {
     return (
-      <div className="max-w-xl mx-auto mt-8 p-6 bg-white dark:bg-stone-900 rounded-2xl shadow-md dark:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-stone-800">
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="w-16 h-16 bg-green-100 dark:bg-emerald-950/30 rounded-full flex items-center justify-center mb-4">
-            <CheckCircle2
-              className="w-9 h-9 text-green-500 dark:text-emerald-400"
-              strokeWidth={1.8}
-            />
+      <div className="flex flex-col h-full bg-white dark:bg-stone-900">
+        <Tabs OpenTabs={[]} hideTabs={true} />
+        <div className="flex-1 overflow-y-auto p-7">
+          <div className="max-w-xl mx-auto">
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="w-16 h-16 bg-green-100 dark:bg-emerald-950/30 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle2
+                  className="w-9 h-9 text-green-500 dark:text-emerald-400"
+                  strokeWidth={1.8}
+                />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-stone-300 mb-1">
+                All caught up!
+              </h3>
+              <p className="text-sm text-gray-400 dark:text-stone-500 mb-6">
+                You've reviewed all {flashcards.length} card
+                {flashcards.length !== 1 ? "s" : ""} in this set.
+              </p>
+              <button
+                onClick={restart}
+                className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 dark:bg-emerald-500 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 dark:hover:bg-emerald-600 active:scale-95 transition-all"
+              >
+                <RotateCcw className="w-4 h-4" />
+                Review Again
+              </button>
+            </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-700 dark:text-stone-300 mb-1">
-            All caught up!
-          </h3>
-          <p className="text-sm text-gray-400 dark:text-stone-500 mb-6">
-            You've reviewed all {flashcards.length} card
-            {flashcards.length !== 1 ? "s" : ""} in this set.
-          </p>
-          <button
-            onClick={restart}
-            className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 dark:bg-emerald-500 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 dark:hover:bg-emerald-600 active:scale-95 transition-all"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Review Again
-          </button>
         </div>
       </div>
     );
@@ -98,54 +109,57 @@ export default function ReviewFlashcard() {
   const progress = (currentIndex / flashcards.length) * 100;
 
   return (
-    <div className="max-w-xl mx-auto mt-8 p-6 bg-white dark:bg-stone-900 rounded-2xl shadow-md dark:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-stone-800">
-      <div className="mb-5">
-        <div className="flex justify-between text-xs text-gray-400 dark:text-stone-500 mb-1.5">
-          <span>
-            Card {currentIndex + 1} of {flashcards.length}
-          </span>
-          <span>{Math.round(progress)}% complete</span>
-        </div>
-        <div className="w-full h-1.5 bg-gray-100 dark:bg-stone-800 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-emerald-500 dark:bg-emerald-600 rounded-full transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </div>
-      <div className="relative mb-6" style={{ perspective: "1000px" }}>
-        <div
-          role="button"
-          aria-label={flipped ? "Show question" : "Reveal answer"}
-          onClick={() => setFlipped((f) => !f)}
-          style={{
-            transformStyle: "preserve-3d",
-            transition: "transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1)",
-            transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-            position: "relative",
-            width: "100%",
-            height: "256px",
-            cursor: "pointer",
-          }}
-        >
-          <div
-            className="absolute inset-0 flex flex-col items-center justify-center bg-emerald-50 dark:bg-emerald-950/30 rounded-xl p-8"
-            style={{ backfaceVisibility: "hidden" }}
-          >
-            <h3 className="text-xs font-semibold text-emerald-500 dark:text-emerald-400 uppercase tracking-widest mb-3">
-              Question
-            </h3>
-            <p className="text-lg font-semibold text-gray-900 dark:text-stone-100 leading-snug text-center">
-              {currentCard.question}
-            </p>
-            <span className="text-xs text-gray-400 dark:text-stone-500 mt-5 flex items-center gap-1.5">
-              Click or press
-              <kbd className="px-1.5 py-0.5 bg-white dark:bg-stone-900 border border-gray-200 dark:border-stone-700 rounded text-gray-500 dark:text-stone-400 font-mono text-xs">
-                Space
-              </kbd>
-              to reveal
-            </span>
+    <div className="flex flex-col h-full bg-white dark:bg-stone-900">
+      <Tabs OpenTabs={[]} hideTabs={true} />
+      <div className="flex-1 overflow-y-auto p-7">
+        <div className="max-w-xl mx-auto">
+          <div className="mb-5">
+            <div className="flex justify-between text-xs text-gray-400 dark:text-stone-500 mb-1.5">
+              <span>
+                Card {currentIndex + 1} of {flashcards.length}
+              </span>
+              <span>{Math.round(progress)}% complete</span>
+            </div>
+            <div className="w-full h-1.5 bg-gray-100 dark:bg-stone-800 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-emerald-500 dark:bg-emerald-600 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
+          <div className="relative mb-6" style={{ perspective: "1000px" }}>
+            <div
+              role="button"
+              aria-label={flipped ? "Show question" : "Reveal answer"}
+              onClick={() => setFlipped((f) => !f)}
+              style={{
+                transformStyle: "preserve-3d",
+                transition: "transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1)",
+                transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+                position: "relative",
+                width: "100%",
+                height: "256px",
+                cursor: "pointer",
+              }}
+            >
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center bg-emerald-50 dark:bg-emerald-950/30 rounded-xl p-8"
+                style={{ backfaceVisibility: "hidden" }}
+              >
+                <h3 className="text-xs font-semibold text-emerald-500 dark:text-emerald-400 uppercase tracking-widest mb-3">
+                  Question
+                </h3>
+                <p className="text-lg font-semibold text-gray-900 dark:text-stone-100 leading-snug text-center">
+                  {currentCard.question}
+                </p>
+                <span className="text-xs text-gray-400 dark:text-stone-500 mt-5 flex items-center gap-1.5">
+                  Click or press
+                  <kbd className="px-1.5 py-0.5 bg-white dark:bg-stone-900 border border-gray-200 dark:border-stone-700 rounded text-gray-500 dark:text-stone-400 font-mono text-xs">
+                    Space
+                  </kbd>
+                  to reveal
+                </span>
+              </div>
 
           <div
             className="absolute inset-0 flex flex-col items-center justify-center bg-emerald-50 dark:bg-emerald-950/30 rounded-xl p-8"
@@ -266,6 +280,8 @@ export default function ReviewFlashcard() {
           Rating options will appear after you reveal the answer
         </p>
       )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -8,6 +8,11 @@ import {
   deleteFlashcardsAsync,
 } from "./flashcardThunks";
 import LoadingLoader from "../../commons/loader";
+import { Button } from "../../components/ui/button";
+import { Textarea } from "../../components/ui/textarea";
+import { Label } from "../../components/ui/label";
+import { Card, CardContent } from "../../components/ui/card";
+import Tabs from "../notes/editor/tabs";
 
 const Manage = () => {
   const { id } = useParams();
@@ -73,83 +78,86 @@ const Manage = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-white dark:bg-stone-900">
+      <Tabs OpenTabs={[]} hideTabs={true} />
       {loading && (
         <div className="absolute inset-0 bg-white/80 dark:bg-stone-900/80 flex items-center justify-center z-10">
           <LoadingLoader size="lg" color="blue" />
         </div>
       )}
-      <div className="flex items-center gap-3 px-6 pt-4">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-[13px] font-medium rounded-xl border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 px-3 py-1.5 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors"
-        >
-          &larr; Back
-        </button>
-        <h1 className="text-lg font-medium text-stone-900 dark:text-stone-100">
-          Manage Flashcards
-        </h1>
-      </div>
-      <div className="flex-1 px-6 py-4 overflow-hidden">
-        {editState ? (
-          <form
-            className="max-w-2xl flex flex-col gap-4"
-            onSubmit={handleUpdate}
+      <div className="flex-1 overflow-y-auto">
+        <div className="flex items-center gap-3 px-6 pt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate(-1)}
           >
-            <div className="flex flex-col gap-1">
-              <label className="text-stone-500 dark:text-white/50 text-xs uppercase tracking-wide">
-                Question
-              </label>
-              <textarea
-                className="w-full bg-white border border-stone-200 dark:bg-white/5 dark:border-white/10 rounded px-3 py-2 text-stone-900 dark:text-white resize-none focus:outline-none focus:border-stone-400 dark:focus:border-white/30 transition-colors"
-                rows={3}
-                name="question"
-                value={editState.question}
-                onChange={(e) =>
-                  setEditState((prev) => ({
-                    ...prev,
-                    question: e.target.value,
-                  }))
-                }
-              />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-stone-500 dark:text-white/50 text-xs uppercase tracking-wide">
-                Answer
-              </label>
-              <textarea
-                className="w-full bg-white border border-stone-200 dark:bg-white/5 dark:border-white/10 rounded px-3 py-2 text-stone-900 dark:text-white resize-none focus:outline-none focus:border-stone-400 dark:focus:border-white/30 transition-colors"
-                rows={5}
-                name="answer"
-                value={editState.answer}
-                onChange={(e) =>
-                  setEditState((prev) => ({ ...prev, answer: e.target.value }))
-                }
-              />
-            </div>
-
-            <div className="flex items-center gap-3 mt-2">
-              <button
-                type="submit"
-                className="px-4 py-2 bg-stone-200 hover:bg-stone-300 dark:bg-white/10 dark:hover:bg-white/20 rounded text-stone-700 dark:text-white transition-colors"
+            &larr; Back
+          </Button>
+          <h1 className="text-lg font-medium text-stone-900 dark:text-stone-100">
+            Manage Flashcards
+          </h1>
+        </div>
+        <div className="px-6 py-4">
+        {editState ? (
+          <Card className="max-w-2xl">
+            <CardContent>
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={handleUpdate}
               >
-                Update
-              </button>
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-100 hover:bg-red-200 dark:bg-red-500/20 dark:hover:bg-red-500/40 text-red-600 dark:text-red-300 rounded transition-colors"
-              >
-                Delete
-              </button>
-            </div>
-          </form>
+                <div className="flex flex-col gap-2">
+                  <Label className="text-xs uppercase tracking-wide">
+                    Question
+                  </Label>
+                  <Textarea
+                    rows={3}
+                    name="question"
+                    value={editState.question}
+                    onChange={(e) =>
+                      setEditState((prev) => ({
+                        ...prev,
+                        question: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <Label className="text-xs uppercase tracking-wide">
+                    Answer
+                  </Label>
+                  <Textarea
+                    rows={5}
+                    name="answer"
+                    value={editState.answer}
+                    onChange={(e) =>
+                      setEditState((prev) => ({ ...prev, answer: e.target.value }))
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center gap-3 mt-2">
+                  <Button type="submit" variant="secondary">
+                    Update
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
         ) : (
           <div className="flex items-center justify-center h-full text-stone-400 dark:text-white/30">
             {loading ? "" : "Select a flashcard to edit"}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

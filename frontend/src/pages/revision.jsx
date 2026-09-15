@@ -7,6 +7,7 @@ import { apiFetch } from "../commons/apifetch";
 import { useContext } from "react";
 import { sidebarContext, viewContext } from "../home";
 import { childrenIds } from "../features/navigation/sidebar/utils";
+import Tabs from "../features/notes/editor/tabs";
 /*
   Cards Page — Noto (light mode)
   ------------------------------------------------------------
@@ -330,10 +331,12 @@ export default function CardsPage({ decks = MOCK_DECKS }) {
   };
 
   return (
-    <div className="bg-stone-50 dark:bg-stone-950 min-h-full p-7">
-      <div className="flex items-center justify-between mb-7">
-        <h1 className="text-xl font-medium text-stone-900 dark:text-stone-100">Flashcards</h1>
-      </div>
+    <div className="flex flex-col h-full bg-white dark:bg-stone-900">
+      <Tabs OpenTabs={[]} hideTabs={true} />
+      <div className="flex-1 bg-stone-50 dark:bg-stone-950 p-7 overflow-y-auto">
+        <div className="flex items-center justify-between mb-7">
+          <h1 className="text-xl font-medium text-stone-900 dark:text-stone-100">Flashcards</h1>
+        </div>
       {childs.length ? (
         <Section
           title={"Deck"}
@@ -377,6 +380,7 @@ export default function CardsPage({ decks = MOCK_DECKS }) {
           )}
         </>
       )}
+      </div>
     </div>
   );
 }
