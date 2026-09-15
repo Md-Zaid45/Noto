@@ -8,16 +8,41 @@ import { useEditor, useNote, useTabs } from "./hooks";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HiOutlineCheckBadge } from "react-icons/hi2";
 import LoadingLoader from "../../../commons/loader";
+import { useDispatch } from "react-redux";
+import { renameNote } from "../notesSlice";
+import { updateNoteAsync } from "../notesThunks";
 
 export default function Editr() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const note = useNote(id, setIsLoading);
   const [tabs, deleteTab] = useTabs(note, id);
   const editors = useRef(new Map());
 
   const [editor, isSaved] = useEditor(editors, tabs, note);
+  const [title, setTitle] = useState("");
+
+  useEffect(() => {
+    if (note?.name) {
+      setTitle(note.name);
+    }
+  }, [note?.name]);
+
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const handleTitleBlur = () => {
+    if (!note?.noteId) return;
+    const finalTitle = title.trim() || "Untitled";
+    setTitle(finalTitle);
+    if (finalTitle !== note?.name) {
+      dispatch(renameNote({ id: note.noteId, name: finalTitle }));
+      dispatch(updateNoteAsync({ id: note.noteId, name: finalTitle }));
+    }
+  };
 
   const deleteHandler = useCallback(
     (tab) => {
@@ -68,6 +93,16 @@ export default function Editr() {
                 </div>
               )}
               <div className="pt-9 px-12" style={{ maxWidth: "700px" }}>
+                <style>{`.note-title::-webkit-scrollbar { display: none; }`}</style>
+                <textarea
+                  className="note-title w-full text-2xl font-bold bg-transparent border-none outline-none resize-none overflow-hidden mb-4 placeholder-stone-400 dark:placeholder-stone-500 font-heading"
+                  style={{ color: "var(--editor-text)", resize: "none", overflow: "hidden", scrollbarWidth: "none" }}
+                  value={title}
+                  onChange={handleTitleChange}
+                  onBlur={handleTitleBlur}
+                  placeholder="Untitled"
+                  rows={1}
+                />
                 <EditorBubbleMenu editor={editor} />
                 <EditorContent
                   editor={editor}

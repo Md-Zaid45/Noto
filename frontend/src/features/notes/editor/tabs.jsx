@@ -6,14 +6,14 @@ const clickHandler = (tab, navigate) => {
   navigate(`../notes/${tab.id}`);
 };
 
-const Tabs = React.memo(function Tabs({ OpenTabs, deleteHandler }) {
+const Tabs = React.memo(function Tabs({ OpenTabs, deleteHandler, hideTabs = false }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const { rightPanelOpen, setRightPanelOpen } = useContext(viewContext);
 
   return (
     <div className="flex items-center h-10 bg-[#f7f8f7] dark:bg-stone-950 border-b border-[#E8E6E1] dark:border-stone-800 px-3 overflow-x-auto gap-1">
-      {OpenTabs.map((tab) => (
+      {!hideTabs && OpenTabs.map((tab) => (
         <div
           key={tab.id}
           className={`group flex items-center gap-[5px] px-3 py-1 cursor-pointer select-none shrink-0 rounded-[6px] transition-all duration-150 ${
