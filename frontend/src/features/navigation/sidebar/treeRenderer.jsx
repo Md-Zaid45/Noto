@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
-import { BiChevronDown, BiChevronRight } from "react-icons/bi";
-import { LuFilePen, LuFolderClosed, LuFolderOpen } from "react-icons/lu";
+import { ChevronDown, ChevronRight, Folder, FolderOpen, FileText } from "lucide-react";
 import { treeContext } from "./store";
 import { sidebarContext} from "../../../home"
 import Input from "./inputFileTab";
@@ -9,8 +8,6 @@ import { renameNote } from "../../notes/notesSlice";
 import { renameFolder } from "../../folders/foldersSlice";
 import { keydownHandler, onContextHandler } from "./handlers";
 import { useNavigate } from "react-router-dom";
-import { HiFolder, HiFolderOpen, HiDocumentText } from "react-icons/hi2";
-import { HiChevronDown, HiChevronRight } from "react-icons/hi2";
 
 export default function Tree({ folder, level = -1 }) {
   const navigate = useNavigate();
@@ -88,15 +85,15 @@ export default function Tree({ folder, level = -1 }) {
           >
             <span className={`shrink-0 transition-transform duration-200 ${ExpandFolder ? "rotate-90" : "rotate-0"} text-[#A8A7A2] dark:text-stone-500 text-[11px]`}>
               {ExpandFolder ? (
-                <HiChevronDown contentEditable={false} className="text-[11px]" />
+                <ChevronDown contentEditable={false} className="text-[11px]" size={11} />
               ) : (
-                <HiChevronRight contentEditable={false} className="text-[11px]" />
+                <ChevronRight contentEditable={false} className="text-[11px]" size={11} />
               )}
             </span>
             {ExpandFolder ? (
-              <HiFolderOpen contentEditable={false} className="text-[#BA7517] shrink-0 text-[13px]" />
+              <FolderOpen contentEditable={false} className="text-[#BA7517] shrink-0 text-[13px]" size={13} />
             ) : (
-              <HiFolder contentEditable={false} className="text-[#BA7517] shrink-0 text-[13px]" />
+              <Folder contentEditable={false} className="text-[#BA7517] shrink-0 text-[13px]" size={13} />
             )}
             <span className="truncate text-[12.5px]">{folder.name}</span>
           </div>
@@ -168,9 +165,10 @@ export default function Tree({ folder, level = -1 }) {
                 );
               }}
             >
-              <HiDocumentText
+              <FileText
                 contentEditable={false}
                 className={`shrink-0 text-[13px] ${Active === node.id ? "text-[#059669] dark:text-emerald-400" : "text-[#A8A7A2] dark:text-stone-500"}`}
+                size={13}
               />
               <span className="truncate text-[12.5px]" contentEditable={Rename === node.id}>
                 {node.name}

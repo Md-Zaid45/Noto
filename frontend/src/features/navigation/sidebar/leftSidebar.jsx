@@ -7,7 +7,7 @@ import { UiController } from "../../../store/uiController";
 import SiderbarHeader from "./sidebarHeader";
 import Tree from "./treeRenderer";
 import { useLocation, useParams } from "react-router-dom";
-import { HiDocumentText } from "react-icons/hi2";
+import { FileText } from "lucide-react";
 import { setManageSelectedId } from "../../flashcards/flashcardSlice";
 
 function FlashcardList() {
@@ -48,12 +48,13 @@ function FlashcardList() {
             }}
             onClick={() => dispatch(setManageSelectedId(c.id))}
           >
-            <HiDocumentText
+            <FileText
               className={`shrink-0 text-[13px] ${
                 activeId === c.id
                   ? "text-[#059669] dark:text-emerald-400"
                   : "text-[#A8A7A2] dark:text-stone-500"
               }`}
+              size={13}
             />
             <span className="truncate text-[12.5px]">{c.question}</span>
           </div>
