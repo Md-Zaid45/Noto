@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { sidebarContext, viewContext } from "../home";
 import { childrenIds } from "../features/navigation/sidebar/utils";
 import Tabs from "../features/notes/editor/tabs";
+import { toast } from "../hooks/use-toast";
 /*
   Cards Page — Noto (light mode)
   ------------------------------------------------------------
@@ -106,99 +107,86 @@ function timeAgo(iso) {
 function DeckCard({ deck, onStudy, onGenerate, onQuiz, onManage, generating }) {
   const isEmpty = deck.totalCards === 0;
   const [count, setCount] = useState(5);
-  const colorClasses = COLOR_MAP[deck.color] || COLOR_MAP.purple;
 
   return (
-    <div className="group rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 p-5 flex flex-col gap-4 shadow-sm shadow-emerald-500/5 hover:shadow-emerald-500/10 hover:border-stone-300 dark:hover:border-stone-700 transition-all duration-150">
-      <div className="flex items-start justify-between">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center`}>
-          <i className={`ti text-lg`} aria-hidden="true" />
+    <div className="group w-[280px] h-[320px] rounded-2xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 flex flex-col shadow-sm hover:shadow-lg hover:shadow-gray-200/50 dark:hover:shadow-stone-900/50 hover:border-gray-300 dark:hover:border-stone-600 transition-all duration-200 overflow-hidden">
+      <div className="flex-1 p-5 flex flex-col min-h-0">
+        <div className="flex items-start justify-between mb-3">
+          <div className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
+            <i className="ti ti-book text-gray-600 dark:text-gray-300 text-base" aria-hidden="true" />
+          </div>
+          {deck.dueToday > 0 && (
+            <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+              {deck.dueToday} due
+            </span>
+          )}
         </div>
-        {deck.dueToday > 0 && (
-          <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400">
-            due
-          </span>
-        )}
-      </div>
 
-      <div>
-        <h3 className="text-[15px] font-medium text-stone-900 dark:text-stone-100 leading-snug">
+        <h3 className="text-[14px] font-semibold text-gray-900 dark:text-white leading-snug mb-1 truncate">
           {deck.name}
         </h3>
-        <p className="text-[13px] text-stone-500 dark:text-stone-400 mt-1 leading-relaxed line-clamp-2">
-          {deck.name}
+        <p className="text-[12px] text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 mb-3">
+          {deck.totalCards} cards · {timeAgo(deck.lastStudied)}
         </p>
-      </div>
 
-      {isEmpty ? (
-        <button
-          onClick={() => onGenerate(deck, count)}
-          disabled={generating === deck.id}
-          className="mt-1 text-[13px] font-medium rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 py-2.5 flex items-center justify-center gap-1.5 hover:bg-stone-700 dark:hover:bg-stone-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          <i className="ti ti-sparkles text-sm" aria-hidden="true" />
-          {generating === deck.id ? "Generating..." : "Generate cards"}
-        </button>
-      ) : (
-        <>
-          <div>
-            <div className="flex justify-between text-[11px] text-stone-500 dark:text-stone-400 mb-1.5">
+        {!isEmpty && (
+          <div className="mt-auto">
+            <div className="flex justify-between text-[11px] text-gray-500 dark:text-gray-400 mb-1.5">
               <span>Mastery</span>
-              <span className="font-medium text-stone-700 dark:text-stone-300">
-                {deck.mastery}%
-              </span>
+              <span className="font-medium text-gray-700 dark:text-gray-200">{deck.mastery}%</span>
             </div>
-            <div className="h-1.5 rounded-full bg-stone-100 dark:bg-stone-800 overflow-hidden">
+            <div className="h-1.5 rounded-full bg-gray-100 dark:bg-stone-800 overflow-hidden">
               <div
-                className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+                className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-500"
                 style={{ width: `${deck.mastery}%` }}
               />
             </div>
           </div>
+        )}
+      </div>
 
-          <div className="flex items-center justify-between text-[11px] text-stone-400 dark:text-stone-500 pt-1 border-t border-stone-100 dark:border-stone-800">
-            <span>{deck.totalCards} cards</span>
-          </div>
-
-          <div className="flex flex-col gap-2">
+      <div className="p-4 pt-0 flex flex-col gap-2">
+        {isEmpty ? (
+          <button
+            onClick={() => onGenerate(deck, count)}
+            disabled={generating === deck.id}
+            className="w-full text-[12px] font-medium rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-2 flex items-center justify-center gap-1.5 hover:bg-gray-700 dark:hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            <i className="ti ti-sparkles text-[13px]" aria-hidden="true" />
+            {generating === deck.id ? "Generating..." : "Generate cards"}
+          </button>
+        ) : (
+          <>
             <button
               onClick={() => onStudy(deck)}
-              className="text-[13px] font-medium rounded-xl border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 py-2.5 hover:bg-stone-50 dark:hover:bg-stone-800 hover:border-stone-300 dark:hover:border-stone-600 transition-colors"
+              className="w-full text-[12px] font-medium rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-2 hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
             >
               Study now
             </button>
-            <div className="flex gap-2 items-center">
-              <input
-                type="number"
-                min={1}
-                max={50}
-                value={count}
-                onChange={(e) => setCount(Math.max(1, parseInt(e.target.value) || 1))}
-                className="w-10 text-center text-[13px] py-2 border border-stone-200 dark:border-stone-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-400 dark:bg-stone-800 dark:text-stone-100"
-              />
+            <div className="flex gap-2">
               <button
                 onClick={() => onGenerate(deck, count)}
                 disabled={generating === deck.id}
-                className="flex-1 text-[13px] font-medium rounded-xl border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex-1 text-[12px] font-medium rounded-xl bg-gray-100 dark:bg-stone-800 text-gray-700 dark:text-gray-300 py-2 hover:bg-gray-200 dark:hover:bg-stone-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {generating === deck.id ? "..." : "Generate"}
               </button>
               <button
                 onClick={() => onQuiz(deck)}
-                className="flex-1 text-[13px] font-medium rounded-xl border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 py-2 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors"
+                className="flex-1 text-[12px] font-medium rounded-xl bg-gray-100 dark:bg-stone-800 text-gray-700 dark:text-gray-300 py-2 hover:bg-gray-200 dark:hover:bg-stone-700 transition-colors"
               >
                 Quiz
               </button>
+              <button
+                onClick={() => onManage(deck)}
+                className="flex-1 text-[12px] font-medium rounded-xl bg-gray-100 dark:bg-stone-800 text-gray-700 dark:text-gray-300 py-2 hover:bg-gray-200 dark:hover:bg-stone-700 transition-colors"
+              >
+                Manage
+              </button>
             </div>
-            <button
-              onClick={() => onManage(deck)}
-              className="text-[13px] font-medium rounded-xl border border-stone-200 dark:border-stone-700 text-stone-500 dark:text-stone-400 py-2 hover:bg-stone-50 dark:hover:bg-stone-800 hover:border-stone-300 dark:hover:border-stone-600 transition-colors"
-            >
-              Manage
-            </button>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -221,8 +209,8 @@ function Section({ title, decks, onStudy, onGenerate, onQuiz, onManage, generati
   if (decks.length === 0) return null;
   return (
     <div className="mb-9">
-      <h2 className="text-[14px] font-medium text-stone-700 dark:text-stone-300 mb-3.5">{title}</h2>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
+      <h2 className="text-[14px] font-medium text-gray-700 dark:text-gray-300 mb-4">{title}</h2>
+      <div className="ml-16 flex flex-wrap gap-4">
         {decks.map((d) => (
           <DeckCard
             key={d.id}
@@ -291,14 +279,26 @@ export default function CardsPage({ decks = MOCK_DECKS }) {
 
   const handleStudy = async (deck) => {
     const noteId = deck.id || deck._id;
-    const res = await apiFetch(`/flashcards/${noteId}`, { method: "GET" });
-    const data = await res.json();
-    if (data.success === false) {
-      console.error("Failed to fetch flashcards for review:", data.message);
-      return;
+    try {
+      const res = await apiFetch(`/flashcards/${noteId}`, { method: "GET" });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.message || `Request failed (${res.status})`);
+      }
+      const data = await res.json();
+      if (data.success === false) {
+        throw new Error(data.message || "Failed to fetch flashcards");
+      }
+      dispatch(addFlashcards(data.payload));
+      navigate(`../cards/review/${noteId}`);
+    } catch (err) {
+      console.error("Failed to fetch flashcards for review:", err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: err.message || "Failed to load flashcards. Please try again.",
+      });
     }
-    dispatch(addFlashcards(data.payload));
-    navigate(`../cards/review/${noteId}`);
   };
 
   const handleGenerate = async (deck, count = 5) => {
@@ -309,12 +309,23 @@ export default function CardsPage({ decks = MOCK_DECKS }) {
         method: "POST",
         body: { count },
       });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.message || `Request failed (${res.status})`);
+      }
       const data = await res.json();
       if (data.success && data.newFlashcards?.length) {
         dispatch(addFlashcards({ flashcards: data.newFlashcards }));
+      } else {
+        throw new Error(data.message || "No flashcards generated");
       }
     } catch (err) {
       console.error("Failed to generate flashcards", err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: err.message || "Failed to generate flashcards. Please try again.",
+      });
     } finally {
       setGenerating(null);
     }
@@ -331,9 +342,9 @@ export default function CardsPage({ decks = MOCK_DECKS }) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-stone-900">
+    <div className="flex flex-col  h-full bg-white dark:bg-stone-900">
       <Tabs OpenTabs={[]} hideTabs={true} />
-      <div className="flex-1 bg-stone-50 dark:bg-stone-950 p-7 overflow-y-auto">
+      <div className="flex-1  bg-stone-50 dark:bg-stone-950 p-7 overflow-y-auto">
         <div className="flex items-center justify-between mb-7">
           <h1 className="text-xl font-medium text-stone-900 dark:text-stone-100">Flashcards</h1>
         </div>
