@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { ChevronRight, Sparkles, Trash2 } from "lucide-react";
+import { ChevronRight, Sparkles, Trash2, Send, Bot } from "lucide-react";
 import { useSelector } from "react-redux";
 import { apiFetch } from "../../commons/apifetch";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { toast } from "../../hooks/use-toast";
 
 export default function AiChatSidebar() {
   const {pathname} = useLocation()
@@ -48,22 +51,34 @@ export default function AiChatSidebar() {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
-    const res = await apiFetch(`/ai/ask/${id}`, {
-      method: "POST",
-      body: {
-        query: inputValue,
-      },
-    });
-    if (!res.ok) return;
-    const data = await res.json();
-    const aiMessage = {
-      id: Date.now() + 1,
-      text: data.paylaod.answer,
-      sender: "ai",
-    };
-
-    setMessages((prev) => [...prev, aiMessage]);
-    setIsLoading(false);
+    try {
+      const res = await apiFetch(`/ai/ask/${id}`, {
+        method: "POST",
+        body: {
+          query: inputValue,
+        },
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.message || `Request failed (${res.status})`);
+      }
+      const data = await res.json();
+      const aiMessage = {
+        id: Date.now() + 1,
+        text: data.payload?.answer || data.message || "No response received.",
+        sender: "ai",
+      };
+      setMessages((prev) => [...prev, aiMessage]);
+    } catch (err) {
+      console.error("AI chat error:", err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: err.message || "Failed to get response. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const clearChat = () => {
@@ -93,33 +108,32 @@ export default function AiChatSidebar() {
       >
         <div className="h-[38px] border-b border-[#E8E6E1] dark:border-stone-800 flex items-center justify-between px-3 shrink-0">
           <div className="flex items-center gap-2">
-            <span
-              className="material-symbols-outlined text-[#059669] dark:text-emerald-400 text-[17px]"
-              style={{ fontSize: "17px" }}
-            >
-              auto_awesome
-            </span>
+            <Sparkles className="w-4 h-4 text-[#059669] dark:text-emerald-400" />
             <span className="text-[12.5px] font-medium text-[#1C1B22] dark:text-stone-100">
               AI Assistant
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-[28px] w-[28px] !text-[#6B6A65] dark:!text-stone-400 hover:!text-[#059669] dark:hover:!text-emerald-400 hover:!bg-[#ecfdf5] dark:hover:!bg-emerald-950/30"
               onClick={clearChat}
-              className="w-[28px] h-[26px] flex items-center justify-center text-[#6B6A65] dark:text-stone-400 hover:text-[#059669] dark:hover:text-emerald-400 rounded-[5px] hover:bg-[#ecfdf5] dark:hover:bg-emerald-950/30 transition-all duration-150 active:scale-[0.97]"
               title="Clear conversation"
               aria-label="Clear conversation"
             >
-              <Trash2 className="w-[14px] h-[14px]" />
-            </button>
-            <button
+              <Trash2 className="w-3.5 h-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-[28px] w-[28px] !text-[#6B6A65] dark:!text-stone-400 hover:!text-[#059669] dark:hover:!text-emerald-400 hover:!bg-[#ecfdf5] dark:hover:!bg-emerald-950/30"
               onClick={() => setIsOpen(false)}
-              className="w-[28px] h-[26px] flex items-center justify-center text-[#6B6A65] dark:text-stone-400 hover:text-[#059669] dark:hover:text-emerald-400 rounded-[5px] hover:bg-[#ecfdf5] dark:hover:bg-emerald-950/30 transition-all duration-150 active:scale-[0.97]"
               title="Close sidebar"
               aria-label="Close sidebar"
             >
-              <ChevronRight className="w-[14px] h-[14px]" />
-            </button>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Button>
           </div>
         </div>
 
@@ -131,12 +145,7 @@ export default function AiChatSidebar() {
             >
               {msg.sender === "ai" && (
                 <div className="w-[26px] h-[26px] rounded-full bg-[#ecfdf5] flex items-center justify-center flex-shrink-0 mr-[7px] mt-0.5">
-                  <span
-                    className="material-symbols-outlined text-[13px] text-[#059669] dark:text-emerald-400"
-                    style={{ fontSize: "13px" }}
-                  >
-                    auto_awesome
-                  </span>
+                  <Bot className="w-3.5 h-3.5 text-[#059669] dark:text-emerald-400" />
                 </div>
               )}
               <div
@@ -154,12 +163,7 @@ export default function AiChatSidebar() {
           {isLoading && (
             <div className="flex">
               <div className="w-[26px] h-[26px] rounded-full bg-[#ecfdf5] flex items-center justify-center flex-shrink-0 mr-[7px] mt-0.5">
-                <span
-                  className="material-symbols-outlined text-[13px] text-[#059669] dark:text-emerald-400"
-                  style={{ fontSize: "13px" }}
-                >
-                  auto_awesome
-                </span>
+                <Bot className="w-3.5 h-3.5 text-[#059669] dark:text-emerald-400" />
               </div>
               <div className="bg-[#ecfdf5] text-[#064e3b] dark:text-emerald-200 rounded-[10px] p-[9px_11px] text-[12.5px]">
                 <div className="flex gap-1">
@@ -187,27 +191,23 @@ export default function AiChatSidebar() {
           className="border-t border-[#E8E6E1] dark:border-stone-800 p-[10px_12px] bg-[#FAFAF9] dark:bg-stone-950"
         >
           <div className="flex items-center gap-1.5">
-            <input
+            <Input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ask me anything…"
               disabled={isLoading}
-              className="flex-1 px-[10px] py-[6px] border-[0.5px] border-[#E2E0DC] dark:border-stone-700 rounded-full bg-white dark:bg-stone-900 text-[#1C1B22] dark:text-stone-100 text-[12.5px] placeholder-[#C4C3BE] dark:placeholder-stone-600 focus:border-[#6ee7b7] dark:focus:border-emerald-500 focus:ring-0 outline-none transition-all duration-150"
+              className="flex-1 !rounded-full !py-[6px] !px-[10px] !text-[12.5px] !border-[0.5px] !border-[#E2E0DC] dark:!border-stone-700"
             />
-            <button
+            <Button
               type="submit"
+              size="icon"
               disabled={!inputValue.trim() || isLoading}
-              className="w-[28px] h-[28px] rounded-full bg-[#059669] dark:bg-emerald-600 flex items-center justify-center flex-shrink-0 text-white cursor-pointer hover:bg-[#047857] dark:hover:bg-emerald-700 transition-all duration-150 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed border-none"
+              className="w-[28px] h-[28px] !rounded-full !bg-[#059669] !text-white hover:!bg-[#047857] dark:!bg-emerald-600 dark:hover:!bg-emerald-700"
               aria-label="Send message"
             >
-              <span
-                className="material-symbols-outlined text-[13px]"
-                style={{ fontSize: "13px" }}
-              >
-                arrow_upward
-              </span>
-            </button>
+              <Send className="w-3.5 h-3.5" />
+            </Button>
           </div>
           <p className="text-[10px] text-[#A8A7A2] dark:text-stone-500 text-center pt-2">
             AI may produce inaccurate information
