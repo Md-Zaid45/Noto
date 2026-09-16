@@ -5,6 +5,7 @@ async function generate(prompt, jsonMode = true) {
   try {
     const completion = await ai.chat.completions.create({
       model: "qwen/qwen3-32b",
+      max_tokens: 1024,
       messages: [
         {
           role: "user",
@@ -136,7 +137,7 @@ Do not include anything not found in the content. Do not use headers unless the 
  */
 export async function answerQuestion(question, context, history = []) {
   const historyText = history
-    .map((h) => `${h.role === "user" ? "User" : "Assistant"}: ${h.text}`)
+    .map((h) => `${h.role === "user" ? "User" : "Assistant"}: ${h.content}`)
     .join("\n");
 
   const prompt = `
