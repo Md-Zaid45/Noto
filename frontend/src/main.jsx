@@ -78,12 +78,14 @@ const router = createBrowserRouter([
 
 import { ThemeProvider } from "./store/themeContext.jsx";
 import Manage from "./features/flashcards/manage.jsx";
+import { Toaster } from "./components/ui/toaster";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={appStore}>
       <ThemeProvider>
         <RouterProvider router={router} />
+        <Toaster />
       </ThemeProvider>
     </Provider>
   </StrictMode>,
