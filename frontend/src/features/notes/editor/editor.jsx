@@ -11,6 +11,7 @@ import LoadingLoader from "../../../commons/loader";
 import { useDispatch } from "react-redux";
 import { renameNote } from "../notesSlice";
 import { updateNoteAsync } from "../notesThunks";
+import { updateNoteName } from "../notesContentSlice";
 
 export default function Editr() {
   const { id } = useParams();
@@ -22,8 +23,8 @@ export default function Editr() {
   const editors = useRef(new Map());
 
   const [editor, isSaved] = useEditor(editors, tabs, note);
-  const [title, setTitle] = useState("");
-
+  const [title, setTitle] = useState(note?.name);
+  
   useEffect(() => {
     if (note?.name) {
       setTitle(note.name);
@@ -38,10 +39,9 @@ export default function Editr() {
     if (!note?.noteId) return;
     const finalTitle = title.trim() || "Untitled";
     setTitle(finalTitle);
-    if (finalTitle !== note?.name) {
-      dispatch(renameNote({ id: note.noteId, name: finalTitle }));
-      dispatch(updateNoteAsync({ id: note.noteId, name: finalTitle }));
-    }
+    dispatch(updateNoteName({ id: note.noteId, name: finalTitle }));
+    dispatch(renameNote({ id: note.noteId, name: finalTitle }));
+    dispatch(updateNoteAsync({ id: note.noteId, name: finalTitle }));
   };
 
   const deleteHandler = useCallback(
@@ -95,7 +95,7 @@ export default function Editr() {
               <div className="pt-9 px-12" style={{ maxWidth: "700px" }}>
                 <style>{`.note-title::-webkit-scrollbar { display: none; }`}</style>
                 <textarea
-                  className="note-title w-full text-2xl font-bold bg-transparent border-none outline-none resize-none overflow-hidden mb-4 placeholder-stone-400 dark:placeholder-stone-500 font-heading"
+                  className="note-title w-full text-2xl font-[500] font-heading bg-transparent border-none outline-none resize-none overflow-hidden mb-4 placeholder-stone-400 dark:placeholder-stone-500 font-heading"
                   style={{ color: "var(--editor-text)", resize: "none", overflow: "hidden", scrollbarWidth: "none" }}
                   value={title}
                   onChange={handleTitleChange}

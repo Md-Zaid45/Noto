@@ -138,7 +138,17 @@ export function useTabs(note, id) {
   useEffect(() => {
     if (!note?.noteId) return;
     setTabs((prev) => {
-      if (prev.tabs.find((tab) => tab.id === note.noteId)) return { ...prev , activeTab: note.noteId };
+      const existingTab = prev.tabs.find((tab) => tab.id === note.noteId);
+      if (existingTab) {
+        if (existingTab.name === note.name) return { ...prev, activeTab: note.noteId };
+        return {
+          ...prev,
+          activeTab: note.noteId,
+          tabs: prev.tabs.map((tab) =>
+            tab.id === note.noteId ? { ...tab, name: note.name } : tab
+          ),
+        };
+      }
       const newTabs = [...prev.tabs, { id: note.noteId, name: note.name }];
       return { activeTab: note.noteId, tabs: newTabs };
     });

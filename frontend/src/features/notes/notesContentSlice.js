@@ -10,6 +10,12 @@ const notesContentSlice = createSlice({
         note.content = action.payload.content;
       }
     },
+    updateNoteName: (state, action) => {
+      const note = state?.find((note) => note.noteId === action.payload.id);
+      if (note) {
+        note.name = action.payload.name;
+      }
+    },
     addNoteContent: (state, action) => {
       if (action.payload) {
         const newNote = {
@@ -54,4 +60,5 @@ export const {
   deleteNoteContent,
   deleteNotesContent,
   updateNoteContent,
+  updateNoteName,
 } = notesContentSlice.actions;
