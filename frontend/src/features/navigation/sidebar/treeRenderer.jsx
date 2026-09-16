@@ -95,7 +95,7 @@ export default function Tree({ folder, level = -1 }) {
             ) : (
               <Folder contentEditable={false} className="text-[#BA7517] shrink-0 text-[13px]" size={13} />
             )}
-            <span className="truncate text-[12.5px]">{folder.name}</span>
+            <span className=" truncate text-[12.5px]  ">{folder.name}</span>
           </div>
         )}
 
@@ -131,9 +131,9 @@ export default function Tree({ folder, level = -1 }) {
               ref={Rename === node.id ? renameRef : null}
               contentEditable={Rename === node.id}
               key={node.id}
-              className={`
+              className={` 
                 flex items-center gap-1.5 pr-2 cursor-pointer
-                transition-all duration-150 text-[#6B6A65] dark:text-stone-400
+                transition-all duration-150 text-[#282825] dark:text-stone-400
                 ${Active && Active === node.id ? "bg-[#ecfdf5] dark:bg-emerald-950/30 text-[#047857] dark:text-emerald-300 font-medium" : "hover:bg-[#d1fae5] dark:hover:bg-emerald-950/30 hover:text-[#059669] dark:hover:text-emerald-400"}
               ${Active === node.id ? "dark:border-emerald-500" : ""}
               `}

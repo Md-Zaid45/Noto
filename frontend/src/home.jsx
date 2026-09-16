@@ -26,10 +26,6 @@ function App() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const data = useLoaderData();
-  const Notes = useSelector((state) => state.Notes);
-  const Folders = useSelector((state) => state.Folders);
-  const NotesContent = useSelector((state) => state.NotesContent);
-  const Flashcards = useSelector((state) => state.Flashcards.cards);
   const [ContextMenuPos, setContextMenuPos] = useState({});
   const [Rename, setRename] = useState(null);
   const [ShowContextMenu, setShowContextMenu] = useState(null);

@@ -76,7 +76,6 @@ export default function LeftSidebar({ view, setView, treeOpen }) {
   const { id } = useParams();
   const activeRef = useRef(null);
   const Notes = useSelector((state) => state.Notes);
-  const NotesContent = useSelector((state) => state.NotesContent);
   const Folders = useSelector((state) => state.Folders);
   const fileButtonRef = useRef(null);
   const folderButtonRef = useRef(null);
