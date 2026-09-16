@@ -11,7 +11,7 @@ import LoadingLoader from "../../commons/loader";
 import { Button } from "../../components/ui/button";
 import { Textarea } from "../../components/ui/textarea";
 import { Label } from "../../components/ui/label";
-import { Card, CardContent } from "../../components/ui/card";
+import { Card, CardContent, CardTitle } from "../../components/ui/card";
 import Tabs from "../notes/editor/tabs";
 
 const Manage = () => {
@@ -86,28 +86,27 @@ const Manage = () => {
         </div>
       )}
       <div className="flex-1 overflow-y-auto">
-        <div className="flex items-center gap-3 px-6 pt-4">
-          <Button
+        <div className="items-center flex gap-5 px-6 pt-4">
+          <Button 
             variant="outline"
             size="sm"
             onClick={() => navigate(-1)}
           >
             &larr; Back
           </Button>
-          <h1 className="text-lg font-medium text-stone-900 dark:text-stone-100">
-            Manage Flashcards
-          </h1>
+
         </div>
         <div className="px-6 py-4">
         {editState ? (
           <Card className="max-w-2xl">
+            <CardTitle className='mt-4 ml-6 mb-2 font-heading'>Edit Flashcard</CardTitle>
             <CardContent>
               <form
                 className="flex flex-col gap-4"
                 onSubmit={handleUpdate}
               >
                 <div className="flex flex-col gap-2">
-                  <Label className="text-xs uppercase tracking-wide">
+                  <Label className="text-xs mt-3 uppercase tracking-wide">
                     Question
                   </Label>
                   <Textarea
