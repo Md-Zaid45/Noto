@@ -6,15 +6,17 @@ import { apiFetch } from "../../commons/apifetch";
 import { useDispatch } from "react-redux";
 import { addFlashcards } from "./flashcardSlice";
 import Tabs from "../notes/editor/tabs";
-const handleRating = async (rating,timeSpent, cardId) => {
+const handleRating = async (rating,time,setTime, cardId) => {
+  const now=new Date()
+  setTime(now)
   const res = await apiFetch(`/flashcards/review/${cardId}`, {
     method: "PATCH",
-    body: { score: rating , timeSpent},
+    body: { score: rating ,timeSpent:now-time },
   });
   const data = await res.json();
 };
 export default function ReviewFlashcard() {
-  const [time, setTime] = useState()
+  const [time, setTime] = useState(new Date());
   const { id } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -254,7 +256,7 @@ export default function ReviewFlashcard() {
             <button
               key={label}
               onClick={() => {
-                handleRating(key, currentCard.id);
+                handleRating(key,time, setTime, currentCard.id);
                 moveToNext();
               }}
               className={`flex flex-col items-center justify-center px-3 py-3 rounded-xl
