@@ -10,7 +10,7 @@ export default function useFormHandlers(
   setErrors,
   touched,
   setTouched,
-  setSuccess,
+  onSuccess,
   setIsLoading,
 ) {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ export default function useFormHandlers(
       });
       const r = await result.json();
       setIsLoading(false);
-      if (result.ok) setSuccess(true);
+      if (result.ok) onSuccess();
       else {
         setErrors((prev) => ({ ...prev, res: r.message }));
       }
@@ -76,7 +76,7 @@ export default function useFormHandlers(
       setIsLoading(false);
       if (result.ok) {
         const { name, email } = res.payload;
-        setSuccess(true);
+        onSuccess();
         dispatch(setLoggedIn(name));
       } else {
         setErrors((prev) => ({ ...prev, res: "Incorrect email or password" }));

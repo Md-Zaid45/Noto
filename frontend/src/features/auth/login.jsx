@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import { feildsConfig, validateForm, validators } from "./authLogic";
+import { useEffect, useState } from "react";
+import { feildsConfig } from "./authLogic";
 import Input from "./input";
 import { NavLink, useNavigate } from "react-router-dom";
 import useFormHandlers from "./hooks";
 import { useSelector } from "react-redux";
 import { IoIosWarning } from "react-icons/io";
 import LoadingLoader from "../../commons/loader";
+import { toast } from "../../hooks/use-toast";
 
 export default function Login() {
   const [formValues, setFormValues] = useState({
@@ -18,7 +19,6 @@ export default function Login() {
     Password: false,
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   const { loginHandler, handleInput, handleBlur } = useFormHandlers(
     formValues,
@@ -27,27 +27,14 @@ export default function Login() {
     setErrors,
     touched,
     setTouched,
-    setSuccess,
+    () => {
+      toast({ title: "Logged in Successfully!", variant: "success" });
+      setTimeout(() => navigate("../home"), 1300);
+    },
     setIsLoading,
   );
   const navigate = useNavigate();
   const auth = useSelector((state) => state.Auth);
-  const timeoutKey = useRef(null);
-  useEffect(() => {
-    if (timeoutKey.current) {
-      clearTimeout(timeoutKey.current);
-    }
-
-    if (success) {
-      timeoutKey.current = setTimeout(() => {
-        navigate("../login");
-      }, 1300);
-    }
-
-    return () => {
-      if (timeoutKey.current) clearTimeout(timeoutKey.current);
-    };
-  }, []);
 
   useEffect(() => {
     if (auth.isLoggedIn === true) navigate("../home");
@@ -95,11 +82,6 @@ export default function Login() {
             Log in
           </button>
         </form>
-        {success && (
-          <div className=" mt-1 w-full bg-green-100 dark:bg-emerald-950/30 text-green-800 dark:text-emerald-300 border-b border-green-300 dark:border-emerald-800 px-4 py-3 text-center font-medium animate-slideDown">
-            Logged in Successfully !
-          </div>
-        )}
         <p className="text-center text-sm text-gray-500 dark:text-stone-400 mt-6">
           Don't have an account?{" "}
           <NavLink

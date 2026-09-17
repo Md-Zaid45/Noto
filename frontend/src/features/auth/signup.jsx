@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Input from "./input";
 import { feildsConfig } from "./authLogic";
 import { NavLink, useNavigate } from "react-router-dom";
 import useFormHandlers from "./hooks";
 import { IoIosWarning } from "react-icons/io";
 import LoadingLoader from "../../commons/loader";
+import { toast } from "../../hooks/use-toast";
 
 export function SignUp() {
   const navigate = useNavigate();
@@ -14,7 +15,6 @@ export function SignUp() {
     CreatePassword: "",
     ConfirmPassword: "",
   });
-  const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({
@@ -30,25 +30,12 @@ export function SignUp() {
     setErrors,
     touched,
     setTouched,
-    setSuccess,
+    () => {
+      toast({ title: "Registered Successfully!", variant: "success" });
+      setTimeout(() => navigate("../login"), 1300);
+    },
     setIsLoading,
   );
-  const timeoutKey = useRef(null);
-  useEffect(() => {
-    if (timeoutKey.current) {
-      clearTimeout(timeoutKey.current);
-    }
-
-    if (success) {
-      timeoutKey.current = setTimeout(() => {
-        navigate("../login");
-      }, 1300);
-    }
-
-    return () => {
-      if (timeoutKey.current) clearTimeout(timeoutKey.current);
-    };
-  }, [success, navigate]);
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-stone-950 px-4">
       <div className="w-full max-w-md bg-white dark:bg-stone-900 rounded-2xl shadow-lg dark:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-stone-800 p-8">
@@ -90,11 +77,6 @@ export function SignUp() {
             Sign Up
           </button>
         </form>
-        {success && (
-          <div className=" mt-1 w-full bg-green-100 dark:bg-emerald-950/30 text-green-800 dark:text-emerald-300 border-b border-green-300 dark:border-emerald-800 px-4 py-3 text-center font-medium animate-slideDown">
-            Registered Successfully !
-          </div>
-        )}
         <p className="text-center text-sm text-gray-500 dark:text-stone-400 mt-6">
           Already have an account?{" "}
           <NavLink
