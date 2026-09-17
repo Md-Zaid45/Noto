@@ -37,13 +37,13 @@ function App() {
   const auth = useSelector((state) => state.Auth);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    if (!data) return;
+    console.log('data',data);
+    
+    if (!data?.success) return;
     dispatch(hydrateApp(data.payload));
   }, [data, dispatch]);
   useEffect(() => {
-    if (auth.isAuthChecked) {
-      return;
-    }
+    if (auth.isLoggedIn) return;
     setLoading(true);
     const fetchData = async () => {
       const res = await apiFetch(`/me`, {
@@ -56,7 +56,7 @@ function App() {
       } else navigate("../login");
     };
     fetchData();
-  }, [auth.isAuthChecked]);
+  }, [auth.isLoggedIn]);
 
   useEffect(() => {
     const handler = (e) => UiController.handler(e);

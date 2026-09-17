@@ -10,7 +10,8 @@ import Editr from "./features/notes/editor/editor.jsx";
 import { AuthPage } from "./pages/signup-login.jsx";
 import ErrorPage from "./pages/errorPage.jsx";
 import { apiFetch } from "./commons/apifetch.js";
-import Dashboard from "./pages/dashboard.jsx";
+import Dashboard, { DashboardHome } from "./pages/dashboard.jsx";
+import DeckStatsPage from "./features/dashboard/deckStats.jsx";
 import CardsPage from "./pages/revision.jsx";
 import ReviewFlashcard from "./features/flashcards/reviewFlashcard.jsx";
 import Quiz from "./features/quiz/quiz.jsx";
@@ -24,7 +25,8 @@ const router = createBrowserRouter([
         method: "POST",
         body: JSON.parse(localStorage.getItem("tabs")),
       });
-      if (!res.ok) throw new Error("Failed to fetch data");
+      if (!res?.success){ console.log('Failed to fetch workspace')}
+      
       const data = await res.json();
       return data;
     },
@@ -55,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />,
+        children: [
+          { index: true, element: <DashboardHome /> },
+          { path: "deck-stats", element: <DeckStatsPage /> },
+        ],
       },
       {
         path: "quiz",
