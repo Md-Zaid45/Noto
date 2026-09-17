@@ -48,7 +48,7 @@ export const updateFlashcard = async (req, res, next) => {
 export const reviewUpdate = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { score } = req.body;
+    const { score , timeSpent} = req.body;
     const card = await Flashcard.findById(id);
     if (!card) throw new ApiError(404, "Flashcard not found");
     const previousInterval = card.interval;
@@ -60,6 +60,7 @@ export const reviewUpdate = async (req, res, next) => {
       flashcardId:id,
       userId:req.user._id,
       quality:score,
+      timeSpent,
       previousInterval,
       previousEaseFactor,
       newInterval,
@@ -113,14 +114,13 @@ export const getFlashcardsActivity = async (req, res, next) => {
     const monthAgo = new Date();
     monthAgo.setDate(monthAgo.getDate() - 27);
     monthAgo.setHours(0, 0, 0, 0);
-         const [
+          const [
       totalCards,
       activeCards,
       dueCards,
       reviewedCards,
       masteredCards,
       learningCards,
-      newCards,
       weeklyActivity,
       dailyActivity,
       totalReviews,
@@ -147,19 +147,15 @@ export const getFlashcardsActivity = async (req, res, next) => {
       Flashcard.countDocuments({
         userId,
         revisionMark: true,
+        interval: { $lt: 30 },
         repetitions: { $gte: 3 },
-      }),
-      Flashcard.countDocuments({
-        userId,
-        revisionMark: true,
-        repetitions: { $gte: 0, $lte: 2 },
       }),
       ReviewLog.aggregate([
         { $match: { userId  } },
         {
           $group: {
             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-            count: { $sum: 1 },
+            count: { $sum: "$timeSpent" },
           },
         },
         { $sort: { _id: 1 } },
@@ -169,7 +165,7 @@ export const getFlashcardsActivity = async (req, res, next) => {
         {
           $group: {
             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-            count: { $sum: 1 },
+            count: { $sum: "$timeSpent" },
           },
         },
         { $sort: { _id: 1 } },
@@ -205,6 +201,8 @@ export const getFlashcardsActivity = async (req, res, next) => {
       { $sort: { _id: 1 } },
     ]);
 
+    const newCards = activeCards - masteredCards - learningCards;
+
     const accuracy =
       totalReviews > 0
         ? Math.round((correctReviews / totalReviews) * 1000) / 10
@@ -212,14 +210,16 @@ export const getFlashcardsActivity = async (req, res, next) => {
 
     let streak = 0;
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().slice(0, 10);
     for (const day of streakDays) {
       const expected = new Date(today);
-      expected.setDate(expected.getDate() - streak);
+      expected.setUTCDate(today.getUTCDate() - streak);
       const dayStr = expected.toISOString().slice(0, 10);
       if (day._id === dayStr) streak++;
       else break;
     }
+    console.log('weekly',weeklyActivity);
+    
     return res.status(200).json({
       success: true,
       payload: {
@@ -261,12 +261,49 @@ export const getDeckStats = async (req, res, next) => {
         },
       },
     ]);
+
+    const reviewStats = await ReviewLog.aggregate([
+      { $match: { userId } },
+      {
+        $lookup: {
+          from: "flashcards",
+          localField: "flashcardId",
+          foreignField: "_id",
+          as: "flashcard",
+        },
+      },
+      { $unwind: "$flashcard" },
+      {
+        $group: {
+          _id: "$flashcard.noteId",
+          totalTimeSpent: { $sum: { $ifNull: ["$timeSpent", 0] } },
+          totalReviews: { $sum: 1 },
+          correctReviews: {
+            $sum: { $cond: [{ $gte: ["$quality", 3] }, 1, 0] },
+          },
+          lastReviewed: { $max: "$createdAt" },
+        },
+      },
+    ]);
+
+    const reviewMap = {};
+    for (const stat of reviewStats) {
+      reviewMap[stat._id.toString()] = stat;
+    }
+
     const noteIds = deckAgg.map((d) => d._id);
     const notes = await Note.find({ _id: { $in: noteIds } }).select(
       "name folderId",
     );
     const result = deckAgg.map((d) => {
       const note = notes.find((n) => n._id.equals(d._id));
+      const review = reviewMap[d._id.toString()];
+      const accuracy =
+        review && review.totalReviews > 0
+          ? Math.round((review.correctReviews / review.totalReviews) * 100)
+          : 0;
+      const timeSpent = review ? review.totalTimeSpent : 0;
+      const hardness = accuracy > 0 ? Math.round(timeSpent / accuracy) : 0;
       return {
         noteId: d._id,
         name: note?.name || "Unknown",
@@ -277,6 +314,10 @@ export const getDeckStats = async (req, res, next) => {
           d.totalCards > 0
             ? Math.round((d.masteredCards / d.totalCards) * 100)
             : 0,
+        timeSpent,
+        accuracy,
+        hardness,
+        lastReviewed: review ? review.lastReviewed : null,
       };
     });
     return res.status(200).json({ success: true, payload: result });
