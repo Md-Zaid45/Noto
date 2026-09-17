@@ -1,5 +1,4 @@
-import { useDispatch } from "react-redux";
-import { setLoggedIn, toggleIsAuthChecked } from "../store/authSlice";
+import { setLoggedIn, setLoggedOut } from "../store/authSlice";
 import appStore from "../store/appStore";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -38,8 +37,7 @@ export const apiFetch = async (url, options = {}) => {
         body: options.body ? JSON.stringify(options.body) : undefined,
       });
     } else {
-      appStore.dispatch(setLoggedIn(false));
-      appStore.dispatch(toggleIsAuthChecked(false));
+      appStore.dispatch(setLoggedOut());
     }
   }
 
