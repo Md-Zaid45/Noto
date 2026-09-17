@@ -1,14 +1,38 @@
-import { useState, useEffect } from "react";
-import {apiFetch} from "../commons/apifetch";
-import {
-  Zap,
-} from "lucide-react";
+import { useState, useEffect, createContext, useContext } from "react";
+import { Outlet } from "react-router-dom";
+import { apiFetch } from "../commons/apifetch";
 import { Doughnut, HeaderCounts } from "../features/dashboard/counts";
 import { PastActivity } from "../features/dashboard/PastAcitvity";
 import DueCards from "../features/dashboard/dueCards";
 import HeatMap from "../features/dashboard/heatMap";
 import FocusAreas from "../features/dashboard/focusArea";
 import { FutureScheduledCards } from "../features/dashboard/futureShcedules";
+
+export const DashboardContext = createContext();
+
+export function DashboardHome() {
+  const {
+    totalCards, activeCards, dueCards, reviewedCards,
+    masteredCards, accuracy, learningCards, newCards,
+    futureCards, streak, weeklyActivity, dailyActivity, decks,
+  } = useContext(DashboardContext);
+
+  return (
+    <>
+      <HeaderCounts totalCards={totalCards} activeCards={activeCards} dueCards={dueCards} reviewedCards={reviewedCards} streak={streak} accuracy={accuracy} />
+      <div className="flex gap-6">
+        <Doughnut activeCards={activeCards} masteredCards={masteredCards} learningCards={learningCards} newCards={newCards} />
+        <PastActivity weeklyActivity={weeklyActivity} />
+      </div>
+      <FutureScheduledCards futureCards={futureCards} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <DueCards decks={decks} />
+        <HeatMap dailyActivity={dailyActivity} />
+        <FocusAreas decks={decks} />
+      </div>
+    </>
+  );
+}
 
 export default function Dashboard() {
   const [totalCards, setTotalCards] = useState(0);
@@ -52,20 +76,18 @@ export default function Dashboard() {
     fetchDashboardData();
   }, []);
 
+  const contextValue = {
+    totalCards, activeCards, dueCards, reviewedCards,
+    masteredCards, accuracy, learningCards, newCards,
+    futureCards, streak, weeklyActivity, dailyActivity, decks,
+  };
+
   return (
     <div className="h-full overflow-y-auto bg-[#f9fafb] dark:bg-stone-950 p-6 text-[#111827] dark:text-stone-100">
       <div className="max-w-7xl mx-auto space-y-6 pb-8">
-        <HeaderCounts totalCards={totalCards} activeCards={activeCards} dueCards={dueCards} reviewedCards={reviewedCards} streak={streak} accuracy={accuracy} />
-        <div className="flex gap-6">
-          <Doughnut activeCards={activeCards} masteredCards={masteredCards} learningCards={learningCards} newCards={newCards} />
-          <PastActivity weeklyActivity={weeklyActivity} />
-        </div>
-        <FutureScheduledCards futureCards={futureCards} />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <DueCards decks={decks} />
-          <HeatMap dailyActivity={dailyActivity} />
-          <FocusAreas decks={decks} />
-        </div>
+        <DashboardContext.Provider value={contextValue}>
+          <Outlet />
+        </DashboardContext.Provider>
       </div>
     </div>
   );
