@@ -122,10 +122,10 @@ function DeckCard({ deck, onStudy, onGenerate, onQuiz, onManage, generating }) {
           )}
         </div>
 
-        <h3 className="text-[14px] font-semibold text-gray-900 dark:text-white leading-snug mb-1 truncate">
+        <h3 className="text-[14px]  font-semibold text-gray-900 dark:text-white leading-snug mb-1 truncate">
           {deck.name}
         </h3>
-        <p className="text-[12px] text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 mb-3">
+        <p className="font-heading text-[12px] text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 mb-3">
           {deck.totalCards} cards · {timeAgo(deck.lastStudied)}
         </p>
 

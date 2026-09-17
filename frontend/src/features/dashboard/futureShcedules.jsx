@@ -1,13 +1,25 @@
 import { useMemo } from 'react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
+function CustomTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null;
+  const data = payload[0].payload;
+  return (
+    <div className="bg-white dark:bg-stone-800 px-3 py-2 rounded-xl shadow-lg shadow-black/5 border border-[#e5e7eb] dark:border-stone-700">
+      <p className="text-[11px] font-semibold text-[#6b7280] dark:text-stone-400 mb-0.5">{data.fullDate}</p>
+      <p className="text-sm font-bold text-[#1a5c3a] dark:text-emerald-400">{data.volume} cards</p>
+    </div>
+  );
+}
+
 export function FutureScheduledCards({ futureCards }) {
   const chartData = useMemo(() => {
     if (!futureCards?.length) return [];
     const next14 = futureCards.slice(0, 14);
     return next14.map((d) => {
-      const day = new Date(d._id).getDate();
-      return { day: `${day}`, volume: d.count };
+      const date = new Date(d._id);
+      const label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return { date: label, volume: d.count, fullDate: d._id };
     });
   }, [futureCards]);
 
@@ -30,8 +42,8 @@ export function FutureScheduledCards({ futureCards }) {
       <div className="h-48 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-            <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#A1A1AA", fontSize: 10, fontWeight: 500 }} />
-            <Tooltip cursor={{ fill: "#F4F4F5" }} />
+            <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: "#A1A1AA", fontSize: 10, fontWeight: 500 }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: "#F4F4F5" }} />
             <Bar dataKey="volume" fill="#1a5c3a" opacity={0.85} radius={[3, 3, 0, 0]} barSize={16} />
           </BarChart>
         </ResponsiveContainer>

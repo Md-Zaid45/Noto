@@ -50,7 +50,7 @@ const Tabs = React.memo(function Tabs({ OpenTabs, deleteHandler, hideTabs = fals
           className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] text-[#A8A7A2] dark:text-stone-500 hover:bg-[#ecfdf5] dark:hover:bg-emerald-950/30 hover:text-[#059669] dark:hover:text-emerald-400 transition-all duration-150"
           title="Toggle right panel"
         >
-          <span className="material-symbols-outlined" style={{ fontSize: "17px" }}>
+          <span className="material-symbols-outlined" style={{ fontSize: "19px" }}>
             {rightPanelOpen ? 'right_panel_close' : 'right_panel_open'}
           </span>
         </button>

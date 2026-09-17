@@ -3,6 +3,16 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
+function CustomTooltip({ active, payload, label }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-white dark:bg-stone-800 px-3 py-2 rounded-xl shadow-lg shadow-black/5 border border-[#e5e7eb] dark:border-stone-700">
+      <p className="text-[11px] font-semibold text-[#6b7280] dark:text-stone-400 mb-0.5">{label}</p>
+      <p className="text-sm font-bold text-[#1a5c3a] dark:text-emerald-400">{payload[0].value} min</p>
+    </div>
+  );
+}
+
 export function PastActivity({ weeklyActivity }) {
   const chartData = useMemo(() => {
     if (!weeklyActivity?.length) return [];
@@ -14,11 +24,14 @@ export function PastActivity({ weeklyActivity }) {
       const found = weeklyActivity.find((w) => w._id === key);
       last7.push({
         day: DAY_NAMES[d.getDay()],
-        hours: found ? found.count : 0,
+        minutes: found ? parseFloat((found.count / 60000).toFixed(1)) : 0,
       });
     }
     return last7;
   }, [weeklyActivity]);
+
+  const maxMinutes = useMemo(() => Math.max(...chartData.map((d) => d.minutes), 1), [chartData]);
+  const yMax = Math.ceil(maxMinutes * 1.2);
 
   return (
     <div className="bg-white dark:bg-stone-900 flex-4 p-6 rounded-2xl border border-[#e5e7eb] dark:border-stone-800 lg:col-span-2">
@@ -33,9 +46,9 @@ export function PastActivity({ weeklyActivity }) {
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E4E4E7" />
             <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#A1A1AA', fontSize: 11, fontWeight: 600 }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#A1A1AA', fontSize: 11 }} />
-            <Tooltip cursor={{ fill: '#F4F4F5' }} />
-            <Bar dataKey="hours" fill="#1a5c3a" radius={[4, 4, 0, 0]} barSize={32} />
+            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#A1A1AA', fontSize: 11 }} domain={[0, yMax]} allowDecimals={false} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F4F4F5' }} />
+            <Bar dataKey="minutes" fill="#1a5c3a" radius={[4, 4, 0, 0]} barSize={32} />
           </BarChart>
         </ResponsiveContainer>
       </div>

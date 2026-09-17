@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 
-function getLevel(val) {
-  if (val === 0) return 0;
-  if (val <= 2) return 1;
-  if (val <= 5) return 2;
-  if (val <= 10) return 3;
+function getLevel(minutes) {
+  if (minutes === 0) return 0;
+  if (minutes <= 5) return 1;
+  if (minutes <= 15) return 2;
+  if (minutes <= 30) return 3;
   return 4;
 }
 
@@ -24,7 +24,7 @@ export default function HeatMap({ dailyActivity }) {
       d.setDate(d.getDate() - i);
       const key = d.toISOString().slice(0, 10);
       const found = dailyActivity?.find((a) => a._id === key);
-      cells.push(found ? found.count : 0);
+      cells.push(found ? parseFloat((found.count / 60000).toFixed(1)) : 0);
     }
     return cells;
   }, [dailyActivity]);

@@ -27,7 +27,7 @@ export function HeaderCounts({ totalCards, activeCards, dueCards, reviewedCards,
           <p className="text-xs font-bold text-[#6b7280] dark:text-stone-400 tracking-wider uppercase">Daily Reviewed</p>
           <div className="flex items-baseline gap-1 mt-2">
             <span className="text-2xl font-bold text-[#111827] dark:text-stone-100">{reviewedCards}</span>
-            <span className="text-[#9ca3af] dark:text-stone-500 text-sm">/ {totalCards}</span>
+            <span className="text-[#9ca3af] dark:text-stone-500 text-sm">/ {activeCards}</span>
           </div>
         </div>
         <div className="p-2 bg-[#d1fae5] dark:bg-emerald-950/30 rounded-lg text-[#1a5c3a] dark:text-emerald-300">
@@ -77,6 +77,14 @@ export function HeaderCounts({ totalCards, activeCards, dueCards, reviewedCards,
 }
 
 export function Doughnut({ activeCards, masteredCards, learningCards, newCards }) {
+  const circumference = 402;
+  const masteredPct = activeCards > 0 ? masteredCards / activeCards : 0;
+  const learningPct = activeCards > 0 ? learningCards / activeCards : 0;
+  const masteredOffset = circumference - circumference * masteredPct;
+  const learningOffset = circumference - circumference * learningPct;
+  const masteredAngle = 0;
+  const learningAngle = masteredPct * 360;
+
   return (
     <>
       <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl border flex-1 border-[#e5e7eb] flex flex-col justify-between">
@@ -99,8 +107,9 @@ export function Doughnut({ activeCards, masteredCards, learningCards, newCards }
               stroke="#1a5c3a"
               strokeWidth="16"
               fill="transparent"
-              strokeDasharray="402"
-              strokeDashoffset="185"
+              strokeDasharray={circumference}
+              strokeDashoffset={masteredOffset}
+              strokeLinecap="butt"
             />
             <circle
               cx="80"
@@ -109,9 +118,11 @@ export function Doughnut({ activeCards, masteredCards, learningCards, newCards }
               stroke="#6ee7b7"
               strokeWidth="16"
               fill="transparent"
-              strokeDasharray="402"
-              strokeDashoffset="293"
-              className="transform rotate-[195deg] origin-[80px_80px] dark:stroke-emerald-500"
+              strokeDasharray={circumference}
+              strokeDashoffset={learningOffset}
+              className="dark:stroke-emerald-500"
+              style={{ transform: `rotate(${learningAngle}deg)`, transformOrigin: "80px 80px" }}
+              strokeLinecap="butt"
             />
           </svg>
           <div className="absolute text-center">

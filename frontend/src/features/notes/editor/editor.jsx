@@ -74,8 +74,12 @@ export default function Editr() {
   return (
     <div className="flex flex-col h-full bg-white dark:bg-stone-900">
       <Tabs OpenTabs={tabs} deleteHandler={deleteHandler} />
-
-      {editor ? (
+      {isLoading && (
+                <div className="absolute inset-0 bg-white/80 dark:bg-stone-900/80 flex items-center justify-center z-10">
+                  <LoadingLoader size="lg" color="blue" />
+                </div>
+              )}
+      {!isLoading && editor ? (
         <div className="flex-1 flex flex-col overflow-hidden">
           {isSaved === id && (
             <div className="fixed top-20 right-8 z-50 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-950/30 animate-fade-in">
@@ -87,11 +91,7 @@ export default function Editr() {
           <MenuBar editor={editor} />
           <div className="flex-1 overflow-y-auto bg-white dark:bg-stone-900">
             <div className="h-full bg-white dark:bg-stone-900">
-              {isLoading && (
-                <div className="absolute inset-0 bg-white/80 dark:bg-stone-900/80 flex items-center justify-center z-10">
-                  <LoadingLoader size="lg" color="blue" />
-                </div>
-              )}
+              
               <div className="pt-9 px-12" style={{ maxWidth: "700px" }}>
                 <style>{`.note-title::-webkit-scrollbar { display: none; }`}</style>
                 <textarea

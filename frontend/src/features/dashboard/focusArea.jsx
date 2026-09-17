@@ -1,7 +1,22 @@
+import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
+function formatTimeSpent(ms) {
+  if (!ms) return '0m';
+  const minutes = ms / 60000;
+  if (minutes < 1) return '<1m';
+  if (minutes < 60) return `${Math.round(minutes)}m`;
+  const hours = minutes / 60;
+  return `${hours.toFixed(1)}h`;
+}
+
 export default function FocusAreas({ decks }) {
-  const items = (decks || []).filter((d) => d.totalCards > 0).slice(0, 5);
+  const items = (decks || [])
+    .filter((d) => d.totalCards > 0)
+    .sort((a, b) => (b.timeSpent || 0) - (a.timeSpent || 0))
+    .slice(0, 5);
+
+  const navigate = useNavigate();
 
   return (
     <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-[#e5e7eb] dark:border-stone-800 flex flex-col justify-between">
@@ -13,7 +28,7 @@ export default function FocusAreas({ decks }) {
             <div key={d.noteId}>
               <div className="flex justify-between text-xs font-semibold mb-1">
                 <span className="text-[#111827] dark:text-stone-100">{d.name}</span>
-                <span className="text-[#6b7280] dark:text-stone-400">{d.mastery}%</span>
+                <span className="text-[#6b7280] dark:text-stone-400">{formatTimeSpent(d.timeSpent)}</span>
               </div>
               <div className="w-full bg-[#e5e7eb] dark:bg-stone-800 h-2 rounded-full overflow-hidden">
                 <div
@@ -28,10 +43,15 @@ export default function FocusAreas({ decks }) {
         </div>
       </div>
 
-      <button className="w-full mt-6 text-center text-xs font-semibold text-[#6b7280] dark:text-stone-400 border border-[#d1d5db] dark:border-stone-700 rounded-xl py-2.5 bg-white dark:bg-stone-900 hover:bg-[#f9fafb] dark:hover:bg-stone-800 transition-colors flex items-center justify-center gap-1">
-        View Detailed Breakdown
-        <ChevronRight className="w-3.5 h-3.5" />
-      </button>
+      {items.length > 0 && (
+        <button
+          onClick={() => navigate('/home/dashboard/deck-stats')}
+          className="w-full mt-6 text-center text-xs font-semibold text-[#6b7280] dark:text-stone-400 border border-[#d1d5db] dark:border-stone-700 rounded-xl py-2.5 bg-white dark:bg-stone-900 hover:bg-[#f9fafb] dark:hover:bg-stone-800 transition-colors flex items-center justify-center gap-1"
+        >
+          View Detailed Breakdown
+          <ChevronRight className="w-3.5 h-3.5" />
+        </button>
+      )}
     </div>
   );
 }
