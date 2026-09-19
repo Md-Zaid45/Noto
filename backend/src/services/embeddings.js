@@ -51,7 +51,7 @@ export function getTextFromEmbedding(embeddings) {
   return text;
 }
 
-import ai from "../GenAI/connection.js";
+import getAI from "../GenAI/connection.js";
 import mongoose from "mongoose";
 
 const EMBEDDING_MODEL = "text-embedding-3-small";
@@ -69,7 +69,7 @@ export const generateEmbeddings = async (doc) => {
     }
     const embeddings = await Promise.all(
       blocks.map(async (block, index) => {
-        const response = await ai.embeddings.create({
+        const response = await getAI().embeddings.create({
           model: EMBEDDING_MODEL,
           input: block.text,
         });
@@ -110,7 +110,7 @@ export const getRelevantEmbeddings = async (query, userId, noteId) => {
     "vector search started",
   );
   try {
-    const response = await ai.embeddings.create({
+    const response = await getAI().embeddings.create({
       model: EMBEDDING_MODEL,
       input: query,
     });

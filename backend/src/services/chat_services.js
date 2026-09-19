@@ -1,4 +1,4 @@
-import ai from "../GenAI/connection.js";
+import getAI from "../GenAI/connection.js";
 import ApiError from "../utils/ApiError.js";
 import logger from "../utils/logger.js";
 
@@ -11,7 +11,7 @@ async function generate(prompt, jsonMode = true) {
     "ai generate started",
   );
   try {
-    const completion = await ai.chat.completions.create({
+    const completion = await getAI().chat.completions.create({
       model: MODEL,
       max_tokens: 1024,
       messages: [
