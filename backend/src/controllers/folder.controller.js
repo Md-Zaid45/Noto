@@ -1,6 +1,5 @@
 import { Folder } from "../models/folder.model.js";
 import { Note } from "../models/note.model.js";
-import { Flashcard } from "../models/flashcard.model.js";
 import ApiError from "../utils/ApiError.js";
 
 export const getFolderStructure = async (req, res, next) => {

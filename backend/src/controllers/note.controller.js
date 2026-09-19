@@ -1,4 +1,3 @@
-import { Flashcard } from "../models/flashcard.model.js";
 import { Note } from "../models/note.model.js";
 import ApiError from "../utils/ApiError.js";
 
@@ -74,22 +73,6 @@ export const updateNote = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       payload: { note: updatedNote },
-    });
-  } catch (error) {
-    return next(error);
-  }
-};
-
-export const getNoteCount = async (req, res, next) => {
-  try {
-    const userId = req.user._id;
-    const count = await Note.countDocumetns({ _id: userId });
-
-    return res.status(200).json({
-      success: true,
-      payload: {
-        notesCount: count,
-      },
     });
   } catch (error) {
     return next(error);

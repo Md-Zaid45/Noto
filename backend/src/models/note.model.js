@@ -24,7 +24,7 @@ const noteSchema = new mongoose.Schema(
     },
     isIndexed: {
       type: Boolean,
-      dafault: false,
+      default: false,
       enum: [true, false],
     },
     revisionMark: {

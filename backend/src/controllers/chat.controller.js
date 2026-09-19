@@ -1,9 +1,7 @@
-import { Embedding } from "../models/embedding.model.js";
 import { Flashcard } from "../models/flashcard.model.js";
 import { Note } from "../models/note.model.js";
 import {
   createUpdateEmbeddings,
-  generateEmbeddings,
   getRelevantEmbeddings,
   getText,
   getTextFromEmbedding,
@@ -16,13 +14,14 @@ import {
   summariseNote,
 } from "../services/chat_services.js";
 import { Chat } from "../models/chats.model.js";
-import { User } from "../models/user.model.js";
+import logger from "../utils/logger.js";
 
 export const getAiFlashcards = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { count } = req.body;
-    const note = await Note.findById(id);
+    logger.info({ userId: req.user._id, noteId: id, count }, "flashcards request");
+    const note = await Note.findOne({ _id: id, userId: req.user._id });
     if (!note) throw new ApiError(404, "No note found");
     const context = getText(note.content);
     const generatedFlashcards = await generateFlashcards(context, count);
@@ -38,6 +37,7 @@ export const getAiFlashcards = async (req, res, next) => {
     );
     if (!newFlashcards || !newFlashcards.length)
       throw new ApiError(500, "Error in saving flashcards to db");
+    logger.info({ noteId: id, saved: newFlashcards.length }, "flashcards saved");
     return res.status(200).json({
       success: true,
       message: "Flashcards generated successfully",
@@ -52,12 +52,14 @@ export const getAiQuiz = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { count } = req.body;
-    const note = await Note.findById(id);
+    logger.info({ userId: req.user._id, noteId: id, count }, "quiz request");
+    const note = await Note.findOne({ _id: id, userId: req.user._id });
     if (!note) throw new ApiError(404, "No note found");
     const context = getText(note.content);
     const generatedQuiz = await generateQuiz(context, count);
     if (!generatedQuiz || !generatedQuiz.length)
       return res.json({ success: false, message: "No quiz generated" });
+    logger.info({ noteId: id, questionCount: generatedQuiz.length }, "quiz generated");
     return res.status(200).json({
       success: true,
       message: "Quiz generated successfully",
@@ -71,17 +73,21 @@ export const getAiQuiz = async (req, res, next) => {
 export const getNoteSummary = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const noteDoc = await Note.findById(id).select("content");
-    if (!noteDoc.content)
+    logger.info({ userId: req.user._id, noteId: id }, "summary request");
+    const noteDoc = await Note.findOne({ _id: id, userId: req.user._id }).select("content");
+    if (!noteDoc?.content) {
+      logger.debug({ noteId: id }, "summary skipped: no content");
       return res
         .status(200)
         .json({
           success: true,
           message: "No content to summarize! Add some text to use this feature",
         });
+    }
     const context = getText(noteDoc.content);
     const summary = await summariseNote(context);
     if (!summary) throw new ApiError(500, "Failed to generate summary");
+    logger.info({ noteId: id, summaryLength: summary.length }, "summary completed");
     return res.status(200).json({
       success: true,
       payload: {
@@ -97,6 +103,10 @@ export const chatResponse = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { query } = req.body;
+    logger.info(
+      { userId: req.user._id, noteId: id, query: query?.slice(0, 100) },
+      "chat request",
+    );
     if (!query?.trim()) {
       throw new ApiError(400, "Query is required");
     }
@@ -106,46 +116,57 @@ export const chatResponse = async (req, res, next) => {
 
       if (!note) throw new ApiError(404, "No note found for QnA");
 
+      logger.debug({ noteId: id, isIndexed: note.isIndexed }, "chat index status");
+
       if (!note?.isIndexed) {
-        const genneratedEmbeddings = await createUpdateEmbeddings(note);
-        const contextEmbeddings = await getRelevantEmbeddings(
-          query,
-          req.user._id,
-          id,
-        );
-        // if (!contextEmbeddings.length) {
-        //   contextEmbeddings = await generatedEmbeddings;
-        // }
-        contextText = getTextFromEmbedding(contextEmbeddings);
-      } else {
-        const contextEmbeddings = await getRelevantEmbeddings(
-          query,
-          req.user._id,
-          id,
-        );
-        contextText = getTextFromEmbedding(contextEmbeddings);
+        await createUpdateEmbeddings(note);
       }
+
+      const contextEmbeddings = await getRelevantEmbeddings(
+        query,
+        req.user._id,
+        id,
+      );
+      contextText = getTextFromEmbedding(contextEmbeddings);
+      logger.debug({ noteId: id, contextLength: contextText.length }, "context retrieved");
     }
 
     let chat = await Chat.findOne({ userId: req.user._id, noteId: id });
-    if (!chat)
+    if (!chat) {
       chat = await Chat.create({
         userId: req.user._id,
         noteId: id,
         name: "New chat",
         history: [{ role: "user", content: query }],
       });
-    else {
+      logger.debug({ noteId: id }, "new chat created");
+    } else {
       chat.history.push({ role: "user", content: query });
       await chat.save();
     }
 
+    logger.debug(
+      { noteId: id, historyTurns: chat.history.length },
+      "calling ai for answer",
+    );
+
     const answer = await answerQuestion(query, contextText, chat.history);
-    if (!answer)
-      return res.status(200).json({ 
+    if (!answer) {
+      logger.warn({ noteId: id, query: query?.slice(0, 100) }, "ai returned null answer");
+      return res.status(200).json({
         success: true,
-        payload: { answer: "Try again later" } 
+        payload: { answer: "Try again later" },
       });
+    }
+
+    chat.history.push({ role: "assistant", content: answer.answer });
+    await chat.save();
+
+    logger.info(
+      { noteId: id, answerLength: answer.answer.length, confidence: answer.confidence },
+      "chat completed",
+    );
+
     return res.status(200).json({
       success: true,
       payload: {
