@@ -56,14 +56,13 @@ export default function Header({
           {auth.isLoggedIn ? (
             <button
               onClick={async () => {
-                navigate("../login");
-                dispatch(setLoggedOut());
-                const res = await fetch(`${API_URL}/api/v1/users/logout`, {
+                await fetch(`${API_URL}/api/v1/users/logout`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   credentials: "include",
                 });
-                const data = await res.json();
+                dispatch(setLoggedOut());
+                navigate("../login");
               }}
               className="text-[#6B6A65] dark:text-stone-400 hover:text-[#059669] dark:hover:text-emerald-400 p-2 rounded-[5px] transition-all duration-150 hover:bg-[#ecfdf5] dark:hover:bg-emerald-950/30 active:scale-[0.97]"
               title="Logout"

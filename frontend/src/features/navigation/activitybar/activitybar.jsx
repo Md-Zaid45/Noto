@@ -1,15 +1,29 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useTheme } from "../../../store/themeContext";
-import { BookOpen, Layers, LayoutDashboard, Mail, Sun, Moon, Settings, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { setLoggedOut } from "../../../store/authSlice";
+import {
+  BookOpen,
+  Layers,
+  LayoutDashboard,
+  User,
+  Sun,
+  Moon,
+  LogOut,
+  PanelLeftClose,
+  PanelLeftOpen,
+} from "lucide-react";
 import { Button } from "../../../components/ui/button";
 
 export default function ActivityBar({ treeOpen, setTreeOpen }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { theme, toggleTheme } = useTheme();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const activeView = pathname.split("/")[2] || "";
-
+  
   const items = [
     {
       name: "Notes",
@@ -46,25 +60,39 @@ export default function ActivityBar({ treeOpen, setTreeOpen }) {
       },
     },
     {
-      name: "Contact",
-      icon: Mail,
-      view: "contact",
-      action: () => {},
+      name: "Profile",
+      icon: User,
+      view: "profile",
+      action: () => {
+        navigate("./profile");
+      },
     },
   ];
 
   const bottomItems = [
     {
-      name: "Settings",
-      icon: Settings,
-      action: () => {},
+      name: "Logout",
+      icon: LogOut,
+      action: async () => {
+        await fetch(`${API_URL}/api/v1/users/logout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
+        dispatch(setLoggedOut());
+        navigate("/login");
+      },
     },
   ];
 
   return (
     <aside className="flex flex-col  items-center w-[47px] bg-[#efeeeb] dark:bg-stone-900 shrink-0 border-r border-[#E8E6E1] dark:border-stone-800">
       <div className="flex flex-col items-center py-3">
-        <span className="text-[13px] font-medium text-stone-700 dark:text-white text-center block mb-[10px]">N</span>
+        <div className="w-[32px] h-[32px] rounded-lg bg-[#059669] dark:bg-emerald-600 flex items-center justify-center mb-[10px]">
+          <span className="text-[13px] font-bold text-white font-heading leading-none">
+            N
+          </span>
+        </div>
         <Button
           variant="ghost"
           size="icon"
@@ -72,7 +100,11 @@ export default function ActivityBar({ treeOpen, setTreeOpen }) {
           onClick={() => setTreeOpen(!treeOpen)}
           title="Toggle sidebar"
         >
-          {treeOpen ? <PanelLeftClose size={17} /> : <PanelLeftOpen size={17} />}
+          {treeOpen ? (
+            <PanelLeftClose size={17} />
+          ) : (
+            <PanelLeftOpen size={17} />
+          )}
         </Button>
         {items.map((item, index) => {
           const isActive = activeView === item.view;
