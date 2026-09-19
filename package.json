@@ -1,0 +1,9 @@
+{
+  "name": "noto",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "cd backend && npm start",
+    "install-all": "cd backend && npm install"
+  }
+}
