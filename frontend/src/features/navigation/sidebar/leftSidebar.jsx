@@ -88,7 +88,7 @@ export default function LeftSidebar({ view, setView, treeOpen }) {
   const tree = useMemo(() => {
     return fileTree(Folders, Notes);
   }, [Folders, Notes]);
-
+  
   useEffect(() => {
     if (id) setActive(id);
     else setActive("r");

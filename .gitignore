@@ -4,6 +4,11 @@
 node_modules/
 **/node_modules/
 
+# Root lock file (dev convenience only)
+/package-lock.json
+!frontend/package-lock.json
+!backend/package-lock.json
+
 # ==============================
 # Build outputs
 # ==============================
