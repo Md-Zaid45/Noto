@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     loader: async () => {
       const res = await apiFetch(`/workspace`, {
         method: "POST",
-        body: JSON.parse(localStorage.getItem("tabs")),
+        body: JSON.parse(localStorage.getItem("tabs") || '{"tabs":[],"activeTab":null}'),
       });
       const data = await res.json();
       return data;
