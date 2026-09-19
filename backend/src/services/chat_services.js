@@ -1,10 +1,18 @@
 import ai from "../GenAI/connection.js";
 import ApiError from "../utils/ApiError.js";
-const MODEL=process.env.MODEL
+import logger from "../utils/logger.js";
+
+const MODEL = process.env.MODEL || "qwen/qwen3-32b";
+
 async function generate(prompt, jsonMode = true) {
+  const start = Date.now();
+  logger.debug(
+    { promptLength: prompt.length, model: MODEL, jsonMode },
+    "ai generate started",
+  );
   try {
     const completion = await ai.chat.completions.create({
-      model: "qwen/qwen3-32b",
+      model: MODEL,
       max_tokens: 1024,
       messages: [
         {
@@ -20,13 +28,36 @@ async function generate(prompt, jsonMode = true) {
     });
 
     const text = completion.choices[0].message.content;
+    const usage = completion.usage;
+    const duration = ((Date.now() - start) / 1000).toFixed(2);
+
+    logger.info(
+      {
+        model: MODEL,
+        promptLength: prompt.length,
+        responseLength: text.length,
+        promptTokens: usage?.prompt_tokens,
+        completionTokens: usage?.completion_tokens,
+        totalTokens: usage?.total_tokens,
+        jsonMode,
+        duration: `${duration}s`,
+      },
+      "ai generate completed",
+    );
+
     return jsonMode ? JSON.parse(text) : text;
   } catch (error) {
-    console.error("AI generation error:", error.message);
+    const duration = ((Date.now() - start) / 1000).toFixed(2);
+    logger.error(
+      { err: error, promptLength: prompt.length, model: MODEL, duration: `${duration}s` },
+      "ai generate failed",
+    );
     throw error;
+  }
 }
-}
+
 export async function generateFlashcards(context, count = 10) {
+  logger.debug({ contextLength: context.length, count }, "flashcard generation started");
   const prompt = `
 You are an expert educator. Using ONLY the content below, generate exactly ${count} high-quality flashcards.
 Each flashcard must test a single, clear concept. Prefer specific facts, definitions, and cause-effect over vague generalities.
@@ -50,19 +81,12 @@ Rules:
   if (!result.flashcards || !Array.isArray(result.flashcards)) {
     throw new ApiError(500, "Malformed flashcard response from AI");
   }
+  logger.info({ count: result.flashcards.length, requested: count }, "flashcards generated");
   return result.flashcards;
 }
 
-// ─── 2. Quiz Generation ──────────────────────────────────────────────────────
-
-/**
- * Generates a multiple-choice quiz from a RAG context.
- *
- * @param {string} context  - Retrieved chunks
- * @param {number} count    - Number of questions (default 5)
- * @returns {Array<{question, options, correctIndex, explanation}>}
- */
 export async function generateQuiz(context, count = 5) {
+  logger.debug({ contextLength: context.length, count }, "quiz generation started");
   const prompt = `
 You are an expert educator creating a multiple-choice quiz. Use ONLY the content below.
 
@@ -91,19 +115,12 @@ Rules:
   if (!result.quiz || !Array.isArray(result.quiz)) {
     throw new ApiError(500, "Malformed quiz response from AI");
   }
+  logger.info({ count: result.quiz.length, requested: count }, "quiz generated");
   return result.quiz;
 }
 
-// ─── 3. Note Summary ─────────────────────────────────────────────────────────
-
-/**
- * Summarises a note at a given detail level.
- *
- * @param {string} context      - Full note text (or top chunks)
- * @param {"brief"|"detailed"|"bullets"} style
- * @returns {string}            - The summary text
- */
 export async function summariseNote(context, style = "detailed") {
+  logger.debug({ contextLength: context.length, style }, "summary generation started");
   const styleGuide = {
     brief:
       "Write a single paragraph (3–5 sentences) covering only the most critical points.",
@@ -122,20 +139,16 @@ ${context}
 
 Do not include anything not found in the content. Do not use headers unless the style is "detailed".
 `;
-  return await generate(prompt, false);
+  const result = await generate(prompt, false);
+  logger.info({ style, summaryLength: result.length }, "summary generated");
+  return result;
 }
 
-// ─── 4. QnA (RAG Chat) ───────────────────────────────────────────────────────
-
-/**
- * Answers a user question using retrieved context.
- *
- * @param {string} question       - The user's question
- * @param {string} context        - Top-k retrieved chunks
- * @param {Array}  history        - [{role:"user"|"model", text:string}] conversation turns
- * @returns {{ answer: string, sourceChunks: number[] }}
- */
 export async function answerQuestion(question, context, history = []) {
+  logger.debug(
+    { questionLength: question.length, contextLength: context.length, historyTurns: history.length },
+    "qna started",
+  );
   const historyText = history
     .map((h) => `${h.role === "user" ? "User" : "Assistant"}: ${h.content}`)
     .join("\n");
@@ -160,6 +173,13 @@ Return a JSON object:
 }
 `;
   const result = await generate(prompt);
-  if (!result.answer) throw new ApiError(500, "Malformed QnA response from AI");
+  if (!result.answer) {
+    logger.warn({ questionLength: question.length }, "qna returned empty answer");
+    throw new ApiError(500, "Malformed QnA response from AI");
+  }
+  logger.info(
+    { confidence: result.confidence, answerLength: result.answer.length },
+    "qna completed",
+  );
   return result;
 }

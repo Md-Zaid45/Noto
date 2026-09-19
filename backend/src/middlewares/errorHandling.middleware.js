@@ -1,7 +1,24 @@
+import logger from "../utils/logger.js";
+
 export const errorHandler = (err, req, res, next) => {
-  return res.status(err.statusCode || 500).json({
+  const statusCode = err.statusCode || 500;
+  const level = statusCode >= 500 ? "error" : "warn";
+
+  logger[level](
+    {
+      err: statusCode >= 500 ? err : undefined,
+      statusCode,
+      message: err.message,
+      method: req.method,
+      path: req.originalUrl,
+      userId: req.user?._id,
+    },
+    "request error",
+  );
+
+  return res.status(statusCode).json({
     success: false,
-    statusCode: err.statusCode || 500,
+    statusCode,
     message: err.message || "Internal server error",
   });
 };
