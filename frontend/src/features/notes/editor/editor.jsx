@@ -47,7 +47,7 @@ export default function Editr() {
 
   const deleteHandler = useCallback(
     (tab) => {
-      const nextTabs = tabs.filter((t) => t.id !== tab.id);
+      const nextTabs = (tabs || []).filter((t) => t.id !== tab.id);
       deleteTab(tab.id);
 
       if (tab.id === id) {

@@ -29,7 +29,7 @@ export function useEditor(editors, OpenTabs, note) {
   }, [note?.noteId, dispatch]);
 
   useEffect(() => {
-    if (!OpenTabs.length) return;
+    if (!OpenTabs?.length) return;
 
     const openIds = new Set(OpenTabs.map((t) => t.id));
     for (const [editorId, edt] of [...editors.current]) {
@@ -126,8 +126,9 @@ export function useTabs(note, id) {
   const Notes = useSelector((state) => state.Notes);
 
   useEffect(() => {
-    setTabs((prev) =>{
-      const newTabs = prev.tabs = prev.tabs.filter((tab) => Notes.find((note) => note.id === tab.id));
+    setTabs((prev) => {
+      const safeTabs = Array.isArray(prev.tabs) ? prev.tabs : [];
+      const newTabs = safeTabs.filter((tab) => Notes.find((note) => note.id === tab.id));
       if(!newTabs.some((tab) => tab.id === prev.activeTab)){
         if (newTabs.length > 1) {
           return { activeTab: newTabs[newTabs.length-1].id, tabs: newTabs };
@@ -136,25 +137,26 @@ export function useTabs(note, id) {
         }
       } else {
         return { ...prev, tabs: newTabs }
-      }}
-    )
+      }
+    })
   }, [Notes]);
 
   useEffect(() => {
     if (!note?.noteId) return;
     setTabs((prev) => {
-      const existingTab = prev.tabs.find((tab) => tab.id === note.noteId);
+      const safeTabs = Array.isArray(prev.tabs) ? prev.tabs : [];
+      const existingTab = safeTabs.find((tab) => tab.id === note.noteId);
       if (existingTab) {
         if (existingTab.name === note.name) return { ...prev, activeTab: note.noteId };
         return {
           ...prev,
           activeTab: note.noteId,
-          tabs: prev.tabs.map((tab) =>
+          tabs: safeTabs.map((tab) =>
             tab.id === note.noteId ? { ...tab, name: note.name } : tab
           ),
         };
       }
-      const newTabs = [...prev.tabs, { id: note.noteId, name: note.name }];
+      const newTabs = [...safeTabs, { id: note.noteId, name: note.name }];
       return { activeTab: note.noteId, tabs: newTabs };
     });
   }, [note?.noteId, note?.name]);
@@ -162,16 +164,17 @@ export function useTabs(note, id) {
   const deleteTab = useCallback(
     (id) => {
       setTabs((prev) => {
+        const safeTabs = Array.isArray(prev.tabs) ? prev.tabs : [];
         if (prev.activeTab === id) {
-          const filteredTabs = prev.tabs.filter((tab) => tab.id !== id);
+          const filteredTabs = safeTabs.filter((tab) => tab.id !== id);
           const newActiveTab = filteredTabs.length > 0 ? filteredTabs[filteredTabs.length - 1].id : null;
           return { activeTab: newActiveTab, tabs: filteredTabs };
         }
-        return { ...prev, tabs: prev.tabs.filter((tab) => tab.id !== id)};
+        return { ...prev, tabs: safeTabs.filter((tab) => tab.id !== id)};
       });
     },
     [id],
   );
 
-  return [Tabs.tabs, deleteTab];
+  return [Array.isArray(Tabs.tabs) ? Tabs.tabs : [], deleteTab];
 }
