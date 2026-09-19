@@ -1,120 +1,199 @@
+<div align="center">
+
 # Noto
 
-Noto is a modern, intuitive web‑based note‑taking and knowledge management application designed for structured thinking and effective learning. It combines a clean writing experience with built‑in active recall and spaced repetition, helping users not just store information but retain it.
+**AI-powered note-taking with spaced repetition**
 
-[![Node.js](https://img.shields.io/badge/Node.js-18.x-green)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-18.x-61dafb)](https://reactjs.org/)
+A full-stack application that combines structured note-taking with active recall and AI-assisted learning. Write notes, generate flashcards and quizzes, chat with an AI tutor — all grounded in your own content via RAG.
 
----
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-22-339933?logo=node.js)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-5-white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-9-47A248?logo=mongodb)](https://www.mongodb.com/)
 
-## ✨ Features
+[Live Demo](https://noto-rust.vercel.app) · [API](https://noto-1-qwzb.onrender.com)
 
-- **Secure Authentication** – JWT‑based user authentication with protected routes and user‑specific data isolation.
-- **Rich Text Editor** – Tab‑based editing workflow with formatting tools, auto‑save, and persistent state.
-- **Hierarchical Organization** – Tree‑based folder navigation with context menus (rename, delete, move).
-- **Active Recall & Spaced Repetition** – Convert notes into flashcards; SM‑2 scheduling algorithm for optimized review intervals based on recall performance.
-- **Responsive & Accessible** – Clean interface that works across devices.
-
----
-
-## 🛠️ Tech Stack
-
-| Layer       | Technology                         |
-|-------------|------------------------------------|
-| Frontend    | React, Vite, TailwindCSS           |
-| State Mgmt  | Redux Toolkit (centralized store)  |
-| Backend     | Node.js, Express, MongoDB          |
-| Auth        | JSON Web Tokens (JWT)              |
+</div>
 
 ---
 
-🌐 Live Demo
-Frontend: https://noto-rust.vercel.app
-Backend API: https://noto-1-qwzb.onrender.com
+## Features
 
-## 📁 Project Structure
+### Core
+- **Rich Text Editor** — Tab-based editing with TipTap, auto-save, and formatting toolbar
+- **Folder Hierarchy** — Tree-based navigation with context menus (rename, delete, move)
+- **JWT Authentication** — Secure login with protected routes and per-user data isolation
+
+### Active Recall
+- **Flashcards** — AI-generated from your notes with question/answer pairs
+- **Quiz Generation** — Multiple-choice questions with explanations
+- **SM-2 Scheduling** — Spaced repetition algorithm adapts review intervals to your recall performance
+
+### AI-Powered
+- **RAG Chat** — Ask questions about your notes, answered with retrieved context via vector search
+- **Note Summarization** — Brief, detailed, or bullet-point summaries on demand
+- **Smart Flashcard Generation** — AI creates flashcards grounded in your actual content
+
+### Technical
+- **Vector Search** — MongoDB Atlas vector embeddings for semantic retrieval
+- **Structured Logging** — Pino-based JSON logging across the full RAG pipeline
+- **Dark Mode** — System-aware theme with manual toggle
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, Vite 7, TailwindCSS 4 |
+| State | Redux Toolkit (slices + thunks) |
+| Editor | TipTap (ProseMirror) |
+| Components | Radix UI, Lucide Icons |
+| Backend | Node.js, Express 5 |
+| Database | MongoDB (Mongoose 9, Atlas Vector Search) |
+| AI | OpenRouter (qwen3-32b), Google Gemini |
+| Auth | JWT (access + refresh tokens) |
+| Logging | Pino |
+| Deployment | Vercel (frontend), Render (backend) |
+
+---
+
+## Project Structure
+
 ```
-- `Noto/`
-  - `backend/`
-    - `package.json`
-  - `frontend/`
-    - `public/`
-      - `vite.svg`
-    - `src/`
-      - `features/`
-        - `auth/` – authentication components & logic
-        - `flashcards/` – flashcard review components
-        - `folders/` – folder slice (Redux)
-        - `navigation/` – header, sidebar, context menu
-        - `notes/` – editor, tabs, notes slices
-      - `pages/` – route components
-      - `store/` – Redux store configuration
-      - `index.css`
-      - `main.jsx`
-    - `index.html`
-    - `tailwind.config.js`
-    - `vite.config.js`
-    - `package.json`
+Noto/
+├── frontend/
+│   └── src/
+│       ├── features/
+│       │   ├── auth/           # Login, signup, hooks, thunks
+│       │   ├── flashcards/     # Review cards, scheduling, slices
+│       │   ├── folders/        # Folder tree, Redux slice, thunks
+│       │   ├── navigation/     # Header, sidebar, activity bar
+│       │   └── notes/          # Editor, tabs, content slices
+│       ├── pages/              # Route-level components
+│       ├── store/              # Redux store config
+│       └── commons/            # Shared components, loaders
+├── backend/
+│   └── src/
+│       ├── controllers/        # Route handlers
+│       ├── models/             # Mongoose schemas
+│       ├── services/           # AI, embeddings, chat logic
+│       ├── routes/             # Express route definitions
+│       ├── middlewares/         # Auth, error handling
+│       └── utils/              # ApiError, logger
 ```
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Node.js (v18 or later)
+
+- Node.js 20+
 - MongoDB (local or Atlas)
+- OpenRouter API key (for AI features)
+- Google Gemini API key (optional, for flashcards/quiz)
 
 ### Installation
 
-```
+```bash
 git clone https://github.com/Md-Zaid45/Noto.git
 cd Noto
-Backend setup```
+```
 
+**Backend**
+
+```bash
 cd backend
 npm install
-# Create a .env file with MONGO_URI and JWT_SECRET
-npm run dev
-Frontend setup
+```
 
+Create a `.env` file (see `.env.example`):
+
+```env
+MONGO_DB_URI=mongodb://localhost:27017/noto
+ACCESS_TOKEN_SECRET=<random-64-char-string>
+ACCESS_TOKEN_EXPIRY=15m
+REFRESH_TOKEN_SECRET=<random-64-char-string>
+REFRESH_TOKEN_EXPIRY=7d
+GEMINI_API_KEY=your-gemini-key
+ORIGIN=http://localhost:5173
+MODEL=qwen/qwen3-32b
+LOG_LEVEL=info
+```
+
+```bash
+npm run dev
+```
+
+**Frontend**
+
+```bash
 cd frontend
 npm install
 npm run dev
-Visit http://localhost:5173 to open the application.
 ```
 
-🛣️ Roadmap
-Rich text editing
+Open [http://localhost:5173](http://localhost:5173).
 
-Folder hierarchy
+---
 
-SM‑2 spaced repetition
+## API Reference
 
-Full‑text search and tagging
+### Auth
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/v1/users/signup` | Create account |
+| POST | `/api/v1/users/login` | Login |
+| POST | `/api/v1/users/logout` | Logout |
+| POST | `/api/v1/users/refresh-token` | Refresh access token |
 
-Drag‑and‑drop folder management
+### Notes
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/v1/notes/` | Create note |
+| GET | `/api/v1/notes/:id` | Get note with content |
+| PATCH | `/api/v1/notes/:id` | Update note name |
+| DELETE | `/api/v1/notes/:id` | Delete note |
+| POST | `/api/v1/notes/:id/content` | Add content block |
+| PATCH | `/api/v1/notes/content/:id` | Update content block |
+| DELETE | `/api/v1/notes/content/:id` | Delete content block |
 
-Learning analytics dashboard
+### Folders
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/v1/folders/` | Create folder |
+| PATCH | `/api/v1/folders/:id` | Rename folder |
+| DELETE | `/api/v1/folders/:id` | Delete folder |
 
-Offline support (PWA)
+### AI
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/v1/ai/chat/:id?` | RAG chat (note-scoped or global) |
+| POST | `/api/v1/ai/summary/:id` | Summarize note |
+| POST | `/api/v1/ai/flashcards/:id` | Generate flashcards |
+| POST | `/api/v1/ai/quiz/:id` | Generate quiz |
 
-AI‑assisted note & flashcard generation
+---
 
-🤝 Contributing
-Contributions are welcome! Please follow these steps:
-```
-Fork the repository.
+## Environment Variables
 
-Clone your fork: git clone https://github.com/your-username/Noto.git
+See `backend/.env.example` for the full list. Key variables:
 
-Create a feature branch: git checkout -b feature/your-feature
+| Variable | Description | Required |
+|---|---|---|
+| `MONGO_DB_URI` | MongoDB connection string | Yes |
+| `ACCESS_TOKEN_SECRET` | JWT access token secret | Yes |
+| `REFRESH_TOKEN_SECRET` | JWT refresh token secret | Yes |
+| `GEMINI_API_KEY` | Google Gemini API key | Yes |
+| `ORIGIN` | Frontend URL for CORS | Yes |
+| `MODEL` | AI model for chat (default: qwen/qwen3-32b) | No |
+| `LOG_LEVEL` | Logging level: debug/info/warn/error | No |
 
-Commit your changes: git commit -m 'Add some feature'
+---
 
-Push to your branch: git push origin feature/your-feature
+## License
 
-Open a pull request.
-
-Please ensure your code follows the project’s style guidelines and includes tests where applicable.
-```
+MIT
