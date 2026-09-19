@@ -5,12 +5,13 @@ export const createFolderAsync = createAsyncThunk(
   "folders/createFolder",
   async ({ name, parentFolderId = null, revisionMark = false }) => {
     const newFolder = { name, revisionMark, folderId: parentFolderId };
-    const data = await apiFetch(`/folders`, {
+    const res = await apiFetch(`/folders`, {
       method: "POST",
       body: newFolder,
     });
-    const res = await data.json();
-    return res.payload.folder;
+    if (!res.ok) throw new Error("Failed to create folder");
+    const data = await res.json();
+    return data.payload?.folder;
   },
 );
 
@@ -33,11 +34,9 @@ export const updateFolderAsync = createAsyncThunk(
     const { id, ...updateField } = obj;
     const res = await apiFetch(`/folders/${id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(updateField),
+      body: updateField,
     });
-    if (!res.ok) throw new Error("res error at updateFolderAsync");
+    if (!res.ok) throw new Error("Failed to update folder");
     const data = await res.json();
     return data?.payload?.folder;
   },

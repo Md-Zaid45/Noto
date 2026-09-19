@@ -17,7 +17,7 @@ import { setLoggedIn } from "./store/authSlice";
 import EmptyState from "./pages/emptyPage";
 import { apiFetch } from "./commons/apifetch";
 import LoadingLoader from "./commons/loader";
-import ActivityBar from "./features/navigation/activityBar/activitybar";
+import ActivityBar from "./features/navigation/activitybar/activitybar";
 export const sidebarContext = createContext({});
 export const viewContext = createContext({});
 
@@ -37,23 +37,29 @@ function App() {
   const auth = useSelector((state) => state.Auth);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    console.log('data',data);
-    
-    if (!data?.success) return;
+    if (!data) return;
     dispatch(hydrateApp(data.payload));
   }, [data, dispatch]);
+  
   useEffect(() => {
     if (auth.isLoggedIn) return;
     setLoading(true);
     const fetchData = async () => {
-      const res = await apiFetch(`/me`, {
-        method: "POST",
-      });
-      const data = await res.json();
-      if (data.success === true) {
+      try {
+        const res = await apiFetch(`/me`, {
+          method: "POST",
+        });
+        const data = await res.json();
+        if (data.success === true) {
+          dispatch(setLoggedIn(data.payload));
+        } else {
+          navigate("../login");
+        }
+      } catch (err) {
+        navigate("../login");
+      } finally {
         setLoading(false);
-        dispatch(setLoggedIn(data.payload));
-      } else navigate("../login");
+      }
     };
     fetchData();
   }, [auth.isLoggedIn]);

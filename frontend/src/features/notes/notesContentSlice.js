@@ -30,7 +30,7 @@ const notesContentSlice = createSlice({
 
     deleteNoteContent: (state, action) => {
       if (action.payload?.id) {
-        state = state?.filter((note) => note.noteId != action.payload.id);
+        return state.filter((note) => note.noteId !== action.payload.id);
       }
     },
     deleteNotesContent: (state, action) => {
@@ -42,14 +42,13 @@ const notesContentSlice = createSlice({
   },
       extraReducers: (builder) => {
       builder.addCase("HYDRATE_APP", (state, action) => {
-        const newState = action.payload.notesContent.map((note) => ({
+        if (!action.payload?.notesContent) return state;
+        return action.payload.notesContent.map((note) => ({
           id: note._id,
           name: note.name,
           noteId: note._id,
           content: note.content,
         }));
-
-        return newState;
       });
     },
 });

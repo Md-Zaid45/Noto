@@ -25,8 +25,6 @@ const router = createBrowserRouter([
         method: "POST",
         body: JSON.parse(localStorage.getItem("tabs")),
       });
-      if (!res?.success){ console.log('Failed to fetch workspace')}
-      
       const data = await res.json();
       return data;
     },
@@ -63,8 +61,12 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "profile",
+        element: <Profile />,
+      },
+      {
         path: "quiz",
-        element: <Dashboard />,
+        element: <CardsPage />,
       },
       {
         path: "quiz/:id",
@@ -85,6 +87,7 @@ const router = createBrowserRouter([
 import { ThemeProvider } from "./store/themeContext.jsx";
 import Manage from "./features/flashcards/manage.jsx";
 import { Toaster } from "./components/ui/toaster";
+import Profile from "./pages/profile.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

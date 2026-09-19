@@ -7,6 +7,7 @@ import Tabs from "./tabs";
 import { useEditor, useNote, useTabs } from "./hooks";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HiOutlineCheckBadge } from "react-icons/hi2";
+import { FileText } from "lucide-react";
 import LoadingLoader from "../../../commons/loader";
 import { useDispatch } from "react-redux";
 import { renameNote } from "../notesSlice";
@@ -113,16 +114,16 @@ export default function Editr() {
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-stone-900">
-          <div className="w-24 h-24 mb-6 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 flex items-center justify-center animate-pulse">
-            <span className="text-4xl">🔍</span>
+        <div className="flex-1 flex flex-col items-center justify-center bg-[#f9fafb] dark:bg-stone-950">
+          <div className="w-16 h-16 rounded-2xl bg-[#d1fae5] dark:bg-emerald-950/30 flex items-center justify-center mb-5">
+            <FileText className="w-7 h-7 text-[#059669] dark:text-emerald-400" />
           </div>
-          <div className="text-center">
-            <h1 className="text-4xl font-black bg-gradient-to-br from-emerald-400 dark:from-emerald-300 to-emerald-700 dark:to-emerald-500 bg-clip-text text-transparent">
-              No Note found
-            </h1>
-            <div className="h-1 w-12 bg-emerald-500/30 dark:bg-emerald-500/50 mx-auto mt-2 rounded-full"></div>
-          </div>
+          <h1 className="text-lg font-bold font-heading text-[#111827] dark:text-stone-100 mb-2">
+            No note found
+          </h1>
+          <p className="text-sm text-[#6b7280] dark:text-stone-400 max-w-sm">
+            Select a note from the sidebar to start editing.
+          </p>
         </div>
       )}
     </div>

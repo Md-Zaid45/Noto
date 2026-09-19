@@ -95,7 +95,7 @@ export function handleContextMenuAction(
     setRename(ShowContextMenu.id);
   } else if (ShowContextMenu && option === "Delete") {
     if (ShowContextMenu.type === "file") {
-      dispatch(deleteNotesContent([ShowContextMenu]));
+      dispatch(deleteNotesContent([ShowContextMenu.id]));
       dispatch(deleteNote(ShowContextMenu.id));
       dispatch(deleteNotesAsync([ShowContextMenu.id]));
     } else if (ShowContextMenu.type === "folder") {

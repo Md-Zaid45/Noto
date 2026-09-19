@@ -44,7 +44,7 @@ export const feildsConfig = {
   },
 
   Email: {
-    type: "e-mail",
+    type: "email",
     placeholder: "E-Mail",
   },
 

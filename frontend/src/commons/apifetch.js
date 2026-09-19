@@ -23,7 +23,7 @@ export const apiFetch = async (url, options = {}) => {
 
     if (refreshRes.ok) {
       const data = await refreshRes.json();
-      appStore.dispatch(setLoggedIn(data.payload.name));
+      appStore.dispatch(setLoggedIn(data.payload));
       response = await fetch(API_URL + `/api/v1${url.slice(1,3)=='ai'?'':'/users'}` + url, {
         credentials: "include",
 

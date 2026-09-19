@@ -52,7 +52,8 @@ const foldersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase("HYDRATE_APP", (state, action) => {
-      const newState = action.payload?.folders.map((folder) => {
+      if (!action.payload?.folders) return state;
+      return action.payload.folders.map((folder) => {
         return {
           id: folder._id,
           name: folder.name,
@@ -61,7 +62,6 @@ const foldersSlice = createSlice({
           type: "folder",
         };
       });
-      return newState || [];
     });
     builder.addCase("folders/createFolder/fulfilled", (state, action) => {
       const newFolder = {

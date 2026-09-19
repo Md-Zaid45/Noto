@@ -64,7 +64,8 @@ const flashcardSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase("HYDRATE_APP", (state, action) => {
-      state.cards = action.payload?.flashcards.map((flashcard) => ({
+      if (!action.payload?.flashcards) return;
+      state.cards = action.payload.flashcards.map((flashcard) => ({
         question: flashcard.question,
         answer: flashcard.answer,
         id: flashcard._id,

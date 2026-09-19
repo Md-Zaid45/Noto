@@ -52,14 +52,14 @@ const notesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase("HYDRATE_APP", (state, action) => {
-      const newState = action.payload?.notes.map((note) => ({
+      if (!action.payload?.notes) return state;
+      return action.payload.notes.map((note) => ({
         name: note.name,
         id: note._id,
         folderId: note.folderId || "r",
         revisionMark: note.revisionMark || false,
         type: "file",
       }));
-      return newState;
     });
 
     builder.addCase("notes/addNote/fulfilled", (state, action) => {

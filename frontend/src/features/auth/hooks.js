@@ -77,7 +77,7 @@ export default function useFormHandlers(
       if (result.ok) {
         const { name, email } = res.payload;
         onSuccess();
-        dispatch(setLoggedIn(name));
+        dispatch(setLoggedIn({ name, email }));
       } else {
         setErrors((prev) => ({ ...prev, res: "Incorrect email or password" }));
       }

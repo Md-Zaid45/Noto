@@ -93,22 +93,27 @@ export function useNote(id, setIsLoading) {
       if (!note) {
         setIsLoading(true);
         const fetchContent = async () => {
-          const res = await apiFetch(`/notes/${id}`, {
-            method: "GET",
-          });
-          if (!res.ok) throw new Error("Unable to fetch Content");
+          try {
+            const res = await apiFetch(`/notes/${id}`, {
+              method: "GET",
+            });
+            if (!res.ok) throw new Error("Unable to fetch Content");
 
-          const { success, payload } = await res.json();
-          dispatch(
-            addNoteContent({
-              noteId: payload.note._id || Note.id,
-              name: payload.note.name || Note.name,
-              content: payload.note.content || {},
-            }),
-          );
+            const { success, payload } = await res.json();
+            dispatch(
+              addNoteContent({
+                noteId: payload.note._id || Note.id,
+                name: payload.note.name || Note.name,
+                content: payload.note.content || {},
+              }),
+            );
+          } catch (err) {
+            console.error("Failed to fetch note content:", err);
+          } finally {
+            setIsLoading(false);
+          }
         };
         fetchContent();
-        setIsLoading(false);
       }
     }
   }, [note?.id, Note]);
