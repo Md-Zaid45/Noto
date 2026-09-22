@@ -101,16 +101,14 @@ const Profile = () => {
                     onClick={() => navigate(`/home/notes/${note.id}`)}
                     className="min-w-[200px] max-w-[240px] flex-shrink-0 bg-[#f9fafb] dark:bg-stone-800/50 hover:bg-[#d1fae5] dark:hover:bg-emerald-950/30 border border-[#e5e7eb] dark:border-stone-700 hover:border-[#059669] dark:hover:border-emerald-600 rounded-xl p-4 text-left transition-all duration-150 group cursor-pointer flex flex-col"
                   >
-                    <div className="flex items-start gap-3 mb-3">
+                    <div className="flex items-start gap-3">
                       <div className="p-2 bg-white dark:bg-stone-900 rounded-lg border border-[#e5e7eb] dark:border-stone-700 shrink-0">
                         <FileText className="w-4 h-4 text-[#6b7280] dark:text-stone-400 group-hover:text-[#059669] dark:group-hover:text-emerald-400 transition-colors" />
                       </div>
-                      <span className="text-sm font-medium text-[#111827] dark:text-stone-100 truncate group-hover:text-[#059669] dark:group-hover:text-emerald-400 transition-colors">
+                      <span className="text-sm font-medium text-[#111827] dark:text-stone-100 truncate flex-1 group-hover:text-[#059669] dark:group-hover:text-emerald-400 transition-colors">
                         {note.name}
                       </span>
-                    </div>
-                    <div className="flex items-center justify-between mt-auto">
-                      <ChevronRight className="w-3.5 h-3.5 text-[#d1d5db] dark:text-stone-600 group-hover:text-[#059669] dark:group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
+                      <ChevronRight className="w-3.5 h-3.5 text-[#d1d5db] dark:text-stone-600 group-hover:text-[#059669] dark:group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all shrink-0 mt-1.5" />
                     </div>
                   </button>
                 ))}
