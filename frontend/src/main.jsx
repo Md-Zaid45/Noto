@@ -1,93 +1,213 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
 import "./index.css";
+
 import App from "./home.jsx";
 import appStore from "./store/appStore.js";
 import { Provider } from "react-redux";
-import LandingPage from "./pages/landinPage.jsx";
-import Editr from "./features/notes/editor/editor.jsx";
-import { AuthPage } from "./pages/signup-login.jsx";
-import ErrorPage from "./pages/errorPage.jsx";
+import { ThemeProvider } from "./store/themeContext.jsx";
+import { Toaster } from "./components/ui/toaster";
 import { apiFetch } from "./commons/apifetch.js";
-import Dashboard, { DashboardHome } from "./pages/dashboard.jsx";
-import DeckStatsPage from "./features/dashboard/deckStats.jsx";
-import CardsPage from "./pages/revision.jsx";
-import ReviewFlashcard from "./features/flashcards/reviewFlashcard.jsx";
-import Quiz from "./features/quiz/quiz.jsx";
+import ErrorPage from "./pages/errorPage.jsx";
+
+// Helper for default exports
+const lazyRoute = (importFn) => async () => {
+  const module = await importFn();
+
+  return {
+    Component: module.default,
+  };
+};
+
 const router = createBrowserRouter([
-  { path: "/", element: <LandingPage />, errorElement: <ErrorPage /> },
+  // -------------------------
+  // LANDING
+  // -------------------------
+  {
+    path: "/",
+    lazy: lazyRoute(() =>
+      import("./pages/landinPage.jsx")
+    ),
+    errorElement: <ErrorPage />,
+  },
+
+  // -------------------------
+  // HOME
+  // -------------------------
   {
     path: "/home",
     element: <App />,
+
     loader: async () => {
       const res = await apiFetch(`/workspace`, {
         method: "POST",
-        body: JSON.parse(localStorage.getItem("tabs") || '{"tabs":[],"activeTab":null}'),
+        body: JSON.parse(
+          localStorage.getItem("tabs") ||
+            '{"tabs":[],"activeTab":null}'
+        ),
       });
+
       const data = await res.json();
+
       return data;
     },
+
     shouldRevalidate() {
       return false;
     },
+
     children: [
+      // -------------------------
+      // NOTES
+      // -------------------------
       {
         path: "notes/:id",
-        element: <Editr />,
+        lazy: lazyRoute(() =>
+          import("./features/notes/editor/editor.jsx")
+        ),
       },
+
+      // -------------------------
+      // CARDS
+      // -------------------------
       {
         path: "cards",
-        element: <CardsPage />,
+        lazy: lazyRoute(() =>
+          import("./pages/revision.jsx")
+        ),
       },
+
       {
         path: "cards/:id",
-        element: <CardsPage />,
+        lazy: lazyRoute(() =>
+          import("./pages/revision.jsx")
+        ),
       },
+
+      // -------------------------
+      // MANAGE CARDS
+      // -------------------------
       {
-        path:'cards/manage/:id',
-        element:<Manage/>
+        path: "cards/manage/:id",
+        lazy: lazyRoute(() =>
+          import("./features/flashcards/manage.jsx")
+        ),
       },
+
+      // -------------------------
+      // REVIEW FLASHCARD
+      // -------------------------
       {
         path: "cards/review/:id",
-        element: <ReviewFlashcard/>
+        lazy: lazyRoute(() =>
+          import("./features/flashcards/reviewFlashcard.jsx")
+        ),
       },
+
+      // -------------------------
+      // DASHBOARD
+      // -------------------------
       {
         path: "dashboard",
-        element: <Dashboard />,
+
+        lazy: lazyRoute(() =>
+          import("./pages/dashboard.jsx")
+        ),
+
         children: [
-          { index: true, element: <DashboardHome /> },
-          { path: "deck-stats", element: <DeckStatsPage /> },
+          {
+            index: true,
+
+            lazy: async () => {
+              const module = await import(
+                "./pages/dashboard.jsx"
+              );
+
+              return {
+                Component: module.DashboardHome,
+              };
+            },
+          },
+
+          {
+            path: "deck-stats",
+
+            lazy: lazyRoute(() =>
+              import("./features/dashboard/deckStats.jsx")
+            ),
+          },
         ],
       },
+
+      // -------------------------
+      // PROFILE
+      // -------------------------
       {
         path: "profile",
-        element: <Profile />,
+
+        lazy: lazyRoute(() =>
+          import("./pages/profile.jsx")
+        ),
       },
+
+      // -------------------------
+      // QUIZ
+      // -------------------------
       {
         path: "quiz",
-        element: <CardsPage />,
+
+        lazy: lazyRoute(() =>
+          import("./pages/revision.jsx")
+        ),
       },
+
       {
         path: "quiz/:id",
-        element: <Quiz />,
+
+        lazy: lazyRoute(() =>
+          import("./features/quiz/quiz.jsx")
+        ),
       },
     ],
   },
+
+  // -------------------------
+  // AUTH
+  // -------------------------
+
   {
     path: "/signup",
-    element: <AuthPage />,
+
+    lazy: async () => {
+      const module = await import(
+        "./pages/signup-login.jsx"
+      );
+
+      return {
+        Component: module.AuthPage,
+      };
+    },
   },
+
   {
     path: "/login",
-    element: <AuthPage />,
+
+    lazy: async () => {
+      const module = await import(
+        "./pages/signup-login.jsx"
+      );
+
+      return {
+        Component: module.AuthPage,
+      };
+    },
   },
 ]);
-
-import { ThemeProvider } from "./store/themeContext.jsx";
-import Manage from "./features/flashcards/manage.jsx";
-import { Toaster } from "./components/ui/toaster";
-import Profile from "./pages/profile.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -97,5 +217,5 @@ createRoot(document.getElementById("root")).render(
         <Toaster />
       </ThemeProvider>
     </Provider>
-  </StrictMode>,
+  </StrictMode>
 );
