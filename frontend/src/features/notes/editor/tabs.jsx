@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { viewContext } from "../../../home";
+import { PanelRightOpen, PanelRightClose, FileText, X } from "lucide-react";
 
 const clickHandler = (tab, navigate) => {
   navigate(`../notes/${tab.id}`);
@@ -23,25 +24,22 @@ const Tabs = React.memo(function Tabs({ OpenTabs, deleteHandler, hideTabs = fals
           }`}
           style={{ fontSize: "12.5px" }}
         >
-          <span className="material-symbols-outlined" style={{ fontSize: "12px", color: "inherit" }}>article</span>
+          <FileText className="w-3 h-3 shrink-0" />
           <div
             className="truncate max-w-[120px]"
             onClick={() => clickHandler(tab, navigate)}
           >
             {tab.name}
           </div>
-          <span
-            className={`material-symbols-outlined transition-opacity duration-100 text-[11px] text-[#A8A7A2] dark:text-stone-500 ml-[4px] cursor-pointer ${
+          <X
+            className={`w-3 h-3 transition-opacity duration-100 text-[#A8A7A2] dark:text-stone-500 ml-[4px] cursor-pointer ${
               tab.id === id ? 'opacity-0 group-hover:opacity-100' : 'opacity-0 pointer-events-none'
             }`}
-            style={{ fontSize: "11px" }}
             onClick={(e) => {
               e.stopPropagation();
               deleteHandler(tab);
             }}
-          >
-            close
-          </span>
+          />
         </div>
       ))}
       <div className="ml-auto flex items-center shrink-0">
@@ -50,9 +48,11 @@ const Tabs = React.memo(function Tabs({ OpenTabs, deleteHandler, hideTabs = fals
           className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] text-[#A8A7A2] dark:text-stone-500 hover:bg-[#ecfdf5] dark:hover:bg-emerald-950/30 hover:text-[#059669] dark:hover:text-emerald-400 transition-all duration-150"
           title="Toggle right panel"
         >
-          <span className="material-symbols-outlined" style={{ fontSize: "19px" }}>
-            {rightPanelOpen ? 'right_panel_close' : 'right_panel_open'}
-          </span>
+          {rightPanelOpen ? (
+            <PanelRightClose className="w-[19px] h-[19px]" />
+          ) : (
+            <PanelRightOpen className="w-[19px] h-[19px]" />
+          )}
         </button>
       </div>
     </div>
